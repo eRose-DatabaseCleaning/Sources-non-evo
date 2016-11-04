@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!-- C++Builder XML Project -->
+<PROJECT>
+  <MACROS>
+    <VERSION value="BCB.05.03"/>
+    <PROJECT value="..\..\LIB_BC\SHO_LS_LIB.lib"/>
+    <OBJFILES value="OBJs\SHO_LS_LIB.obj OBJs\CLS_Client.obj OBJs\CLS_Server.obj 
+      OBJs\CLS_SQLThread.obj OBJs\CLS_Account.obj"/>
+    <RESFILES value=""/>
+    <IDLFILES value=""/>
+    <IDLGENFILES value=""/>
+    <DEFFILE value=""/>
+    <RESDEPEN value="$(RESFILES)"/>
+    <LIBFILES value=""/>
+    <LIBRARIES value=""/>
+    <PACKAGES value=""/>
+    <PATHCPP value=".;"/>
+    <PATHPAS value=".;"/>
+    <PATHRC value=".;"/>
+    <PATHASM value=".;"/>
+    <LINKER value="TLib"/>
+    <USERDEFINES value="_DEBUG;__SERVER"/>
+    <SYSDEFINES value="_RTLDLL;NO_STRICT"/>
+    <MAINSOURCE value="SHO_LS_LIB.bpf"/>
+    <INCLUDEPATH value="$(BCB)\include;$(BCB)\include\vcl;D:\SDK\MySQL\include\;..\..\..\LIB_Util;..\..\..\LIB_Server;..\..\..\Client\Util;..\..\..\Client\Network;..\..\Common"/>
+    <LIBPATH value="$(BCB)\lib\obj;$(BCB)\lib"/>
+    <WARNINGS value="-w-par"/>
+    <LISTFILE value=""/>
+  </MACROS>
+  <OPTIONS>
+    <IDLCFLAGS value="-I$(BCB)\include -I$(BCB)\include\vcl -ID:\SDK\MySQL\include\. 
+      -I..\..\..\LIB_Util -I..\..\..\LIB_Server -I..\..\..\Client\Util 
+      -I..\..\..\Client\Network -I..\..\Common -src_suffix cpp -D_DEBUG 
+      -D__SERVER -boa"/>
+    <CFLAG1 value="-Od -H=$(BCB)\lib\vcl50.csm -Hc -Vx -Ve -X- -r- -a8 -6 -b- -k -y -v -vi- 
+      -c -tW -tWM"/>
+    <PFLAGS value="-N2OBJs -N0OBJs -$YD -$W -$O- -v -JPHNE -M"/>
+    <AFLAGS value="/mx /w2 /zd"/>
+    <LFLAGS value="/P32"/>
+  </OPTIONS>
+  <LINKER>
+    <ALLOBJ value="$(OBJFILES)"/>
+    <ALLLIB value="cg32.lib"/>
+  </LINKER>
+  <IDEOPTIONS>
+[Version Info]
+IncludeVerInfo=0
+AutoIncBuild=0
+MajorVer=1
+MinorVer=0
+Release=0
+Build=0
+Debug=0
+PreRelease=0
+Special=0
+Private=0
+DLL=0
+Locale=1042
+CodePage=949
+
+[Version Info Keys]
+CompanyName=
+FileDescription=
+FileVersion=1.0.0.0
+InternalName=
+LegalCopyright=
+LegalTrademarks=
+OriginalFilename=
+ProductName=
+ProductVersion=1.0.0.0
+Comments=
+
+[HistoryLists\hlIncludePath]
+Count=7
+Item0=$(BCB)\include;$(BCB)\include\vcl;D:\SDK\MySQL\include\;..\..\..\LIB_Util;..\..\..\LIB_Server;..\..\..\Client\Util;..\..\..\Client\Network;..\..\Common
+Item1=$(BCB)\include;$(BCB)\include\vcl;D:\SDK\MySQL\include;..\..\..\LIB_Util;..\..\..\LIB_Server;..\..\..\Client\Util;..\..\..\Client\Network;..\..\Common
+Item2=$(BCB)\include;$(BCB)\include\vcl;..\..\..\LIB_Util;..\..\..\LIB_Server;..\..\..\Client\Util;..\..\..\Client\Network;..\..\Common
+Item3=$(BCB)\include;$(BCB)\include\vcl;..\..\..\LIB_Util;..\..\..\LIB_Server;D:\Project2003\OnlineRPG\Client\Util;D:\Project2003\OnlineRPG\Client\Network;D:\Project2003\OnlineRPG\Server\Common
+Item4=$(BCB)\include;$(BCB)\include\vcl;..\..\..\LIB_Util;..\..\..\LIB_Server
+Item5=$(BCB)\include;$(BCB)\include\vcl;D:\Project2003\OnlineRPG\LIB_Util;D:\Project2003\OnlineRPG\LIB_Server
+Item6=$(BCB)\include;$(BCB)\include\vcl
+
+[HistoryLists\hlLibraryPath]
+Count=1
+Item0=$(BCB)\lib\obj;$(BCB)\lib
+
+[HistoryLists\hlDebugSourcePath]
+Count=1
+Item0=$(BCB)\source\vcl
+
+[HistoryLists\hlConditionals]
+Count=2
+Item0=_DEBUG;__SERVER
+Item1=_DEBUG
+
+[HistoryLists\hlIntOutputDir]
+Count=1
+Item0=OBJs
+
+[HistoryLists\hlFinalOutputDir]
+Count=2
+Item0=..\..\LIB_BC\
+Item1=D:\Project2003\OnlineRPG\Server\LIB_BC
+
+[HistoryLists\hlTlibPageSize]
+Count=2
+Item0=0x0020
+Item1=0x0010
+
+[Debugging]
+DebugSourceDirs=$(BCB)\source\vcl
+
+[Parameters]
+RunParams=
+HostApplication=
+RemoteHost=
+RemotePath=
+RemoteDebug=0
+
+[Compiler]
+ShowInfoMsgs=0
+LinkDebugVcl=0
+LinkCGLIB=0
+
+[CORBA]
+AddServerUnit=1
+AddClientUnit=1
+PrecompiledHeaders=1
+  </IDEOPTIONS>
+</PROJECT>

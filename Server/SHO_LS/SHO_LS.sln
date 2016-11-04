@@ -1,0 +1,61 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SHO_LS_LIB", "SHO_LS_LIB\SHO_LS_LIB.vcproj", "{61D69ABA-670A-4F00-9F0D-90EC3992453C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SHO_LS_DLL", "SHO_LS_DLL\SHO_LS_DLL.vcproj", "{F09B4844-4191-4235-8220-EDFDF56E1FBA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{61D69ABA-670A-4F00-9F0D-90EC3992453C} = {61D69ABA-670A-4F00-9F0D-90EC3992453C}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 3
+		SccProjectName0 = \u0022$/7HeartsOnline/Server/SHO_LS\u0022,\u0020ZLCAAAAA
+		SccLocalPath0 = .
+		SccProvider0 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+		CanCheckoutShared = true
+		SolutionUniqueID = {C5FC6487-47D9-4DE7-A95A-885C649A1D8A}
+		SccProjectUniqueName1 = SHO_LS_DLL\\SHO_LS_DLL.vcproj
+		SccLocalPath1 = .
+		CanCheckoutShared = true
+		SccProjectFilePathRelativizedFromConnection1 = SHO_LS_DLL\\
+		SccProjectUniqueName2 = SHO_LS_LIB\\SHO_LS_LIB.vcproj
+		SccLocalPath2 = .
+		CanCheckoutShared = true
+		SccProjectFilePathRelativizedFromConnection2 = SHO_LS_LIB\\
+	EndGlobalSection
+	GlobalSection(SolutionConfiguration) = preSolution
+		Compaq Debug = Compaq Debug
+		Debug = Debug
+		Debug_AllInONE = Debug_AllInONE
+		Debug2 = Debug2
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{61D69ABA-670A-4F00-9F0D-90EC3992453C}.Compaq Debug.ActiveCfg = Compaq Debug|Win32
+		{61D69ABA-670A-4F00-9F0D-90EC3992453C}.Compaq Debug.Build.0 = Compaq Debug|Win32
+		{61D69ABA-670A-4F00-9F0D-90EC3992453C}.Debug.ActiveCfg = Debug|Win32
+		{61D69ABA-670A-4F00-9F0D-90EC3992453C}.Debug.Build.0 = Debug|Win32
+		{61D69ABA-670A-4F00-9F0D-90EC3992453C}.Debug_AllInONE.ActiveCfg = Debug|Win32
+		{61D69ABA-670A-4F00-9F0D-90EC3992453C}.Debug_AllInONE.Build.0 = Debug|Win32
+		{61D69ABA-670A-4F00-9F0D-90EC3992453C}.Debug2.ActiveCfg = Debug|Win32
+		{61D69ABA-670A-4F00-9F0D-90EC3992453C}.Debug2.Build.0 = Debug|Win32
+		{61D69ABA-670A-4F00-9F0D-90EC3992453C}.Release.ActiveCfg = Release|Win32
+		{61D69ABA-670A-4F00-9F0D-90EC3992453C}.Release.Build.0 = Release|Win32
+		{F09B4844-4191-4235-8220-EDFDF56E1FBA}.Compaq Debug.ActiveCfg = Compaq Debug|Win32
+		{F09B4844-4191-4235-8220-EDFDF56E1FBA}.Compaq Debug.Build.0 = Compaq Debug|Win32
+		{F09B4844-4191-4235-8220-EDFDF56E1FBA}.Debug.ActiveCfg = Debug|Win32
+		{F09B4844-4191-4235-8220-EDFDF56E1FBA}.Debug.Build.0 = Debug|Win32
+		{F09B4844-4191-4235-8220-EDFDF56E1FBA}.Debug_AllInONE.ActiveCfg = Debug|Win32
+		{F09B4844-4191-4235-8220-EDFDF56E1FBA}.Debug_AllInONE.Build.0 = Debug|Win32
+		{F09B4844-4191-4235-8220-EDFDF56E1FBA}.Debug2.ActiveCfg = Debug|Win32
+		{F09B4844-4191-4235-8220-EDFDF56E1FBA}.Debug2.Build.0 = Debug|Win32
+		{F09B4844-4191-4235-8220-EDFDF56E1FBA}.Release.ActiveCfg = Release|Win32
+		{F09B4844-4191-4235-8220-EDFDF56E1FBA}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,42 @@
+#ifndef __CLS_API_H
+#define __CLS_API_H
+//---------------------------------------------------------------------------
+
+class EXE_LS_API
+{
+public :
+	virtual void  __stdcall WriteLOG(char *szString) = 0;
+    virtual void  __stdcall SetListItem(void *pListItem, int iSubStrIDX, int iValue) = 0;
+
+	virtual void* __stdcall AddConnectorITEM (char *szIP) = 0;
+	virtual void  __stdcall DelConnectorITEM (void *pListItem) = 0;
+
+	virtual void* __stdcall AddWorldITEM (char *szWorld, char *szIP, int iPort, unsigned int dwRight) = 0;
+	virtual void  __stdcall DelWorldITEM (void *pListItem) = 0;
+
+	virtual void* __stdcall AddBlockITEM (char *szIP, DWORD dwEndTime) = 0;
+	virtual void  __stdcall DelBlockITEM (void *pListItem) = 0;
+} ;
+
+#ifdef __BORLANDC__
+    class CEXE_API : public EXE_LS_API
+    {
+    public :
+		void  __stdcall WriteLOG(char *szString);
+        void  __stdcall SetListItem(void *pListItem, int iSubStrIDX, int iValue);
+
+		void* __stdcall AddConnectorITEM (char *szIP);
+		void  __stdcall DelConnectorITEM (void *pListItem);
+
+		void* __stdcall AddWorldITEM (char *szWorld, char *szIP, int iPort, unsigned int dwRight);
+		void  __stdcall DelWorldITEM (void *pListItem);
+
+		void* __stdcall AddBlockITEM (char *szIP, DWORD dwEndTime);
+		void  __stdcall DelBlockITEM (void *pListItem);
+    } ;
+#endif
+
+//---------------------------------------------------------------------------
+#endif
+
+ 

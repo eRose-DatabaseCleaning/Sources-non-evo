@@ -1,0 +1,61 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SHO_WS_LIB", "SHO_WS_LIB\SHO_WS_LIB.vcproj", "{5A5C2054-BC81-4AE1-8B6E-DBAB708DD49C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SHO_WS_DLL", "SHO_WS_DLL\SHO_WS_DLL.vcproj", "{59368FFB-7EDD-46E7-BD58-19EC6415BB1D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5A5C2054-BC81-4AE1-8B6E-DBAB708DD49C} = {5A5C2054-BC81-4AE1-8B6E-DBAB708DD49C}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 3
+		SccProjectName0 = \u0022$/7HeartsOnline/Server/SHO_WS\u0022,\u0020GNCAAAAA
+		SccLocalPath0 = .
+		SccProvider0 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+		CanCheckoutShared = true
+		SolutionUniqueID = {1C7CD183-A613-4D0F-A5DC-919FD1EBEE37}
+		SccProjectUniqueName1 = SHO_WS_LIB\\SHO_WS_LIB.vcproj
+		SccProjectName1 = \u0022$/7HeartsOnline/Server/SHO_WS/Sho_ws_lib\u0022,\u0020DYCAAAAA
+		SccLocalPath1 = SHO_WS_LIB
+		CanCheckoutShared = true
+		SccProjectUniqueName2 = SHO_WS_DLL\\SHO_WS_DLL.vcproj
+		SccProjectName2 = \u0022$/7HeartsOnline/Server/SHO_WS/SHO_WS_DLL\u0022,\u0020HNCAAAAA
+		SccLocalPath2 = SHO_WS_DLL
+		CanCheckoutShared = true
+	EndGlobalSection
+	GlobalSection(SolutionConfiguration) = preSolution
+		Compaq Debug = Compaq Debug
+		Debug = Debug
+		Debug2 = Debug2
+		Release = Release
+		Xeon Debug = Xeon Debug
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{5A5C2054-BC81-4AE1-8B6E-DBAB708DD49C}.Compaq Debug.ActiveCfg = Compaq Debug|Win32
+		{5A5C2054-BC81-4AE1-8B6E-DBAB708DD49C}.Compaq Debug.Build.0 = Compaq Debug|Win32
+		{5A5C2054-BC81-4AE1-8B6E-DBAB708DD49C}.Debug.ActiveCfg = Debug|Win32
+		{5A5C2054-BC81-4AE1-8B6E-DBAB708DD49C}.Debug.Build.0 = Debug|Win32
+		{5A5C2054-BC81-4AE1-8B6E-DBAB708DD49C}.Debug2.ActiveCfg = Debug2|Win32
+		{5A5C2054-BC81-4AE1-8B6E-DBAB708DD49C}.Debug2.Build.0 = Debug2|Win32
+		{5A5C2054-BC81-4AE1-8B6E-DBAB708DD49C}.Release.ActiveCfg = Release|Win32
+		{5A5C2054-BC81-4AE1-8B6E-DBAB708DD49C}.Release.Build.0 = Release|Win32
+		{5A5C2054-BC81-4AE1-8B6E-DBAB708DD49C}.Xeon Debug.ActiveCfg = Debug|Win32
+		{5A5C2054-BC81-4AE1-8B6E-DBAB708DD49C}.Xeon Debug.Build.0 = Debug|Win32
+		{59368FFB-7EDD-46E7-BD58-19EC6415BB1D}.Compaq Debug.ActiveCfg = Compaq Debug|Win32
+		{59368FFB-7EDD-46E7-BD58-19EC6415BB1D}.Compaq Debug.Build.0 = Compaq Debug|Win32
+		{59368FFB-7EDD-46E7-BD58-19EC6415BB1D}.Debug.ActiveCfg = Debug|Win32
+		{59368FFB-7EDD-46E7-BD58-19EC6415BB1D}.Debug.Build.0 = Debug|Win32
+		{59368FFB-7EDD-46E7-BD58-19EC6415BB1D}.Debug2.ActiveCfg = Debug2|Win32
+		{59368FFB-7EDD-46E7-BD58-19EC6415BB1D}.Debug2.Build.0 = Debug2|Win32
+		{59368FFB-7EDD-46E7-BD58-19EC6415BB1D}.Release.ActiveCfg = Release|Win32
+		{59368FFB-7EDD-46E7-BD58-19EC6415BB1D}.Release.Build.0 = Release|Win32
+		{59368FFB-7EDD-46E7-BD58-19EC6415BB1D}.Xeon Debug.ActiveCfg = Debug|Win32
+		{59368FFB-7EDD-46E7-BD58-19EC6415BB1D}.Xeon Debug.Build.0 = Debug|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

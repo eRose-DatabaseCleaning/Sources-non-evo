@@ -1,0 +1,32 @@
+Functions called:
+ fflush (4 times)
+ free (7 times)
+ vsnprintf (2 times)
+ strcat (48 times)
+ sprintf (48 times)
+ memset (6 times)
+ delete (101 times)
+ delete[] (4 times)
+ atoi (2 times)
+ strcmp (9 times)
+ new[] (4 times)
+ new (101 times)
+ SysReallocMem (104 times)
+ SysFreeMem (4281 times)
+ SysGetMem (4281 times)
+ lstrlenA (1 times)
+ lstrcpyA (4 times)
+ calloc (1 times)
+ strlen (114 times)
+ realloc (1 times)
+ strdup (1 times)
+ malloc (4 times)
+ memcpy (89 times)
+Resource types used:
+ object array (4 allocs, 1 max)
+ object (101 allocs, 49 max)
+ memory block (4288 allocs, 1140 max)
+Modules used:
+ 00400000 03/03/2005 16:47:32
+ D:\Project2003\OnlineRPG\Server\SHO_LS\SHO_LS.exe
+==========================================

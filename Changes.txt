@@ -1,0 +1,6 @@
+Changes:
+Client:
+2nd Skill Bar: /!\ Note: Put Binary (96) on Avatar_Info column HotIcon
+Caption to Project Alpha
+Copy Exe and Dll's to folder
+Debug

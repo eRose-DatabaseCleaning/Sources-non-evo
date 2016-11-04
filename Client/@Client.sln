@@ -1,0 +1,32 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client.vcproj", "{B8EEE7A6-5383-4E01-B44A-D6303CAAF8AF}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 2
+		SccProjectName0 = \u0022$/Client\u0022,\u0020TQCAAAAA
+		SccLocalPath0 = .
+		SccProvider0 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+		CanCheckoutShared = true
+		SolutionUniqueID = {83534D29-E36B-4C9C-B083-0904D5A6679F}
+		SccProjectUniqueName1 = Client.vcproj
+		SccLocalPath1 = .
+		CanCheckoutShared = true
+	EndGlobalSection
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{B8EEE7A6-5383-4E01-B44A-D6303CAAF8AF}.Debug.ActiveCfg = Debug|Win32
+		{B8EEE7A6-5383-4E01-B44A-D6303CAAF8AF}.Debug.Build.0 = Debug|Win32
+		{B8EEE7A6-5383-4E01-B44A-D6303CAAF8AF}.Release.ActiveCfg = Release|Win32
+		{B8EEE7A6-5383-4E01-B44A-D6303CAAF8AF}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

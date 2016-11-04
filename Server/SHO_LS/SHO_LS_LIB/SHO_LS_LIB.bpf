@@ -1,0 +1,14 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+USEUNIT("SHO_LS_LIB.CPP");
+USEUNIT("CLS_Client.cpp");
+USEUNIT("CLS_Server.cpp");
+USEUNIT("CLS_SQLThread.cpp");
+USEUNIT("CLS_Account.cpp");
+//---------------------------------------------------------------------------
+#define Library
+
+// To add a file to the library use the Project menu 'Add to Project'.
+

@@ -1,0 +1,106 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "LIB_Server"=..\..\LIB_Server\LIB_Server.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/SevenHearts/LIB_Server", KKAAAAAA
+    ..\..\lib_server
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "LIB_UTIL"=..\..\LIB_Util\LIB_Util.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/SevenHearts/LIB_Util", KLAAAAAA
+    ..\..\lib_util
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "SHO_WS_DLL"=.\SHO_WS_DLL\SHO_WS_DLL.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/SevenHearts/Server/SHO_WS_DLL", AOAAAAAA
+    .\sho_ws_dll
+    end source code control
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name SHO_WS_LIB
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "SHO_WS_LIB"=.\SHO_WS_LIB\SHO_WS_LIB.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/SevenHearts/Server/SHO_WS_LIB", HOAAAAAA
+    .\sho_ws_lib
+    end source code control
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name LIB_Server
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "SHO_WS_MFC"=.\SHO_WS_MFC\SHO_WS_MFC.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/SevenHearts/Server/SHO_WS_MFC", JOAAAAAA
+    .\sho_ws_mfc
+    end source code control
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name SHO_WS_LIB
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

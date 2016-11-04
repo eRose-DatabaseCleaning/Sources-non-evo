@@ -1,0 +1,74 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "SHO_LS_DLL"=.\SHO_LS_DLL\SHO_LS_DLL.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/7HeartsOnline/Server/SHO_LS/SHO_LS_DLL", ANCAAAAA
+    .\sho_ls_dll
+    end source code control
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name SHO_LS_LIB
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "SHO_LS_LIB"=.\SHO_LS_LIB\SHO_LS_LIB.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/7HeartsOnline/Server/SHO_LS/SHO_LS_LIB", CNCAAAAA
+    .\sho_ls_lib
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "SHO_LS_MFC"=.\SHO_LS_MFC\SHO_LS_MFC.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/7HeartsOnline/Server/SHO_LS/SHO_LS_MFC", ENCAAAAA
+    .\sho_ls_mfc
+    end source code control
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name SHO_LS_DLL
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name SHO_LS_LIB
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

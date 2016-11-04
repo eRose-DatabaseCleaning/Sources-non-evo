@@ -1,0 +1,43 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LIB_Server", "LIB_Server.vcproj", "{07F4D39F-4AAF-4848-BEC1-F0FB9A7A69B3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B4DDE42E-8878-441E-87AE-62B2F0E5A9CF} = {B4DDE42E-8878-441E-87AE-62B2F0E5A9CF}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LIB_UTIL", "..\LIB_Util\LIB_Util.vcproj", "{B4DDE42E-8878-441E-87AE-62B2F0E5A9CF}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 2
+		SccProjectUniqueName0 = LIB_Server.vcproj
+		SccProjectName0 = \u0022$/7HeartsOnline/LIB_Server\u0022,\u0020OLCAAAAA
+		SccLocalPath0 = .
+		SccProvider0 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+		CanCheckoutShared = true
+		SccProjectUniqueName1 = ..\\LIB_Util\\LIB_Util.vcproj
+		SccProjectName1 = \u0022$/7HeartsOnline/LIB_Util\u0022,\u0020YQCAAAAA
+		SccLocalPath1 = ..\\LIB_Util
+		SccProvider1 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+		CanCheckoutShared = true
+	EndGlobalSection
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{07F4D39F-4AAF-4848-BEC1-F0FB9A7A69B3}.Debug.ActiveCfg = Debug|Win32
+		{07F4D39F-4AAF-4848-BEC1-F0FB9A7A69B3}.Debug.Build.0 = Debug|Win32
+		{07F4D39F-4AAF-4848-BEC1-F0FB9A7A69B3}.Release.ActiveCfg = Release|Win32
+		{07F4D39F-4AAF-4848-BEC1-F0FB9A7A69B3}.Release.Build.0 = Release|Win32
+		{B4DDE42E-8878-441E-87AE-62B2F0E5A9CF}.Debug.ActiveCfg = Debug|Win32
+		{B4DDE42E-8878-441E-87AE-62B2F0E5A9CF}.Debug.Build.0 = Debug|Win32
+		{B4DDE42E-8878-441E-87AE-62B2F0E5A9CF}.Release.ActiveCfg = Release|Win32
+		{B4DDE42E-8878-441E-87AE-62B2F0E5A9CF}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
