@@ -217,4 +217,5 @@ FakesAssemblies/
 *objs/
 
 #Rose
-*.inc
+Client/**/*.inc
+engine/**/*.inc
