@@ -47,11 +47,9 @@ int	CGameStateMoveMain::Update( bool bLostFocus )
 	// processing  ...
 	if ( !bLostFocus ) 
 	{
-		//Numenor: Constant rendering. Ideally we would like to add an option for this. But for the moment, let's just comment it :)
-		//NB: bLostFocus is when we close the game while beginScene is really if the window is running or not.
 
-		//if ( ::beginScene() ) // 성공한 경우에만 렌더링
-		//{
+		if ( ::beginScene() ) // 성공한 경우에만 렌더링
+		{
 			::clearScreen();
 			::renderScene();
 
@@ -68,7 +66,7 @@ int	CGameStateMoveMain::Update( bool bLostFocus )
 
 			::endScene ();
 			::swapBuffers();
-		//}
+		}
 	}
 
 	if( getAnimatableState( g_pCamera->GetZHANDLE() ) == 0 )

@@ -162,10 +162,8 @@ int	CGameStateMain::Update( bool bLostFocus )
 		CTargetManager::GetSingleton().Proc();
 		CSkillCommandDelay::GetSingleton().Proc();   */
 
-		//Numenor: Constant rendering. Ideally we would like to add an option for this. But for the moment, let's just comment it :)
-		//NB: bLostFocus is when we close the game while beginScene is really if the window is running or not.
-		//if ( ::beginScene() ) // 성공한 경우에만 렌더링
-		//{
+		if ( ::beginScene() ) // 성공한 경우에만 렌더링
+		{
 			::clearScreen();
 			::renderScene();
 
@@ -178,7 +176,7 @@ int	CGameStateMain::Update( bool bLostFocus )
 
 			::endScene ();
 			::swapBuffers();
-		//}
+		}
 	}else
 	{
 		Sleep( 30 ); // This is the time the game waits between two check if he should render something?

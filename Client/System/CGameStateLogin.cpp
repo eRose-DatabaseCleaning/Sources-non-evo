@@ -52,14 +52,12 @@ int	CGameStateLogin::Update( bool bLostFocus )
 	// processing  ...
 	if ( !bLostFocus ) 
 	{
-				//Numenor: Constant rendering. Ideally we would like to add an option for this. But for the moment, let's just comment it :)
-		//NB: bLostFocus is when we close the game while beginScene is really if the window is running or not.
-		/*
+		
 		if ( !::beginScene() ) //  If the device is lost, the status returns 0, so skip all the rendering
 		{
 			return 0;
 		}
-		*/
+		
 
 		::clearScreen();
 		::renderScene();
