@@ -184,10 +184,12 @@ void CGameStateReLogin::Draw()
 {
 	if( g_pCApp->IsActive() )
 	{
-		if ( !::beginScene() ) //  디바이스가 손실된 상태라면 0을 리턴하므로, 모든 렌더링 스킵
+		
+		if ( !::beginScene() ) //  If the device is lost, the status returns 0, so skip all the rendering
 		{
 			return;
 		}
+		
 
 		::clearScreen();
 

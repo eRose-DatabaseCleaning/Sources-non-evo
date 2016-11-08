@@ -1291,7 +1291,7 @@ Direct3D9: (ERROR) :RenderTargets are not lockable unless application specifies 
 void CGame::ScreenCAPTURE ()
 {
 	//홍근 : 스샷에 서버이름 날짜 그리기.
-	if ( ::beginScene() )
+	if ( ::beginScene() ) 
 	{
 		::beginSprite( D3DXSPRITE_ALPHABLEND );	
 		// Text 넣는곳

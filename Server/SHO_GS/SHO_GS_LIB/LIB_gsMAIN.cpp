@@ -197,6 +197,9 @@ bool IsJAPAN ()
 }
 bool IsTAIWAN ()
 {
+//Numenor: We don't work with Taiwan, let's comment this and return true.
+return false;
+/*
 #ifdef false
 #ifdef	__PHILIPPINES
 	return true;
@@ -214,6 +217,7 @@ bool IsTAIWAN ()
 #else
 	return true;
 #endif
+	*/
 }
 bool IsIROSE ()
 {

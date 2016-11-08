@@ -162,7 +162,6 @@ int	CGameStateMain::Update( bool bLostFocus )
 		CTargetManager::GetSingleton().Proc();
 		CSkillCommandDelay::GetSingleton().Proc();   */
 
-
 		if ( ::beginScene() ) // 성공한 경우에만 렌더링
 		{
 			::clearScreen();
@@ -180,7 +179,7 @@ int	CGameStateMain::Update( bool bLostFocus )
 		}
 	}else
 	{
-		Sleep( 30 );
+		Sleep( 30 ); // This is the time the game waits between two check if he should render something?
 	}
 
 	g_pObjMGR->ClearViewObjectList();

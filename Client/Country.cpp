@@ -85,7 +85,11 @@ DWORD CCountry::GetCountryCode()
 }
 bool CCountry::IsTAIWAN()
 { 
+	//Numenor: We want to avoid Taiwan, let's put it to false for the moment.
+	/*
 	return m_bIsThatCountry[ COUNTRY_CHA_TW ]; 
+	*/
+	return false;
 }
 bool CCountry::IsROSE() 
 { 
@@ -127,7 +131,11 @@ bool CCountry::IsCountry( int country )
 //--------------------------------------------------------------------------------------
 bool IsTAIWAN()
 {	
+	//Numenor: We don't want to work with Taiwan!
+	/*
 	return true;//( CCountry::GetSingleton().IsTAIWAN() || CCountry::GetSingleton().IsPhilipplines() || CCountry::GetSingleton().IsUSA() );
+	*/
+	return false;
 }
 
 

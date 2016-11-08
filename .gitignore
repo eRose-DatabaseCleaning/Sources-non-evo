@@ -215,3 +215,15 @@ FakesAssemblies/
 /bin/
 /lib/
 *objs/
+
+#Rose
+Client/Event/Quest_FUNC_DEF.inc
+Client/Event/Quest_FUNC_REG.inc
+Client/Game_FUNC_DEF.inc
+Client/Game_FUNC_REG.inc
+Client/System/System_FUNC_DEF.inc
+Client/System/System_FUNC_REG.inc
+engine/include/zz_build_count
+engine/include/zz_script_lua.inc
+engine/include/zz_version_info.inc
+Client/Util/Util_r.lib

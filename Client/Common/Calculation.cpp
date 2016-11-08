@@ -181,11 +181,15 @@ bool CCal::Get_DropITEM (int iLevelDiff, CObjMOB *pMobCHAR, tagITEM &sITEM, int 
 {
 	int iDrop_VAR;
 
+	//Numenor: We always want drops. And always the best ones. So we force iLevelDiff to 0
+	/*
 	if ( iLevelDiff < 0 )
 		iLevelDiff = 0;
 	else
 	if ( iLevelDiff >= 10 )
 		return false;
+	*/
+	iLevelDiff = 0;
 
 	if( IsTAIWAN () ) {
 		// ´ë¸¸ 6-14 kchs

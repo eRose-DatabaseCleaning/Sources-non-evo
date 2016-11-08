@@ -206,7 +206,11 @@ bool IsTAIWAN ()
 			return true;
 	} 
 	//*/
+	//Numenor: We don't want  Taiwan switch!
+	/*
 	return true;
+	*/
+	return false;
 }
 
 

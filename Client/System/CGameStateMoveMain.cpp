@@ -47,6 +47,7 @@ int	CGameStateMoveMain::Update( bool bLostFocus )
 	// processing  ...
 	if ( !bLostFocus ) 
 	{
+
 		if ( ::beginScene() ) // 성공한 경우에만 렌더링
 		{
 			::clearScreen();

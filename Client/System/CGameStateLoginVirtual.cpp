@@ -34,6 +34,7 @@ int CGameStateLoginVirtual::Update(	bool bLostFocus )
 	// processing  ...
 	if ( !bLostFocus ) 
 	{
+		
 		if ( ::beginScene() ) //  디바이스가 손실된 상태라면 0을 리턴하므로, 모든 렌더링 스킵
 		{
 			::clearScreen();

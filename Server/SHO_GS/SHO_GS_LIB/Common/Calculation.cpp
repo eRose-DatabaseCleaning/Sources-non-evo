@@ -181,11 +181,15 @@ bool CCal::Get_DropITEM (int iLevelDiff, CObjMOB *pMobCHAR, tagITEM &sITEM, int 
 {
 	int iDrop_VAR;
 
+	//Numenor: We want drops at all levels, and always the best drops. This has to be done in the CLIENT but ALSO in CLIENT_COMMON !!
+	/*
 	if ( iLevelDiff < 0 )
 		iLevelDiff = 0;
 	else
 	if ( iLevelDiff >= 10 )
 		return false;
+	*/
+	iLevelDiff = 0;
 
 	if( IsTAIWAN () ) {
 		// ´ë¸¸ 6-14 kchs
