@@ -18,13 +18,13 @@
 #include "../Country.h"
 
 
-//Item base command¿¡¼­ ÇÊ¿äÇÑ ±Û·Î¹ú ÇÔ¼öµé
+//Item base commandì—ì„œ í•„ìš”í•œ ê¸€ë¡œë²Œ í•¨ìˆ˜ë“¤
 bool IsUnequip( tagBaseITEM* item, int* curr_abilities, const int ability_count )
 {
 	assert( item );
 	assert( curr_abilities );
 
-	if(	item->GetLife() < 1 )/// ¼ö¸íÀÌ ´ÙÇÑ ¾ÆÀÌÅÛÀº ¹«½Ã
+	if(	item->GetLife() < 1 )/// ìˆ˜ëª…ì´ ë‹¤í•œ ì•„ì´í…œì€ ë¬´ì‹œ
 		return false;
 
 	int iAddType = 0;
@@ -45,12 +45,12 @@ void SubAbilities( tagBaseITEM* item, int* curr_abilities, const int ability_cou
 	assert( item );
 	assert( curr_abilities );
 
-	if ( item->GetItemNO() < 1 || item->GetLife() < 1 )		/// ¾ÆÀÌÅÛÀÌ ¾ø°Å³ª ¼ö¸íÀÌ ´ÙÇÑ°ÍÀº Åë°ú~
+	if ( item->GetItemNO() < 1 || item->GetLife() < 1 )		/// ì•„ì´í…œì´ ì—†ê±°ë‚˜ ìˆ˜ëª…ì´ ë‹¤í•œê²ƒì€ í†µê³¼~
 		return;
 
 	short nI, nC, nType, nValue;
 
-	// ¿É¼Ç/¹ÚÈù º¸¼®¿¡ ´ëÇØ¼­...
+	// ì˜µì…˜/ë°•íŒ ë³´ì„ì— ëŒ€í•´ì„œ...
 	if ( item->GetGemNO() && ( item->IsAppraisal() || item->HasSocket() ) ) 
 	{
 		for (nI=0; nI<2; nI++)
@@ -82,12 +82,12 @@ void AddAbilities( tagBaseITEM* item, int* curr_abilities, const int ability_cou
 	assert( item );
 	assert( curr_abilities );
 
-	if ( item->GetItemNO() < 1 || item->GetLife() < 1 )		/// ¾ÆÀÌÅÛÀÌ ¾ø°Å³ª ¼ö¸íÀÌ ´ÙÇÑ°ÍÀº Åë°ú~
+	if ( item->GetItemNO() < 1 || item->GetLife() < 1 )		/// ì•„ì´í…œì´ ì—†ê±°ë‚˜ ìˆ˜ëª…ì´ ë‹¤í•œê²ƒì€ í†µê³¼~
 		return;
 
 	short nI, nC, nType, nValue;
 
-	// ¿É¼Ç/¹ÚÈù º¸¼®¿¡ ´ëÇØ¼­...
+	// ì˜µì…˜/ë°•íŒ ë³´ì„ì— ëŒ€í•´ì„œ...
 	if ( item->GetGemNO() && ( item->IsAppraisal() || item->HasSocket() ) ) 
 	{
 		for (nI=0; nI<2; nI++)
@@ -117,7 +117,7 @@ void AddAbilities( tagBaseITEM* item, int* curr_abilities, const int ability_cou
 
 bool CTCmdItemEquipInInventory::Exec( CTObject* pObj )
 {
-	if( g_pAVATAR->GetPetMode() >= 0 )///µå¶óÀÌºê ½ºÅ³ »ç¿ëÁßÀÌ¶ó¸é
+	if( g_pAVATAR->GetPetMode() >= 0 )///ë“œë¼ì´ë¸Œ ìŠ¤í‚¬ ì‚¬ìš©ì¤‘ì´ë¼ë©´
 	{
 		g_itMGR.AppendChatMsg(STR_CANT_EQUIP_USING_DRIVESKILL, IT_MGR::CHAT_TYPE_SYSTEM );
 		return true;
@@ -170,13 +170,13 @@ bool CTCmdItemEquipInInventory::Exec( CTObject* pObj )
 			{
 				switch( ITEM_TYPE(ITEM_TYPE_JEWEL, Item.GetItemNO() ))
 				{
-				case 171:///¹İÁö
+				case 171:///ë°˜ì§€
 					nEquipIDX = EQUIP_IDX_RING;
 					break;
-				case 172:///¸ñ°ÉÀÌ
+				case 172:///ëª©ê±¸ì´
 					nEquipIDX = EQUIP_IDX_NECKLACE;
 					break;
-				case 173:///±Í°ÉÀÌ
+				case 173:///ê·€ê±¸ì´
 					nEquipIDX = EQUIP_IDX_EARRING;
 					break;
 				default:
@@ -186,12 +186,12 @@ bool CTCmdItemEquipInInventory::Exec( CTObject* pObj )
 			}
 			break;
 
-		/// Àåºñ ¾ÆÀÌÅÛÀÌ ¾Æ´Ï´Ù.
+		/// ì¥ë¹„ ì•„ì´í…œì´ ì•„ë‹ˆë‹¤.
 		default:
 			return true;		
 	}
 
-	///ÀåÂø Á¦ÇÑ Ã¼Å© 
+	///ì¥ì°© ì œí•œ ì²´í¬ 
 	if( g_pAVATAR->Check_EquipCondition ( Item ) )
 	{
 		CInventory* pInven = g_pAVATAR->GetInventory();
@@ -213,9 +213,9 @@ bool CTCmdItemEquipInInventory::Exec( CTObject* pObj )
 			tagITEM& Item = pItem->GetItem();
 			if( !Item.IsEmpty() )
 			{
-				int			curr_abilities[ AT_MAX ];			///ÇöÀç ¾Æ¹ÙÅ¸ÀÇ ´É·ÂÄ¡ ÀÓ½Ã ÀúÀå º¯¼ö
-				tagITEM		equiped_items[ MAX_EQUIP_IDX ];		///ÇöÀç ¾Æ¹ÙÅ¸ÀÇ ÀåÂøÀåºñ ÀÓÁö ÀúÀå º¯¼ö
-				std::list< int > removeitem_indexlist;			///¼­¹ö¿¡ ÀåÂøÇØÁ¦ ¿äÃ»ÇÒ ÀåÂøÀåºñµéÀÇ ÀÎº¥Åä¸® ÀÎµ¦½º ¸®½ºÆ®
+				int			curr_abilities[ AT_MAX ];			///í˜„ì¬ ì•„ë°”íƒ€ì˜ ëŠ¥ë ¥ì¹˜ ì„ì‹œ ì €ì¥ ë³€ìˆ˜
+				tagITEM		equiped_items[ MAX_EQUIP_IDX ];		///í˜„ì¬ ì•„ë°”íƒ€ì˜ ì¥ì°©ì¥ë¹„ ì„ì§€ ì €ì¥ ë³€ìˆ˜
+				std::list< int > removeitem_indexlist;			///ì„œë²„ì— ì¥ì°©í•´ì œ ìš”ì²­í•  ì¥ì°©ì¥ë¹„ë“¤ì˜ ì¸ë²¤í† ë¦¬ ì¸ë±ìŠ¤ ë¦¬ìŠ¤íŠ¸
 
 				
 				for( int index = 0; index < AT_MAX; ++index )
@@ -268,7 +268,7 @@ bool CTCmdItemEquipInInventory::Exec( CTObject* pObj )
 
 	return true;
 }
-
+//LZO: Why do this send false or true... need to investigate, it seems illogical
 bool CTCmdItemUseInInventory::Exec( CTObject* pObj )
 {
 	if( pObj == NULL )
@@ -291,11 +291,11 @@ bool CTCmdItemUseInInventory::Exec( CTObject* pObj )
 
 
 	DWORD dwNowTime = timeGetTime();
-	///ÀÏÁ¤½Ã°£µ¿¾È »ç¿ë ±İÁö
+	///ì¼ì •ì‹œê°„ë™ì•ˆ ì‚¬ìš© ê¸ˆì§€
 //	m_LastUseTime = dwNowTime;
 
 	int iType = USEITEM_NEED_DATA_TYPE( Item.GetItemNO() );
-	if( iType == AT_CURRENT_PLANET )///Çà¼º Á¶°ÇÀÏ°æ¿ì
+	if( iType == AT_CURRENT_PLANET )///í–‰ì„± ì¡°ê±´ì¼ê²½ìš°
 	{
 		int iPlanetNo = USEITEM_NEED_DATA_VALUE(  Item.GetItemNO() );
 		if( iPlanetNo != ZONE_PLANET_NO( g_pTerrain->GetZoneNO() ) )
@@ -308,41 +308,41 @@ bool CTCmdItemUseInInventory::Exec( CTObject* pObj )
 
 	switch( ITEM_TYPE( Item.GetTYPE(), Item.GetItemNO()  ) )
 	{
-	///¼ö¸®¿ë ¾ÆÀÌÅÛ
-	case USE_ITEM_REPAIR_ITEM:
+	///ìˆ˜ë¦¬ìš© ì•„ì´í…œ //LZO: type 315 - Repair tool
+	case USE_ITEM_REPAIR_ITEM: 
 		CGame::GetInstance().BeginRepair( CGame::REPAIR_ITEM );
 		CGame::GetInstance().SetUsingRepairItemInvenIdx( pItem->GetIndex() );
 		return true;
 		break;
-	/// ¸¶¹ıÃ¥
-	case USE_ITEM_SKILL_LEARN:
+	/// ë§ˆë²•ì±… //LZO: type 314 - Book of Skill
+	case USE_ITEM_SKILL_LEARN:  
 		{
-			/// 2004 / 2 / 11 : nAvy - »ç¿ë¾ÆÀÌÅÛÀÌ¶ó´Â Á¶°Ç¾Æ·¡
+			/// 2004 / 2 / 11 : nAvy - ì‚¬ìš©ì•„ì´í…œì´ë¼ëŠ” ì¡°ê±´ì•„ë˜
 			BYTE btT = g_pAVATAR->Skill_LearnCondition( USEITEM_SCROLL_LEARN_SKILL( Item.GetItemNO()) );						
 
 			if( btT != RESULT_SKILL_LEARN_SUCCESS )
 			{
 				switch( btT )
 				{
-				case RESULT_SKILL_LEARN_FAILED :		// ¹è¿ì±â ½ÇÆĞ.	
+				case RESULT_SKILL_LEARN_FAILED :		// ë°°ìš°ê¸° ì‹¤íŒ¨.	
 					g_itMGR.AppendChatMsg( STR_LEARN_SKILL_FAILED, IT_MGR::CHAT_TYPE_SYSTEM );
 					break;
-				case RESULT_SKILL_LEARN_NEED_JOB : 		// Á÷¾÷ÀÌ ÀÏÄ¡ÇÏÁö ¾Ê´Â´Ù.		
+				case RESULT_SKILL_LEARN_NEED_JOB : 		// ì§ì—…ì´ ì¼ì¹˜í•˜ì§€ ì•ŠëŠ”ë‹¤.		
 					g_itMGR.AppendChatMsg( STR_LEARN_SKILL_JOB_FAILED, IT_MGR::CHAT_TYPE_SYSTEM );
 					break;
-				case RESULT_SKILL_LEARN_NEED_SKILL :	// º¸À¯ÇÒ ½ºÅ³ÀÌ ÇÊ¿äÇÑ´Ù.		
+				case RESULT_SKILL_LEARN_NEED_SKILL :	// ë³´ìœ í•  ìŠ¤í‚¬ì´ í•„ìš”í•œë‹¤.		
 					g_itMGR.AppendChatMsg( STR_LEARN_SKILL_NEED_PRESKILL_FAILED, IT_MGR::CHAT_TYPE_SYSTEM );
 					break;
-				case RESULT_SKILL_LEARN_NEED_ABILITY :	// ´É·ÂÄ¡°¡ ºÎÁ·ÇÏ´Ù		
+				case RESULT_SKILL_LEARN_NEED_ABILITY :	// ëŠ¥ë ¥ì¹˜ê°€ ë¶€ì¡±í•˜ë‹¤		
 					g_itMGR.AppendChatMsg( STR_LEARN_SKILL_NEED_ABILITY_FAILED, IT_MGR::CHAT_TYPE_SYSTEM );
 					break;
-				case RESULT_SKILL_LEARN_OUTOFSLOT :		// ´õÀÌ»ó ½ºÅ³À» ¹è¿ï¼ö ¾ø´Ù.		
+				case RESULT_SKILL_LEARN_OUTOFSLOT :		// ë”ì´ìƒ ìŠ¤í‚¬ì„ ë°°ìš¸ìˆ˜ ì—†ë‹¤.		
 					g_itMGR.AppendChatMsg( STR_LEARN_SKILL_SLOT_FULL_FAILED, IT_MGR::CHAT_TYPE_SYSTEM );
 					break;
-				case RESULT_SKILL_LEARN_INVALID_SKILL :	// Àß¸øµÈ ½ºÅ³¹øÈ£ ÀÔ´Ï´Ù.		
+				case RESULT_SKILL_LEARN_INVALID_SKILL :	// ì˜ëª»ëœ ìŠ¤í‚¬ë²ˆí˜¸ ì…ë‹ˆë‹¤.		
 					g_itMGR.AppendChatMsg( STR_LEARN_SKILL_INVALID_SKILL_FAILED, IT_MGR::CHAT_TYPE_SYSTEM );
 					break;
-				case RESULT_SKILL_LEARN_OUTOFPOINT ://	0x07   // ½ºÅ³ Æ÷ÀÎÆ® ºÎÁ·
+				case RESULT_SKILL_LEARN_OUTOFPOINT ://	0x07   // ìŠ¤í‚¬ í¬ì¸íŠ¸ ë¶€ì¡±
 					g_itMGR.AppendChatMsg( STR_NOT_ENOUGH_SKILLPOINT, IT_MGR::CHAT_TYPE_SYSTEM );
 					break;
 				default:
@@ -352,19 +352,19 @@ bool CTCmdItemUseInInventory::Exec( CTObject* pObj )
 			}
 			break;
 		}
-	/// ½ºÅ©·Ñ ¸¶¹ı
+	/// ìŠ¤í¬ë¡¤ ë§ˆë²• //LZO: type 313 - Magick Item
 	case USE_ITEM_SKILL_DOING:
 		{	
 			if( g_pAVATAR->GetPetMode() > 0 )
 			{
 				g_itMGR.AppendChatMsg( STR_CANT_USESKILL_USING_DRIVESKILL,  IT_MGR::CHAT_TYPE_SYSTEM);
-				return false;
+				return false; 
 			}
 
 			int iSkillIDX		= USEITEM_SCROLL_USE_SKILL( Item.GetItemNO() );
 			int iCurrentTarget	= g_UserInputSystem.GetCurrentTarget();				
 	
-			if( SKILL_TYPE( iSkillIDX ) == SKILL_TYPE_18 )///warp¿ë scrollÀÏ°æ¿ì
+			if( SKILL_TYPE( iSkillIDX ) == SKILL_TYPE_18 )///warpìš© scrollì¼ê²½ìš°
 			{
 				if( SKILL_WARP_PLANET_NO( iSkillIDX ) != ZONE_PLANET_NO( g_pTerrain->GetZoneNO() ) )
 				{
@@ -372,7 +372,7 @@ bool CTCmdItemUseInInventory::Exec( CTObject* pObj )
 					return true;
 				}
 
-				///<-MP Ã¼Å© 
+				///<-MP ì²´í¬ 
 				int	iRequireMp = (int)(g_pAVATAR->GetCur_WEIGHT() * 0.05);
 				if( g_pAVATAR->Get_AbilityValue( AT_MP ) < iRequireMp )
 				{
@@ -382,11 +382,11 @@ bool CTCmdItemUseInInventory::Exec( CTObject* pObj )
 			}
 
 			//----------------------------------------------------------------------------------------------
-			/// Emotion skill ÀÏ°æ¿ì
-			/// ÇØ¾ÖÇÒ ¸ğ¼ÇÀ¸·Î º¯°æÇØ¼­ ¼­¹ö¿¡ ¿äÃ»ÇÑ´Ù.
+			/// Emotion skill ì¼ê²½ìš°
+			/// í•´ì• í•  ëª¨ì…˜ìœ¼ë¡œ ë³€ê²½í•´ì„œ ì„œë²„ì— ìš”ì²­í•œë‹¤.
 			if( SKILL_TYPE( iSkillIDX ) == SKILL_TYPE_16 )
 			{
-				/// ±âº»¸í·ÉµéÀº Á¤Áö»óÅÂ¿¡¼­¸¸ µ¿ÀÛÇÑ´Ù.
+				/// ê¸°ë³¸ëª…ë ¹ë“¤ì€ ì •ì§€ìƒíƒœì—ì„œë§Œ ë™ì‘í•œë‹¤.
 				if( g_pAVATAR->Get_STATE() != CS_STOP && g_pAVATAR->Get_STATE() != CS_SIT )
 				{
 					g_itMGR.AppendChatMsg( STR_ACTION_COMMAND_STOP_STATE_FAILED, IT_MGR::CHAT_TYPE_SYSTEM);
@@ -408,13 +408,13 @@ bool CTCmdItemUseInInventory::Exec( CTObject* pObj )
 				return true;
 			}
 
-			/// ½ºÅ©·Ñ·Î »ç¿ëÇÏ´Â ½ºÅ³Àº »çÁ¤°Å¸® Ã¼Å©
+			/// ìŠ¤í¬ë¡¤ë¡œ ì‚¬ìš©í•˜ëŠ” ìŠ¤í‚¬ì€ ì‚¬ì •ê±°ë¦¬ ì²´í¬
 			int iTargetDistance = SKILL_DISTANCE( iSkillIDX );
 			CObjCHAR* pTarget = g_pObjMGR->Get_CharOBJ( iCurrentTarget, true );
 
 			if( SKILL_TYPE( iSkillIDX ) != SKILL_TYPE_18 )
 			{
-				/// iTargetDistance ÀÌ 0 ÀÌ¸é Ã¼Å©ÇÏÁö ¾Ê´Â´Ù.
+				/// iTargetDistance ì´ 0 ì´ë©´ ì²´í¬í•˜ì§€ ì•ŠëŠ”ë‹¤.
 				if( iTargetDistance && pTarget && !g_pAVATAR->IsInRANGE( pTarget, iTargetDistance ) )
 				{
 					g_itMGR.AppendChatMsg( STR_NOT_ENOUGH_CONDITION, IT_MGR::CHAT_TYPE_SYSTEM );
@@ -424,7 +424,7 @@ bool CTCmdItemUseInInventory::Exec( CTObject* pObj )
 
 		}
 		break;			
-
+	//LZO: type 321 - Time Coupon (to confirm...)
 	case USE_ITEM_EVENT_ITEM:
 		{
 			g_pEventLIST->Run_EVENT( g_pAVATAR->Get_INDEX(), USEITEM_CONFILE_IDX( Item.GetItemNO() ), -1, true );
@@ -433,34 +433,34 @@ bool CTCmdItemUseInInventory::Exec( CTObject* pObj )
 	}
 
 	//----------------------------------------------------------------------------------------------------
-	/// Use Item Delay Àû¿ë ¹×
-	/// Use Item Delay ¼³Á¤
+	/// Use Item Delay ì ìš© ë°
+	/// Use Item Delay ì„¤ì •
 	//----------------------------------------------------------------------------------------------------
 	
-	// Çã¿ëµÈ ±¹°¡¸¸ÀÌ New Delay typeÀ» Àû¿ë ÇÒ¼ö ÀÖÀ½. 
-	// ÇöÀç ¾ÆÀÌÅÛÀÇ µô·¹ÀÌ Å¸ÀÔÀ» °¡Á®¿Â´Ù. 
+	// í—ˆìš©ëœ êµ­ê°€ë§Œì´ New Delay typeì„ ì ìš© í• ìˆ˜ ìˆìŒ. 
+	// í˜„ì¬ ì•„ì´í…œì˜ ë”œë ˆì´ íƒ€ì…ì„ ê°€ì ¸ì˜¨ë‹¤. 
 	if(CCountry::GetSingleton().IsUseItemDelayNewVersion())
 	{
 		short iItem = Item.GetItemNO();
        int iDelayType	 = USEITME_DELAYTIME_TYPE( iItem );
 		float iDelayTick  = (float)(USEITME_DELAYTIME_TICK(iItem)) * 1000;
 
-		//0 ÀÌ ¾Æ´Ï¸é µô·¹ÀÌ¸¦ ¼³Á¤ÇÑ´Ù. 
+		//0 ì´ ì•„ë‹ˆë©´ ë”œë ˆì´ë¥¼ ì„¤ì •í•œë‹¤. 
 		if( iDelayType )
 		{
-			//µô·¹ÀÌ Å¸ÀÔÀ» ³Ö¾î¼­ °°Àº Å¸ÀÔÀÌ µô·¹ÀÌ ÁßÀÌ¶ó¸é »ç¿ëÇÒ¼ö ¾ø´Ù´Â 
-			//¸Ş¼¼Áö¸¦ Ã¤ÆÃÃ¢¿¡ Ãâ·ÂÇÑ´Ù. 
+			//ë”œë ˆì´ íƒ€ì…ì„ ë„£ì–´ì„œ ê°™ì€ íƒ€ì…ì´ ë”œë ˆì´ ì¤‘ì´ë¼ë©´ ì‚¬ìš©í• ìˆ˜ ì—†ë‹¤ëŠ” 
+			//ë©”ì„¸ì§€ë¥¼ ì±„íŒ…ì°½ì— ì¶œë ¥í•œë‹¤. 
 			if( g_UseItemDelay.GetUseItemDelay( iDelayType ) > 0.0f)
 			{
-				///Use item delay °¡ ¼³Á¤µÇ¾î ÀÖ´Ù¸é ÆĞ½º..
+				///Use item delay ê°€ ì„¤ì •ë˜ì–´ ìˆë‹¤ë©´ íŒ¨ìŠ¤..
 				g_itMGR.AppendChatMsg( STR_CANT_DOUBLE_USE, IT_MGR::CHAT_TYPE_SYSTEM );
 				return false;
 			}
 		}
-		//°ø¹éÀÏ¶§ ´Üµ¶À¸·Î Ã³¸®ÇÑ´Ù. 
+		//ê³µë°±ì¼ë•Œ ë‹¨ë…ìœ¼ë¡œ ì²˜ë¦¬í•œë‹¤. 
 		else
 		{
-			//ÀÚ±â ÀÚ½ÅÀÌ µô·¹ÀÌ Áß 
+			//ìê¸° ìì‹ ì´ ë”œë ˆì´ ì¤‘ 
 			if(g_SoloUseItemDelayTick.GetUseItemDelay( iItem ) > 0.0f)
 			{
 				g_itMGR.AppendChatMsg( STR_CANT_DOUBLE_USE, IT_MGR::CHAT_TYPE_SYSTEM );
@@ -470,7 +470,7 @@ bool CTCmdItemUseInInventory::Exec( CTObject* pObj )
 	}
 	else
 	{
-		// »óÅÂ ¹øÈ£°¡ ¼³Á¤µÇ¾î ÀÖ´Ù¸é..
+		//LZO: If the state number is set
 		if( USEITME_STATUS_STB( Item.GetItemNO() ) )
 		{
 			switch( USEITME_STATUS_STB( Item.GetItemNO() ) )
@@ -480,7 +480,7 @@ bool CTCmdItemUseInInventory::Exec( CTObject* pObj )
 			case 3:
 				if( g_UseItemDelay.GetUseItemDelay( USE_ITEM_HP ) )
 				{
-					///Use item delay °¡ ¼³Á¤µÇ¾î ÀÖ´Ù¸é ÆĞ½º..
+					///Use item delay ê°€ ì„¤ì •ë˜ì–´ ìˆë‹¤ë©´ íŒ¨ìŠ¤..
 					g_itMGR.AppendChatMsg( STR_CANT_DOUBLE_USE, IT_MGR::CHAT_TYPE_SYSTEM );
 					return false;
 				}
@@ -491,7 +491,7 @@ bool CTCmdItemUseInInventory::Exec( CTObject* pObj )
 			case 6:
 				if( g_UseItemDelay.GetUseItemDelay( USE_ITEM_MP ) )
 				{
-					///Use item delay °¡ ¼³Á¤µÇ¾î ÀÖ´Ù¸é ÆĞ½º..
+					///Use item delay ê°€ ì„¤ì •ë˜ì–´ ìˆë‹¤ë©´ íŒ¨ìŠ¤..
 					g_itMGR.AppendChatMsg( STR_CANT_DOUBLE_USE, IT_MGR::CHAT_TYPE_SYSTEM );
 					return false;
 				}
@@ -502,7 +502,7 @@ bool CTCmdItemUseInInventory::Exec( CTObject* pObj )
 				{
 					if( g_UseItemDelay.GetUseItemDelay( USE_ITEM_OTHERS ) )
 					{
-						///Use item delay °¡ ¼³Á¤µÇ¾î ÀÖ´Ù¸é ÆĞ½º..
+						///Use item delay ê°€ ì„¤ì •ë˜ì–´ ìˆë‹¤ë©´ íŒ¨ìŠ¤..
 						g_itMGR.AppendChatMsg( STR_CANT_DOUBLE_USE, IT_MGR::CHAT_TYPE_SYSTEM );
 						return false;
 					}
@@ -513,13 +513,13 @@ bool CTCmdItemUseInInventory::Exec( CTObject* pObj )
 		}
 		else
 		{
-			/// ½ºÅ©·Ñ ½ºÅ³ÀÏ°æ¿ì
+			/// ìŠ¤í¬ë¡¤ ìŠ¤í‚¬ì¼ê²½ìš° //LZO: type 313 - Magick Item
 			if( ITEM_TYPE( Item.GetTYPE(), Item.GetItemNO()  ) == USE_ITEM_SKILL_DOING )
 			{
 
 				if( g_UseItemDelay.GetUseItemDelay( USE_ITEM_SCROLL ) )
 				{
-					///Use item delay °¡ ¼³Á¤µÇ¾î ÀÖ´Ù¸é ÆĞ½º..
+					///Use item delay ê°€ ì„¤ì •ë˜ì–´ ìˆë‹¤ë©´ íŒ¨ìŠ¤..
 					g_itMGR.AppendChatMsg( STR_CANT_DOUBLE_USE, IT_MGR::CHAT_TYPE_SYSTEM );
 					return false;
 				}
@@ -528,11 +528,11 @@ bool CTCmdItemUseInInventory::Exec( CTObject* pObj )
 
 			}else
 			{
-				// ´Ù¸¥ ¸ğµç Á¾·ùÀÇ Use Item
+				// LZO: all other type Use Item
 
 				if( g_UseItemDelay.GetUseItemDelay( USE_ITEM_OTHERS ) )
 				{
-					///Use item delay °¡ ¼³Á¤µÇ¾î ÀÖ´Ù¸é ÆĞ½º..
+					///Use item delay ê°€ ì„¤ì •ë˜ì–´ ìˆë‹¤ë©´ íŒ¨ìŠ¤..
 					g_itMGR.AppendChatMsg( STR_CANT_DOUBLE_USE, IT_MGR::CHAT_TYPE_SYSTEM );
 					return false;
 				}
@@ -544,10 +544,10 @@ bool CTCmdItemUseInInventory::Exec( CTObject* pObj )
 	//--------------------------------------------------------------------------------------------------
 
 
-	//»ç¿ë?
+	//ì‚¬ìš©?
 
 	//--------------------------------------------------------------------------------------------------
-	/// Target skill ÀÏ°æ¿ì´Â ÆĞÅ¶µÚ¿¡ Å¸°Ù ¹øÈ£¸¦ ºÙÀÎ´Ù.
+	/// Target skill ì¼ê²½ìš°ëŠ” íŒ¨í‚·ë’¤ì— íƒ€ê²Ÿ ë²ˆí˜¸ë¥¼ ë¶™ì¸ë‹¤.
 	//--------------------------------------------------------------------------------------------------
 	bool bTargetSkill = false;
 	if( ITEM_TYPE( Item.GetTYPE(), Item.GetItemNO()  ) == USE_ITEM_SKILL_DOING )
@@ -591,14 +591,14 @@ bool CTCmdItemEtcInInventory::Exec( CTObject* pObj )
 		case ITEM_TYPE_NATURAL:
 			{
 				CMakeDLG* pDlg = (CMakeDLG*)g_itMGR.FindDlg( DLG_TYPE_MAKE );
-				if( pDlg && pDlg->IsVision() )///Á¦Á¶Ã¢ÀÌ ¿­·Á ÀÖ´Âµ¿¾È¿¡´Â ¼Ò¸ğÅº ÀåÂøºÒ°¡
+				if( pDlg && pDlg->IsVision() )///ì œì¡°ì°½ì´ ì—´ë ¤ ìˆëŠ”ë™ì•ˆì—ëŠ” ì†Œëª¨íƒ„ ì¥ì°©ë¶ˆê°€
 				{
 					//CTCmdTakeInItem2MakeDlg* pCmd = new CTCmdTakeInItem2MakeDlg( pItem->GetIndex() );
 					//g_itMGR.AddTCommand( DLG_TYPE_MAKE, pCmd );
 				}
 				else if( NATURAL_BULLET_NO(Item.GetItemNO() ) )
 				{
-					if( g_pAVATAR->GetPetMode() >= 0 )///µå¶óÀÌºê ½ºÅ³ »ç¿ëÁßÀÌ¶ó¸é
+					if( g_pAVATAR->GetPetMode() >= 0 )///ë“œë¼ì´ë¸Œ ìŠ¤í‚¬ ì‚¬ìš©ì¤‘ì´ë¼ë©´
 					{
 						g_itMGR.AppendChatMsg(STR_CANT_EQUIP_USING_DRIVESKILL, IT_MGR::CHAT_TYPE_SYSTEM );
 						return true;
@@ -621,7 +621,7 @@ bool CTCmdItemEtcInInventory::Exec( CTObject* pObj )
 
 bool CTCmdItemEquiped::Exec( CTObject* pObj )
 {
-	if( g_pAVATAR->GetPetMode() >= 0 )///µå¶óÀÌºê ½ºÅ³ »ç¿ëÁßÀÌ¶ó¸é
+	if( g_pAVATAR->GetPetMode() >= 0 )///ë“œë¼ì´ë¸Œ ìŠ¤í‚¬ ì‚¬ìš©ì¤‘ì´ë¼ë©´
 	{
 		g_itMGR.AppendChatMsg(STR_CANT_UNEQUIP_USING_DRIVESKILL, IT_MGR::CHAT_TYPE_SYSTEM );
 		return true;
@@ -634,14 +634,14 @@ bool CTCmdItemEquiped::Exec( CTObject* pObj )
 	}
 
 	CItem* pItem = ( CItem*)pObj;
-	///ÀåÂø
+	///ì¥ì°©
 	tagITEM& Item = pItem->GetItem();
 	if( !Item.IsEmpty() )
 	{
 		
-		int			curr_abilities[ AT_MAX ];			///ÇöÀç ¾Æ¹ÙÅ¸ÀÇ ´É·ÂÄ¡ ÀÓ½Ã ÀúÀå º¯¼ö
-		tagITEM		equiped_items[ MAX_EQUIP_IDX ];		///ÇöÀç ¾Æ¹ÙÅ¸ÀÇ ÀåÂøÀåºñ ÀÓÁö ÀúÀå º¯¼ö
-		std::list< int > removeitem_indexlist;			///¼­¹ö¿¡ ÀåÂøÇØÁ¦ ¿äÃ»ÇÒ ÀåÂøÀåºñµéÀÇ ÀÎº¥Åä¸® ÀÎµ¦½º ¸®½ºÆ®
+		int			curr_abilities[ AT_MAX ];			///í˜„ì¬ ì•„ë°”íƒ€ì˜ ëŠ¥ë ¥ì¹˜ ì„ì‹œ ì €ì¥ ë³€ìˆ˜
+		tagITEM		equiped_items[ MAX_EQUIP_IDX ];		///í˜„ì¬ ì•„ë°”íƒ€ì˜ ì¥ì°©ì¥ë¹„ ì„ì§€ ì €ì¥ ë³€ìˆ˜
+		std::list< int > removeitem_indexlist;			///ì„œë²„ì— ì¥ì°©í•´ì œ ìš”ì²­í•  ì¥ì°©ì¥ë¹„ë“¤ì˜ ì¸ë²¤í† ë¦¬ ì¸ë±ìŠ¤ ë¦¬ìŠ¤íŠ¸
 
 		
 		for( int index = 0; index < AT_MAX; ++index )
@@ -700,7 +700,7 @@ bool CTCmdItemBullet::Exec( CTObject* pObj )
 	tagITEM& Item = pItem->GetItem();
 	if( !Item.IsEmpty() )
 	{
-		if( g_pAVATAR->GetPetMode() >= 0 )///µå¶óÀÌºê ½ºÅ³ »ç¿ëÁßÀÌ¶ó¸é
+		if( g_pAVATAR->GetPetMode() >= 0 )///ë“œë¼ì´ë¸Œ ìŠ¤í‚¬ ì‚¬ìš©ì¤‘ì´ë¼ë©´
 		{
 			g_itMGR.AppendChatMsg(STR_CANT_UNEQUIP_BULLET_USING_DRIVESKILL, IT_MGR::CHAT_TYPE_SYSTEM );
 			return true;
