@@ -105,10 +105,15 @@ void CGameStatePrepareSelectAvatar::Draw()
 	
 	if( g_pCApp->IsActive() )
 	{
-		if ( !::beginScene() )
+		//Numenor: Constant rendering. Ideally we would like to add an option for this. But for the moment, let's just comment it :)
+		//NB: bLostFocus is when we close the game while beginScene is really if the window is running or not.
+		/*
+		if ( !::beginScene() ) //  If the device is lost, the status returns 0, so skip all the rendering
 		{
 			return;
 		}
+		*/
+
 		::clearScreen();
 		::renderScene();
 		

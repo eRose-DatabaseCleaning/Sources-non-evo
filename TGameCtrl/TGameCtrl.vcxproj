@@ -170,6 +170,8 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TGameCtrl_r</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TGameCtrl_d</TargetName>
     <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PostBuildEventUseInBuild>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;$(IROSE_ROOT)\3rdParty\dx90csdk\Include;$(IROSE_ROOT)\3rdParty\include;</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;$(IROSE_ROOT)\3rdParty\dx90csdk\Lib;$(IROSE_ROOT)\3rdParty\lib;</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

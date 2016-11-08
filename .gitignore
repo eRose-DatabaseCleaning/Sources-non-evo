@@ -215,3 +215,6 @@ FakesAssemblies/
 /bin/
 /lib/
 *objs/
+
+#Rose
+*.inc

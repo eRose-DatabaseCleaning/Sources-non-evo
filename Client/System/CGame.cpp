@@ -1291,7 +1291,7 @@ Direct3D9: (ERROR) :RenderTargets are not lockable unless application specifies 
 void CGame::ScreenCAPTURE ()
 {
 	//홍근 : 스샷에 서버이름 날짜 그리기.
-	if ( ::beginScene() )
+	if ( ::beginScene() ) //Numenor: This is for the print screen command. I think it is better to ask to have the focus in, to avoid messing up with "windows printscreen".
 	{
 		::beginSprite( D3DXSPRITE_ALPHABLEND );	
 		// Text 넣는곳
@@ -1371,7 +1371,7 @@ void CGame::ScreenCAPTURE ()
 void CGame::ScreenCAPTURE (SYSTEMTIME SystemTime)
 {
 	//홍근 : 스샷에 서버이름 날짜 그리기.
-	if ( ::beginScene() )
+	if ( ::beginScene() ) //Numenor: This is for the print screen command. I think it is better to ask to have the focus in, to avoid messing up with "windows printscreen".
 	{
 		::beginSprite( D3DXSPRITE_ALPHABLEND );	
 		// Text 넣는곳

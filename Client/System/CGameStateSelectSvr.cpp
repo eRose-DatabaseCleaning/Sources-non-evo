@@ -53,8 +53,11 @@ int CGameStateSelectSvr::Update( bool bLostFocus )
 	// processing  ...
 	if ( !bLostFocus ) 
 	{
-		if ( ::beginScene() ) //  디바이스가 손실된 상태라면 0을 리턴하므로, 모든 렌더링 스킵
-		{
+		//Numenor: Constant rendering. Ideally we would like to add an option for this. But for the moment, let's just comment it :)
+		//NB: bLostFocus is when we close the game while beginScene is really if the window is running or not.
+		
+		//if ( ::beginScene() ) //  디바이스가 손실된 상태라면 0을 리턴하므로, 모든 렌더링 스킵
+		//{
 			::clearScreen();
 			::renderScene();
 			
@@ -71,7 +74,7 @@ int CGameStateSelectSvr::Update( bool bLostFocus )
 
 			::endScene ();
 			::swapBuffers();
-		}
+		//}
 	}
 	return 0;
 }
