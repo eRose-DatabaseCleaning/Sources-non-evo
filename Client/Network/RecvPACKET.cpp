@@ -730,7 +730,7 @@ void CRecvPACKET::Recv_gsv_SELECT_CHAR ()
 	szName = Packet_GetStringPtr( m_pRecvPacket, nOffset);
 
 	//Dagnarus
-	g_pCApp->SetCaption( CStr::Printf("Project Alpha [ %s ]", szName));
+	g_pCApp->SetCaption( CStr::Printf("%s", szName));
 
 	LogString (LOG_NORMAL, "\n\n\n>>> AVATER( %s ) : Zone: %d, Pos: %f, %f <<<\n\n\n\n",
 		szName, 
@@ -799,7 +799,7 @@ void CRecvPACKET::Recv_gsv_QUEST_DATA()
 	refGame.ChangeState( CGame::GS_MOVEMAIN );
 	
 	CChatDLG* pChatDLG = g_itMGR.GetChatDLG();
-	pChatDLG->AppendMsg2System((const char*)CStr::Printf("Welcome %s to Project Alpha", g_pAVATAR->Get_NAME()), 0xFF00FFFF);
+	pChatDLG->AppendMsg2System((const char*)CStr::Printf("Welcome %s to RoseAs", g_pAVATAR->Get_NAME()), 0xFF00FFFF);
 	pChatDLG->AppendMsg2System( "Have fun playing", 0xFFFFFF00);
 }
 
