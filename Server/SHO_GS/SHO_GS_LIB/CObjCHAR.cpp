@@ -938,12 +938,26 @@ bool CObjCHAR::Skill_IsPassFilter( CObjCHAR *pTarget, short nSkillIDX )
 
 	bool bResult=false;
 	switch( SKILL_CLASS_FILTER( nSkillIDX ) ) {
-		case SKILL_TARGET_FILTER_GROUP		:///< 그룹(파티)원
-			if ( this->GetPARTY() ) {
-				bResult = ( pTarget->GetPARTY() == this->GetPARTY() );
-				break;
+		case SKILL_TARGET_FILTER_GROUP		:///< 그룹(파티)원 //Numenor: I'm changing this to include summons in this group.
+			if (pTarget->IsUSER()){
+				if ( this->GetPARTY() ) {
+					bResult = ( pTarget->GetPARTY() == this->GetPARTY() );
+					break;
+				}
 			}
-			// else 아래에서 파티가 없으면 자신인지 판다...
+			else{
+				if (this->Is_ALLIED( pTarget ) ){
+					CObjCHAR *pSummon_OWNER = (CObjCHAR*)pTarget->Get_CALLER();
+					if (pSummon_OWNER == this){ bResult = true; break;}
+					else{
+						if ( this->GetPARTY() ) {
+							bResult = ( pSummon_OWNER->GetPARTY() == this->GetPARTY() );
+							break;
+						}
+					}
+				}
+			}
+				// else 아래에서 파티가 없으면 자신인지 판다...
 
 		case SKILL_TARGET_FILTER_SELF		:///< 자기 자신
 			bResult = ( pTarget == this );
