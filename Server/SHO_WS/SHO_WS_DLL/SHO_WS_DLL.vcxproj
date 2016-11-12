@@ -477,8 +477,7 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy /y "%IROSE_ROOT%\bin\$(Platform)\Release\Server\SHO_WS.dll" "%IROSE_ROOT%\00_Latest_build\Latest_server\SHO_WS.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug2|Win32'">

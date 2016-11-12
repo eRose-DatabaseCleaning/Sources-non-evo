@@ -110,7 +110,7 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IROSE_ROOT)\bin\$(Platform)\$(Configuration)\Client\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IROSE_ROOT)\objs\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</PostBuildEventUseInBuild>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='VR_Debug|Win32'">$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='VR_Debug|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='VR_Debug|Win32'">true</LinkIncremental>
@@ -251,11 +251,11 @@
     </Link>
     <PostBuildEvent>
       <Message>Copying to Folder</Message>
-      <Command>copy /y "%IROSE_ROOT%\bin\$(Platform)\Release\Client\TRose.exe" "C:\Program Files (x86)\Ruff-Rose/TRose.exe"
-copy /y "%IROSE_ROOT%\bin\$(Platform)\Release\Client\TGameCtrl_r.dll" "C:\Program Files (x86)\Ruff-Rose/TGameCtrl_r.dll"
-copy /y "%IROSE_ROOT%\bin\$(Platform)\Release\Client\\TriggerInfo.dll" "C:\Program Files (x86)\Ruff-Rose/TriggerInfo.dll"
-copy /y "%IROSE_ROOT%\bin\$(Platform)\Release\Client\TriggerVFS.dll" "C:\Program Files (x86)\Ruff-Rose/TriggerVFS.dll"
-copy /y "%IROSE_ROOT%\bin\$(Platform)\Release\Client\znzin.dll" "C:\Program Files (x86)\Ruff-Rose/znzin.dll"
+      <Command>copy /y "%IROSE_ROOT%\bin\$(Platform)\Release\Client\TRose.exe" "%IROSE_ROOT%\00_Latest_build\Latest_client\TRose.exe"
+copy /y "%IROSE_ROOT%\bin\$(Platform)\Release\Client\TGameCtrl_r.dll" "%IROSE_ROOT%\00_Latest_build\Latest_client\TGameCtrl_r.dll"
+copy /y "%IROSE_ROOT%\bin\$(Platform)\Release\Client\TriggerInfo.dll" "%IROSE_ROOT%\00_Latest_build\Latest_client\TriggerInfo.dll"
+copy /y "%IROSE_ROOT%\bin\$(Platform)\Release\Client\TriggerVFS.dll" "%IROSE_ROOT%\00_Latest_build\Latest_client\TriggerVFS.dll"
+copy /y "%IROSE_ROOT%\bin\$(Platform)\Release\Client\znzin.dll" "%IROSE_ROOT%\00_Latest_build\Latest_client\znzin.dll"
 </Command>
     </PostBuildEvent>
     <PreBuildEvent>

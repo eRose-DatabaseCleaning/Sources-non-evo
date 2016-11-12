@@ -227,3 +227,14 @@ engine/include/zz_build_count
 engine/include/zz_script_lua.inc
 engine/include/zz_version_info.inc
 Client/Util/Util_r.lib
+00_Latest_build/Latest_client/TGameCtrl_r.dll
+00_Latest_build/Latest_client/TriggerInfo.dll
+00_Latest_build/Latest_client/TriggerVFS.dll
+00_Latest_build/Latest_client/TRose.exe
+00_Latest_build/Latest_client/znzin.dll
+00_Latest_build/Latest_server/SHO_GS.dll
+00_Latest_build/Latest_server/SHO_LS.dll
+00_Latest_build/Latest_server/SHO_WS.dll
+00_Latest_build/Latest_server/SHO_GS.exe
+00_Latest_build/Latest_server/SHO_LS.exe
+00_Latest_build/Latest_server/SHO_WS.exe
