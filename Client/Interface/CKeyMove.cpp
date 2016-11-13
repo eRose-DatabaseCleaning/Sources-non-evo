@@ -98,7 +98,8 @@ void CKeyMove::Proc()
 			g_pAVATAR->m_fAltitude -= 10.0f;
 
 	}else
-	{
+	{//Numenor: we don't care of moving with the keyboard... especially that, coded like that, if someone press a key when the game is running, all the instances of the game will move 
+		/*
 		if( m_bWKeyDown || m_bSKeyDown || m_bAKeyDown || m_bDKeyDown || bHeightUp || CGame::GetInstance().IsAutoRun() )
 		{
 			if( g_pAVATAR == NULL )
@@ -162,6 +163,7 @@ void CKeyMove::Proc()
 				sLastShiftGoFrame = CurrentShiftGoFrame ;
 			}
 		}
+		*/
 	}
 	
 }

@@ -430,6 +430,8 @@ int CGameStateMain::ProcKeyboardInput(UINT uiMsg, WPARAM wParam, LPARAM lParam )
 				g_GameDATA.m_bShowDropItemInfo = false;
 				break;
 
+				//Numenor: This part is about keyboard shortcut. Here, the Z triggers the skill 'SIT'. I removed it since it was not wanted.
+				/*
 			case 0x5A://z : 앉기/서기 토글
 				if(	CTControlMgr::GetInstance()->GetKeyboardInputType() == CTControlMgr::INPUTTYPE_NORMAL &&
 					NULL == CTEditBox::s_pFocusEdit )
@@ -444,6 +446,7 @@ int CGameStateMain::ProcKeyboardInput(UINT uiMsg, WPARAM wParam, LPARAM lParam )
 						pSkill->Execute();
 				}
 				break;
+				*/
 			case VK_SPACE:
 				if(	CTControlMgr::GetInstance()->GetKeyboardInputType() == CTControlMgr::INPUTTYPE_NORMAL &&
  					NULL == CTEditBox::s_pFocusEdit )
