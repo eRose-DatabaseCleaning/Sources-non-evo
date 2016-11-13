@@ -76,15 +76,16 @@ CAI_OBJ* CObjCHAR::AI_FindNextOBJ ()
 //--------------------------------------------------------------------------------
 
 void CObjCHAR::Adj_MoveSPEED ( WORD wSrvDIST, const D3DVECTOR& PosGOTO )
-{	
-	int iClientDIST; // 클라이언트에서의 현재-목표 위치 차이. 단위 CM
+{
+	int iClientDIST; // The difference between the current-on the client position. Unit CM
 	float fCurSpeed, fNewSpeed, fNeedTime;
 
-	fCurSpeed = this->Get_DefaultSPEED(); // 식에 의해 계산된 현재 기본 속도
+	fCurSpeed = this->Get_DefaultSPEED(); // The current default rate calculated by the expression
 
-	if ( 0 == fCurSpeed ) { // 속도가 0이라면, 현재 위치와 PosGOTO 가 동일해야 하나?
+	if ( 0 == fCurSpeed ) // If the velocity is zero, the same as the current location and the PosGOTO is?
+	{ 
 		m_fAdjustSPEED = 0;
-		
+
 		//assert(m_PosCUR.x == PosGOTO.x);
 		//assert(m_PosCUR.y == PosGOTO.y);
 
@@ -93,39 +94,44 @@ void CObjCHAR::Adj_MoveSPEED ( WORD wSrvDIST, const D3DVECTOR& PosGOTO )
 
 	fNeedTime = float(wSrvDIST) / fCurSpeed;
 
-	// 클라이언트의 현재-목표 거리를 계산한다.
+	// The client calculates the distance of the current goals.
 	iClientDIST = CD3DUtil::distance ((int)m_PosCUR.x, (int)m_PosCUR.y, (int)PosGOTO.x, (int)PosGOTO.y);
 
-	assert(iClientDIST >= 0);
+	//Numenor: I kept the assert, not like PY. We'll see what it beco,es
+	assert(iClientDIST >= 0);		//PY: Can't have these damn asserts breaking things all the time
+	//if(iClientDIST < 0)				//this is probably a bad idea in the long run as it will cause discrepencies between server and client but it will do for now
+	//	iClientDIST = 0;
 
-	if ( 0 == iClientDIST ) { // 목표 지점에 이미 도달했다면,
-		// 클라이언트는 이동하지 않아도 된다.
-		m_fAdjustSPEED = 0;	 
+	if ( 0 == iClientDIST ) { // If you have already reached the target area,
+		// The client does not need to be moved.
+		m_fAdjustSPEED = 0;
 		return;
 	}
-	/// 서버에서 가야할 거리가 클라이언트에서 가야할 거리보다 크다면
+	/// To go the distance to go from the client on the server is greater than the distance
 	else if( iClientDIST <= wSrvDIST )
 	{
-		/// 현재 속도를 그대로 유지해도 된다.
-		/// 클라이언트가 먼저가서 기다리면 되기 때문.
+
+		/// To keep the current rate.
+		/// Because if you wait for a client to go ahead.
 		m_fAdjustSPEED = fCurSpeed;
 		return;
-	}
-	else // wSrvDIST < iClientDIST. 클라이언트에서의 거리가 서버에서의 거리보다 먼 경우, 속도 증가.
-	{
-		fNewSpeed = float(iClientDIST) / fNeedTime; // 제 시간안에 도달하기 위한 새로운 속도 계산
 
-		/// 주체가 나일경우는 그냥 빨린 달린다.( 점프없이 )
+	}
+	else // wSrvDIST < iClientDIST. The distance of the server from the client if, rather than distance from the rate increase.
+	{
+		fNewSpeed = float(iClientDIST) / fNeedTime; // Calculate the new speed to reach in time
+
+		/// If the subject or just run sucked. (Without jumping)
 		if( this->IsA( OBJ_USER ) == false )
 		{
-			int iDiffDistance = iClientDIST - wSrvDIST; // 서버거리와 클라이언트 거리 차 계산. 단위 : cm
+			int iDiffDistance = iClientDIST - wSrvDIST; // The server calculates the distance and the client street car. Unit: cm
 
-			float fNeedTimeDiff = float(iDiffDistance) / fNewSpeed; // 거리 차를 극복하기 위해 걸리는 시간
+			float fNeedTimeDiff = float(iDiffDistance) / fNewSpeed; // It takes time to overcome the distance car
 
-			if (fNeedTimeDiff > 1.0f) 
-			{ 
-				// 거리차를 극복하기 위해, 1초 이상 지연된다면(너무 느리다.)
-				fNewSpeed = fCurSpeed; // 강제로 그 변위만큼 이동
+			if (fNeedTimeDiff > 1.0f)
+			{
+				// Street car to overcome delays over one second (too slow).
+				fNewSpeed = fCurSpeed; // The force that moves the displacement
 
 				D3DXVECTOR3 vDir = (D3DXVECTOR3)PosGOTO - m_PosCUR;
 				float fRatio = (float)iDiffDistance / (float)iClientDIST;
@@ -137,7 +143,6 @@ void CObjCHAR::Adj_MoveSPEED ( WORD wSrvDIST, const D3DVECTOR& PosGOTO )
 			}
 		}
 	}
-
 	m_fAdjustSPEED = fCurSpeed;
 }
 
@@ -2904,6 +2909,9 @@ void CObjCHAR::Reset_Position ()
 
 void CObjCHAR::RecoverHP( short nRecoverMODE )
 {
+#ifdef _NoRecover
+	Add_HP( m_ReviseHP );
+#else
 	int iRecoverHP = Get_RecoverHP( nRecoverMODE );	
 	int iAruaAddHP = (m_IsAroa)?iRecoverHP >> 1:0;
 
@@ -2961,6 +2969,10 @@ void CObjCHAR::RecoverHP( short nRecoverMODE )
 
 void CObjCHAR::RecoverMP( short nRecoverMODE )
 {
+#ifdef _NoRecover
+	Add_MP(m_ReviseMP);
+
+#else
 	int iRecoverMP = Get_RecoverMP( nRecoverMODE );
 	int iAruaAddMP = (m_IsAroa)?iRecoverMP >> 1:0;
 

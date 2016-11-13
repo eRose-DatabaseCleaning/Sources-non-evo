@@ -193,8 +193,11 @@ public   :
 
 //---½º¼¦°ü·Ã...--------------------------------------------------------------------------------------
 	void Send_cli_SCREEN_SHOT_TIME();
+	//Numenor: Useless. I removed it.
+	/*
 	void Send_cli_UPDATE_NAME( char* szName );
 	void Send_cli_SET_RIGHTS( DWORD dwRight );
+	*/
 //
 #ifdef	__VIRTUAL_SERVER
 	void Send_gsv_ADD_CHAR (int iObjectIndex, short nCharIdx, tPOINTF &PosSET);

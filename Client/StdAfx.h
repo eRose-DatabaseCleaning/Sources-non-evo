@@ -26,6 +26,8 @@
 #include <d3d9.h>
 #include <D3DX9.h>
 
+#define _NoRecover	//  Juhyeon: The HP / MP will keep shoveling it out of the server every second cycle once sent. So climb resilience calculate X
+
 // TODO: reference additional headers your program requires here
 //-------------------------------------------------------------------------------------------------
 

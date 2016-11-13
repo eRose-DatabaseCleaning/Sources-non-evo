@@ -599,10 +599,15 @@
 #define CLI_SCREEN_SHOT_TIME		0x07eb                          //스크린샷 찍을때 서버시간요청..(허재영 추가 2005.10.18)
 #define GSV_SCREEN_SHOT_TIME		0x07eb                          //스크린샷 찍을때필요한 서버 시간전송.. .(허재영 추가 2005.10.18)
 
+#define GSV_CHAR_HPMP_INFO			0x07ec					//1 Per second from the server to the client MP/HP Send...  
+#define GSV_CHAR_STAT_INFO			0x07ed					//PY: New packet added to sens ALL stats from the server
+
+//Numenor: Useless... I removed it
+/*
 #define SRV_UPDATE_NAME				0x07ec
 #define PXY_UPDATE_NAME				0x07ed
 #define PXY_SET_RIGHTS				0x07ef
-
+*/
 
 //-------------------------------------------------------------------------------------------------
 
@@ -1005,7 +1010,25 @@ struct gsv_SCREEN_SHOT_TIME:public t_PACKETHEADER
 	BYTE  btMin;
 };
 
+struct gsv_CHAR_HPMP_INFO:public t_PACKETHEADER			//0x07ec packet. HP and MP sent from the server. let's see if we can also pass MaxHP
+{
+	short m_CurHP;
+	short m_CurMP;
+	short m_MaxHP;		//added by PY
+	short m_MaxMP;		//added by PY
+};
 
+struct gsv_CHAR_STAT_INFO:public t_PACKETHEADER			//0x07ed packet. Attack, Dodge, Def etc. sent from server		///PY: added to give server full control
+{
+	short m_CurAP;			//Attack Power
+	short m_CurDef;			//Defense
+	short m_CurAccuracy;	//Accuracy
+	short m_CurDodge;		//Dodge
+	short m_CurMDef;		//Magic Defense
+	short m_CurCrit;		//Critical
+	short m_CurMSPD;		//Move Speed
+	short m_CurMaxWeight;	//Maximum weight capacity
+};
 
 struct cli_REVIVE_REQ : public t_PACKETHEADER {
 	BYTE	m_btReviveTYPE;
@@ -2839,10 +2862,12 @@ struct gsv_CART_RIDE : public cli_CART_RIDE {
 #define	CART_RIDE_OWNER_NOT_FOUND	0x04	// 태워 준다던 케릭이 사라졌다
 #define	CART_RIDE_GUEST_NOT_FOUND	0x05	// 태우려던 케릭이 사라졌다
 
+//Numenor: Useless, I removed it
+/*
 struct gsv_UPDATE_NAME : public t_PACKETHEADER {
-	/*
-		This update player's name
-	*/
+	
+	//	This update player's name
+	
 	short m_nCharID;
 	// new name;
 };
@@ -2854,6 +2879,7 @@ struct pxy_UPDATE_NAME : public t_PACKETHEADER {
 struct pxy_SET_RIGHTS : public t_PACKETHEADER {
 	DWORD wRIGHT;
 };
+*/
 
 //-------------------------------------------------------------------------------------------------
 
@@ -3217,7 +3243,10 @@ struct t_PACKET {
 
 		cli_SCREEN_SHOT_TIME		m_cli_SCREEN_SHOT_TIME;
 		gsv_SCREEN_SHOT_TIME		m_gsv_SCREEN_SHOT_TIME;
-
+		
+		gsv_CHAR_HPMP_INFO			m_gsv_CHAR_HPMP_INFO;			//HP and MP sent from server
+		gsv_CHAR_STAT_INFO			m_gsv_CHAR_STAT_INFO;			//Stats sent from server Attack, def, dodge etc.
+		
 		cli_SUMMON_CMD				m_cli_SUMMON_CMD;
 		// gsv_SUMMON_CMD			m_gsv_SUMMON_CMD;
 		gsv_PATSTATE_CHANGE			m_gsv_PATSTATE_CHANGE;
@@ -3226,9 +3255,12 @@ struct t_PACKET {
 		cli_CART_RIDE				m_cli_CART_RIDE;
 		gsv_CART_RIDE				m_gsv_CART_RIDE;
 
+		//Numenor: Has no useful use and creates troubles.
+		/*
 		gsv_UPDATE_NAME				m_gsv_UPDATE_NAME;
 		pxy_UPDATE_NAME				m_pxy_UPDATE_NAME;
 		pxy_SET_RIGHTS				m_pxy_SET_RIGHTS;
+		*/
 
 #if defined(__SERVER) && !defined(__SKIP_SRV_PROTOTYPE)
 		gsv_LOG_SQL					m_gsv_LOG_SQL;

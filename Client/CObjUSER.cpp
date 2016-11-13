@@ -263,10 +263,11 @@ bool CObjUSER::AddNewSkill( int iSkillIDX, int iSkillSlotNO, int iSkillLevel ,bo
 	if( iSkillSlotNO >= MAX_LEARNED_SKILL_CNT )
 		return false;
 
-	/// 스킬 배우면 적용
+	/// Learn skills if applicable
 	if ( this->Skill_LEARN( iSkillSlotNO, iSkillIDX , bSubPOINT ) ) {
-		/// 패시브 스킬중 속도에 변화가 생길경우..
-		this->Update_SPEED ();
+		/// If the result in the change in the speed of the passive skill.
+		//PY: NOPE. This is now controlled by the server
+		//this->Update_SPEED ();
 	}
 
 	m_SkillSlot.SetSkillSlot( iSkillSlotNO, iSkillIDX, iSkillLevel ); 
@@ -359,8 +360,9 @@ void CObjUSER::Update (bool bUpdateBONE )
 {
 	CObjAVT::Update( bUpdateBONE );
 
-	// 7. 공격, 이동 속도 갱신.
-	this->Update_SPEED ();
+ 	// 7. Attack, the moving speed update.
+	//PY: NOPE. Server does this now
+	//this->Update_SPEED ();
 }
 
 
@@ -687,9 +689,12 @@ void	CObjUSER::UpdateAbility()
 	Cal_BattleAbility(); 
 	Calc_AruaAddAbility();
 	
-	// 홍근 : UpdateInventory()와 Update_SPEED()의 위치 바꿈.
-	UpdateInventory();///최대 소지량이 변경되었을수 있다.
-	Update_SPEED();	
+	// changing the position of UpdateInventory () and Update_SPEED ().
+ 	UpdateInventory();///The maximum amount of possession may have been changed.
+
+	//PY: I just sent in the move speed from the server. Why would i want it to be calculated again so that the damn values are different?
+	//just NO. Commenting this out
+	//Update_SPEED();	
 	
 
 }		
@@ -952,35 +957,37 @@ short CObjUSER::GetPsv_ATKSPEED (float fCurSpeed, short nRightWeaponItemNo)
 	return this->GetPassiveSkillAttackSpeed( fCurSpeed, nRightWeaponItemNo ) + CUserDATA::m_iAddValue[ AT_ATK_SPD ];
 }
 
-/// 스킬에 의해 보정된 값이 있을경우 더해져서 리턴할 함수
-/// arua상태에 의해서 변경된 값도 더해준다.					2005/7/12 : nAvy
+/// If the function returns more haejyeoseo the value fixed by the Skill
+/// arua Also adds value changed by the state.					2005/7/12 : nAvy
 int CObjUSER::GetCur_MaxHP ()
 { 
-	return this->m_Battle.m_nMaxHP + m_EndurancePack.GetStateValue( ING_INC_MAX_HP ) + m_AruaAddHp; 
+	//return this->m_Battle.m_nMaxHP + m_EndurancePack.GetStateValue( ING_INC_MAX_HP ) + m_AruaAddHp; 
+	return this->m_Battle.m_nMaxHP; //PY: removed the extra stuff so it will only return the value sent in from the server
 };
 
 /// 스킬에 의해 보정된 값이 있을경우 더해져서 리턴할 함수
 /// arua상태에 의해서 변경된 값도 더해준다.					2005/7/12 : nAvy
 int	CObjUSER::GetCur_MaxMP ()
 { 
-	return this->m_Battle.m_nMaxMP + m_EndurancePack.GetStateValue( ING_INC_MAX_MP ) + m_AruaAddMp; 
+	return this->m_Battle.m_nMaxMP; // + m_EndurancePack.GetStateValue( ING_INC_MAX_MP ) + m_AruaAddMp; // PY: Nope. not adding any extra stuff. MaxMP is now set from the server only.    
 };
 //------------------------------------------------------------------------------------
-/// @brief aura 상태에 의해서 변경된 값 적용					2005/7/13 : nAvy
+/// @brief aura Values for the changed conditions by					2005/7/13 : nAvy
+/// PY: Removing all the add on stuff so that it just compares the raw stats //Numenor: Edited it accordingly to our server
 //------------------------------------------------------------------------------------
 int CObjUSER::GetCur_CRITICAL()		
 { 
-	return GetDef_CRITICAL() + m_EndurancePack.GetStateValue( ING_INC_CRITICAL ) - m_EndurancePack.GetStateValue( ING_DEC_CRITICAL ) + m_AruaAddCritical;
+	return GetDef_CRITICAL(); // + m_EndurancePack.GetStateValue( ING_INC_CRITICAL ) - m_EndurancePack.GetStateValue( ING_DEC_CRITICAL ) + m_AruaAddCritical;
 }
 
 int CObjUSER::GetCur_ATK()
 { 
-	return GetDef_ATK() + m_EndurancePack.GetStateValue( ING_INC_APOWER ) - m_EndurancePack.GetStateValue( ING_DEC_APOWER ) + m_AruaAddAttackPower;		
+	return GetDef_ATK(); // + m_EndurancePack.GetStateValue( ING_INC_APOWER ) - m_EndurancePack.GetStateValue( ING_DEC_APOWER ) + m_AruaAddAttackPower;		
 }
 
 int CObjUSER::GetCur_DEF()
 { 
-	return GetDef_DEF() + m_EndurancePack.GetStateValue( ING_INC_DPOWER ) - m_EndurancePack.GetStateValue( ING_DEC_DPOWER ) + m_AruaAddDefence;		
+	return GetDef_DEF(); // + m_EndurancePack.GetStateValue( ING_INC_DPOWER ) - m_EndurancePack.GetStateValue( ING_DEC_DPOWER ) + m_AruaAddDefence;		
 }
 
 //------------------------------------------------------------------------------------
@@ -998,19 +1005,19 @@ int CObjUSER::GetOri_MaxMP()
 	return m_Battle.m_nMaxMP;
 }
 //------------------------------------------------------------------------------------
-/// @brief 아루아 버프 걸린 상태에 대한 추가적인 능력치 계산 2005/7/13 : navy
+/// @brief Arua stat buff additional calculations for the jammed state 2005/7/13 : navy
 //------------------------------------------------------------------------------------
-void CObjUSER::Calc_AruaAddAbility()
+void CObjUSER::Calc_AruaAddAbility()	//PY: adding the fairy. We need to disable this
 {
 	if( CCountry::GetSingleton().IsApplyNewVersion() )
 	{
 		if( m_IsAroa )
 		{
-			m_AruaAddHp			= GetDef_MaxHP() * 0.2;
-			m_AruaAddMp			= GetDef_MaxMP() * 0.2;
-			m_AruaAddCritical	= GetDef_CRITICAL() * 0.2;
-			m_AruaAddAttackPower	= GetDef_ATK() * 0.2;
-			m_AruaAddDefence		= GetDef_DEF() * 0.2;
+			m_AruaAddHp			= GetDef_MaxHP(); //* 0.2;
+			m_AruaAddMp			= GetDef_MaxMP(); // * 0.2;
+			m_AruaAddCritical	= GetDef_CRITICAL(); // * 0.2;
+			m_AruaAddAttackPower	= GetDef_ATK(); // * 0.2;
+			m_AruaAddDefence		= GetDef_DEF(); // * 0.2;
 		}
 		else
 		{

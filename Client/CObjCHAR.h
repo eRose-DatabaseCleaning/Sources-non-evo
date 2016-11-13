@@ -1326,8 +1326,14 @@ public :
 	/*override*/int				Get_R_WEAPON ()			{	return this->m_sRWeaponIDX.m_nItemNo;	}
 	/*override*/int				Get_L_WEAPON ()			{	return this->m_sLWeaponIDX.m_nItemNo;	}
 
-	/*override*/int				Get_MaxHP()				{ return m_iMaxHP + m_EndurancePack.GetStateValue( ING_INC_MAX_HP ); }	
-	/*override*/int				Get_MaxMP()				{ return m_iMaxMP + m_EndurancePack.GetStateValue( ING_INC_MAX_MP ); }
+	/*override*/int				Get_MaxHP()				{ 
+		//return m_iMaxHP + m_EndurancePack.GetStateValue( ING_INC_MAX_HP );	//PY: let's remove the added stuff from this so that only the value sent from the server matters
+		return m_iMaxHP;
+	}	
+	/*override*/int				Get_MaxMP()				{ 
+		//return m_iMaxMP + m_EndurancePack.GetStateValue( ING_INC_MAX_MP );	//PY: let's remove the added stuff from this so that only the value sent from the server matters
+		return m_iMaxMP;
+	}
 
 	/*override*/bool			ToggleRunMODE ( float fAdjRate );
 	/*override*/bool			ToggleSitMODE ();

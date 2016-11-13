@@ -680,6 +680,14 @@ void CNetwork::Proc_ZonePacket ()
 				Recv_gsv_SET_HPnMP();
 				break;
 
+			case GSV_CHAR_HPMP_INFO:				//0x07ec	1 packet per second from server updates HP / MP (PY: soon it will receive other stats too)
+ 				Recv_gsv_CHAR_HPMP_INFO();
+ 				break;
+ 
+			case GSV_CHAR_STAT_INFO:
+				Recv_gsv_CHAR_STAT_INFO();
+				break;
+
 			case GSV_CHECK_NPC_EVENT:
 				Recv_gsv_CHECK_NPC_EVENT();
 				break;
@@ -702,10 +710,12 @@ void CNetwork::Proc_ZonePacket ()
 				 Recv_gsv_SCREEN_SHOT_TIME();
 				 break;
 
+				 //Numenor: Useless. I removed it:
+				 /*
 			 case SRV_UPDATE_NAME:
 				Recv_gsv_UPDATE_NAME();
 				break;
-
+				*/
 			default :
 				//_ASSERT(0);
 				LogString (LOG_NORMAL, "received Invalid packet type ... type: 0x%x , size: %d \n", m_pRecvPacket->m_HEADER.m_wType, m_pRecvPacket->m_HEADER.m_nSize);

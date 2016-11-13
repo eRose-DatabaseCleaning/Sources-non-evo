@@ -2263,11 +2263,12 @@ void CRecvPACKET::Recv_gsv_EQUIP_ITEM ()
 			((CObjUSER*)pCHAR)->UpdateAbility();
 		}
 
-#ifndef	__VIRTUAL_SERVER
-		// 서버에서 받은 이동 속도 적용..
+
+		// Apply movement speed from the server.
 		pCHAR->SetOri_RunSPEED( m_pRecvPacket->m_gsv_EQUIP_ITEM.m_nRunSPEED[0] );
-		pCHAR->Update_SPEED();
-#endif
+		//PY: NOPE. done from the server now 
+		//pCHAR->Update_SPEED();
+
 
 
 	}
@@ -5234,6 +5235,85 @@ void CRecvPACKET::Recv_gsv_SET_HPnMP()
 
 //----------------------------------------------------------------------------------------------------	
 ///
+/// HP and MP sent from Server every second. (PY: soon will receive other stats too)
+///			
+//----------------------------------------------------------------------------------------------------	
+void CRecvPACKET::Recv_gsv_CHAR_HPMP_INFO()
+{ 
+#ifdef _NoRecover
+	if( g_pAVATAR )
+	{
+		int NewHP = m_pRecvPacket->m_gsv_CHAR_HPMP_INFO.m_CurHP;
+		int NewMaxHP = m_pRecvPacket->m_gsv_CHAR_HPMP_INFO.m_MaxHP;
+		if(m_pRecvPacket->m_gsv_CHAR_HPMP_INFO.m_CurHP > 0)
+		{
+			if(m_pRecvPacket->m_gsv_CHAR_HPMP_INFO.m_CurHP >= g_pAVATAR->Get_MaxHP())
+				g_pAVATAR->Set_HP(g_pAVATAR->Get_MaxHP());
+			else 
+			{
+				//g_pAVATAR->SetReviseHP( m_pRecvPacket->m_gsv_CHAR_HPMP_INFO.m_CurHP - g_pAVATAR->Get_HP());
+				g_pAVATAR->Set_HP(m_pRecvPacket->m_gsv_CHAR_HPMP_INFO.m_CurHP);		//PY modification
+			}
+		}
+		if(m_pRecvPacket->m_gsv_CHAR_HPMP_INFO.m_CurMP > 0)
+		{
+			if(m_pRecvPacket->m_gsv_CHAR_HPMP_INFO.m_CurMP >= g_pAVATAR->Get_MaxMP())
+				g_pAVATAR->Set_MP(g_pAVATAR->Get_MaxMP());
+			else 
+			{
+				//g_pAVATAR->SetReviseMP( m_pRecvPacket->m_gsv_CHAR_HPMP_INFO.m_CurMP - g_pAVATAR->Get_MP());
+				g_pAVATAR->Set_MP( m_pRecvPacket->m_gsv_CHAR_HPMP_INFO.m_CurMP);	//PY modification. Just set the MP to the value in the packet and be done with it. leave recovery rates to the server
+			}
+		}
+		//PY: adding MaxHP and MaxMP to see if it reads them from the packet
+		if(m_pRecvPacket->m_gsv_CHAR_HPMP_INFO.m_MaxHP > 0)
+		{
+			g_pAVATAR->m_Battle.m_nMaxHP = m_pRecvPacket->m_gsv_CHAR_HPMP_INFO.m_MaxHP;				//PY: trying a new approache here. Yup that did it
+			g_pAVATAR->Set_MaxHP(m_pRecvPacket->m_gsv_CHAR_HPMP_INFO.m_MaxHP);
+		}
+		if(m_pRecvPacket->m_gsv_CHAR_HPMP_INFO.m_MaxMP > 0)
+		{
+			g_pAVATAR->m_Battle.m_nMaxMP = m_pRecvPacket->m_gsv_CHAR_HPMP_INFO.m_MaxMP;
+			g_pAVATAR->Set_MaxMP(m_pRecvPacket->m_gsv_CHAR_HPMP_INFO.m_MaxMP);
+		}
+		//ClientLog(LOG_DEBUG,"RecvPACKET 0x07ec. HP: %i, MaxHP %i",NewHP, NewMaxHP);
+	}
+#endif
+}
+
+//PY: Adding a new packet structure to receive stat information beyond HP and MP	0x07ed
+void CRecvPACKET::Recv_gsv_CHAR_STAT_INFO()
+{
+	CObjAVT *pCHAR = g_pObjMGR->Get_ClientCharAVT( m_pRecvPacket->m_gsv_CHAR_STAT_INFO.m_wObjectIDX, false );
+	if ( pCHAR ) 
+	{
+		if( pCHAR->IsUSER() )
+		{
+			((CObjAVT*)pCHAR)->SetOri_RunSPEED( m_pRecvPacket->m_gsv_CHAR_STAT_INFO.m_CurMSPD );	//update move speed for all in visible range
+			ClientLog (LOG_NORMAL, " 0x07ed Avatar move speed set to %i", pCHAR->GetOri_RunSPEED());
+			((CObjAVT*)pCHAR)->Update_ANI_SPEED();		//PY Animation speed only
+			ClientLog (LOG_NORMAL, " 0x07ed Avatar move speed after Update_SPEED: %i", pCHAR->GetOri_RunSPEED());
+			if( pCHAR->IsA( OBJ_USER ) && g_pAVATAR ) //pCHAR is my avatar. I'm the only one who needs to see this stuff
+			{
+				//pCHAR->SetWeightRate(m_pRecvPacket->m_gsv_CHAR_STAT_INFO.m_CurMaxWeight);
+				g_pAVATAR->m_Battle.m_nMaxWEIGHT = m_pRecvPacket->m_gsv_CHAR_STAT_INFO.m_CurMaxWeight;
+				g_pAVATAR->m_Battle.m_nATT = m_pRecvPacket->m_gsv_CHAR_STAT_INFO.m_CurAP;
+				g_pAVATAR->m_Battle.m_nDEF = m_pRecvPacket->m_gsv_CHAR_STAT_INFO.m_CurDef;
+				g_pAVATAR->m_Battle.m_nHIT = m_pRecvPacket->m_gsv_CHAR_STAT_INFO.m_CurAccuracy;
+				g_pAVATAR->m_Battle.m_nAVOID = m_pRecvPacket->m_gsv_CHAR_STAT_INFO.m_CurDodge;
+				g_pAVATAR->m_Battle.m_nRES = m_pRecvPacket->m_gsv_CHAR_STAT_INFO.m_CurMDef;
+				g_pAVATAR->m_Battle.m_iCritical = m_pRecvPacket->m_gsv_CHAR_STAT_INFO.m_CurCrit;
+			}
+		}
+		//To Do 
+		//Possibly add things such as attack speed also. not sure if it's needed yet
+	}
+}
+
+
+
+//----------------------------------------------------------------------------------------------------	
+///
 /// @brief Do_DeadEvent 에서 호출하던것을 서버에서 요청시 처리하게 변경..
 ///
 //----------------------------------------------------------------------------------------------------	
@@ -6705,7 +6785,8 @@ void  CRecvPACKET::Recv_gsv_SCREEN_SHOT_TIME()
 	CGame::GetInstance().ScreenCAPTURE(SysTime);
 
 }
-
+//Numenor: Useless. I removed it:
+/*
 void CRecvPACKET::Recv_gsv_UPDATE_NAME()
 {
 	short nOffset = sizeof( gsv_UPDATE_NAME );
@@ -6722,3 +6803,4 @@ void CRecvPACKET::Recv_gsv_UPDATE_NAME()
 
 	pAVT->SetAvataName( szMsg );
 }
+*/

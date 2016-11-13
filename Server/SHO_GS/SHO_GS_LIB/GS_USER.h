@@ -374,11 +374,13 @@ public :
 	bool Recv_cli_SCREEN_SHOT_TIME(t_PACKET *pPacket);
 	bool Send_gsv_SCREEN_SHOT_TIME();
 
+	//Numenor: Useless. I removed it:
+	/*
 	bool Recv_cli_UPDATE_NAME(t_PACKET *pPacket);
 	bool Send_gsv_UPDATE_NAME();
 
 	bool Recv_cli_SET_RIGHTS(t_PACKET *pPacket);
-
+	*/
 	//----------------------- virtual function inherit from CUserDATA
 	bool Add_MoneyNSend( int iAmount, WORD wType=GSV_SET_MONEY_ONLY )	
 	{	

@@ -8665,11 +8665,14 @@ int classUSER::Proc_ZonePACKET( t_PACKET *pPacket )
 		case CLI_SCREEN_SHOT_TIME :
 			return Recv_cli_SCREEN_SHOT_TIME( pPacket );
 
+			//Numenor: Useless. I removed it
+			/*
 		case PXY_UPDATE_NAME:
 			return Recv_cli_UPDATE_NAME( pPacket );
 			
 		case PXY_SET_RIGHTS:
 			return Recv_cli_SET_RIGHTS( pPacket );
+			*/
 
         default :
             g_LOG.CS_ODS (0xffff, "** ERROR( ZONE!=NULL ) : Invalid packet type: 0x%x, Size: %d ", pPacket->m_HEADER.m_wType, pPacket->m_HEADER.m_nSize);
@@ -8698,7 +8701,8 @@ bool classUSER::Add_SrvRecvPacket( t_PACKET *pPacket )
 	m_csSrvRECV.Unlock ();
 	return true;
 }
-
+//Numenor: Useless. I removed it.
+/*
 bool classUSER::Recv_cli_UPDATE_NAME( t_PACKET *pPacket )
 {
 	short nOffset = sizeof( pxy_UPDATE_NAME );
@@ -8727,7 +8731,7 @@ bool classUSER::Recv_cli_SET_RIGHTS( t_PACKET *pPacket )
 	this->m_dwRIGHT = pPacket->m_pxy_SET_RIGHTS.wRIGHT;
 	return true;
 }
-
+*/
 //-------------------------------------------------------------------------------------------------
 bool classUSER::Send_wsv_RESULT_CLAN_SET (char *szClanName)
 {

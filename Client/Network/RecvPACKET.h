@@ -225,6 +225,10 @@ public   :
 	///
 	//----------------------------------------------------------------------------------------------------	
 	void Recv_gsv_SET_HPnMP();
+	void Recv_gsv_CHAR_HPMP_INFO();
+ 
+	// PY: New function to receive all stats from the server
+	void Recv_gsv_CHAR_STAT_INFO();
 
 
 	//----------------------------------------------------------------------------------------------------	
@@ -284,8 +288,11 @@ public   :
 	//½º¼¦°ü·Ã..
 	void Recv_gsv_SCREEN_SHOT_TIME();
 
+	//Numenor: Useless. I removed it:
+	/*
 	// Updates a player name
 	void Recv_gsv_UPDATE_NAME();
+	*/
 } ;
 
 //-------------------------------------------------------------------------------------------------

@@ -87,6 +87,9 @@ struct tagBasicAbility {
 struct tagGrowAbility {
 	short	m_nHP;				// 0~2000
 	short	m_nMP;				// 0~1000
+	
+	short	m_MaxHP;
+	short	m_MaxMP;
 
 	__int64	m_lEXP;				// 경험치 1~100000
 	short	m_nLevel;			// 0~250
@@ -491,6 +494,7 @@ public :
 	void	Sub_CurMONEY (int iMoney)		{	this->m_Inventory.m_i64Money-=iMoney;	}
 	void  SetCur_HP (short nValue);// 생명력
 	void  SetCur_MP (short nValue)	{	this->m_GrowAbility.m_nMP=nValue;				}
+	void  SetCur_MaxHP (short nValue);
 
 	int   AddCur_HP (short nValue)	
 	{	
