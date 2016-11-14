@@ -53,7 +53,8 @@ struct tagSqlUSER {
 #ifdef FRAROSE
 #define	MAX_GRAW_ABILITY_BUFF	394
 #else
-#define	MAX_GRAW_ABILITY_BUFF	384
+//#define	MAX_GRAW_ABILITY_BUFF	384
+#define	MAX_GRAW_ABILITY_BUFF	388 // Numenor: HP fix
 #endif
 struct tagGrowA_BUFF {
 	union {

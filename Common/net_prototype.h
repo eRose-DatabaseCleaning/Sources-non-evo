@@ -603,11 +603,11 @@
 #define GSV_CHAR_STAT_INFO			0x07ed					//PY: New packet added to sens ALL stats from the server
 
 //Numenor: Useless... I removed it
-/*
-#define SRV_UPDATE_NAME				0x07ec
-#define PXY_UPDATE_NAME				0x07ed
-#define PXY_SET_RIGHTS				0x07ef
-*/
+
+#define SRV_UPDATE_NAME				0x07ee
+#define PXY_UPDATE_NAME				0x07ef
+#define PXY_SET_RIGHTS				0x07f0
+
 
 //-------------------------------------------------------------------------------------------------
 
@@ -1020,6 +1020,7 @@ struct gsv_CHAR_HPMP_INFO:public t_PACKETHEADER			//0x07ec packet. HP and MP sen
 
 struct gsv_CHAR_STAT_INFO:public t_PACKETHEADER			//0x07ed packet. Attack, Dodge, Def etc. sent from server		///PY: added to give server full control
 {
+	WORD m_wObjectIDX; //Client ID
 	short m_CurAP;			//Attack Power
 	short m_CurDef;			//Defense
 	short m_CurAccuracy;	//Accuracy
@@ -2863,7 +2864,7 @@ struct gsv_CART_RIDE : public cli_CART_RIDE {
 #define	CART_RIDE_GUEST_NOT_FOUND	0x05	// 태우려던 케릭이 사라졌다
 
 //Numenor: Useless, I removed it
-/*
+
 struct gsv_UPDATE_NAME : public t_PACKETHEADER {
 	
 	//	This update player's name
@@ -2879,7 +2880,7 @@ struct pxy_UPDATE_NAME : public t_PACKETHEADER {
 struct pxy_SET_RIGHTS : public t_PACKETHEADER {
 	DWORD wRIGHT;
 };
-*/
+
 
 //-------------------------------------------------------------------------------------------------
 
@@ -3256,11 +3257,11 @@ struct t_PACKET {
 		gsv_CART_RIDE				m_gsv_CART_RIDE;
 
 		//Numenor: Has no useful use and creates troubles.
-		/*
+		
 		gsv_UPDATE_NAME				m_gsv_UPDATE_NAME;
 		pxy_UPDATE_NAME				m_pxy_UPDATE_NAME;
 		pxy_SET_RIGHTS				m_pxy_SET_RIGHTS;
-		*/
+		
 
 #if defined(__SERVER) && !defined(__SKIP_SRV_PROTOTYPE)
 		gsv_LOG_SQL					m_gsv_LOG_SQL;

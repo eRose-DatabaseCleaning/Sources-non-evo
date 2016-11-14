@@ -298,7 +298,7 @@ void CUserDATA::Cal_BattleAbility ()
 	Cal_DropRATE ();
 	m_Battle.m_fRateUseMP = ( 100 - this->GetCur_SaveMP() ) / 100.f;
 
-	if ( GetCur_HP() > GetCur_MaxHP() ) SetCur_HP( GetCur_MaxHP() );
+	if ( GetCur_HP() > GetCur_MaxHP() ) SetCur_HP( GetCur_MaxHP() ); // Numenor: Is commented in the client version of this file. But let's keep it here since it is the server.
 
 	if ( IsTAIWAN() && this->GetCur_MOVE_MODE() <= MOVE_MODE_RUN ) {
 		// 대만 보행모드면...
@@ -342,6 +342,9 @@ void CUserDATA::Cal_PatMaxHP ()
 extern bool IsTAIWAN();
 int CUserDATA::Cal_MaxHP ()
 {
+
+	// Numenor: Computed by the server
+
 	int iA, iM1, iM2;
 	if ( IsTAIWAN() ) {
 		float fC;
@@ -412,6 +415,8 @@ int CUserDATA::Cal_MaxHP ()
 //-------------------------------------------------------------------------------------------------
 int CUserDATA::Cal_MaxMP ()
 {
+	// Numenor: Computed by the server
+
 	int   iA, iM2;
 	float fM1;
 
@@ -448,6 +453,8 @@ int CUserDATA::Cal_MaxMP ()
 //-------------------------------------------------------------------------------------------------
 int CUserDATA::Cal_MaxWEIGHT ()
 {
+	// Numenor: Computed by the server
+
 	// * ITEM = 800 + (LV * 4) + (STR * 6) + 스킬 소지량
 	this->m_Battle.m_nMaxWEIGHT  = (int) ( 1100 + ( this->GetCur_LEVEL() * 5 ) + ( this->GetCur_STR() * 6 ) );
 	this->m_Battle.m_nMaxWEIGHT += this->m_iAddValue[ AT_WEIGHT ];
@@ -466,6 +473,8 @@ int CUserDATA::Cal_MaxWEIGHT ()
 //-------------------------------------------------------------------------------------------------
 int CUserDATA::Cal_AvoidRATE ()
 {
+	// Numenor: Computed by the server
+
 	if ( this->GetCur_MOVE_MODE() > MOVE_MODE_RUN && !IsTAIWAN() ) {
 		m_Battle.m_nAVOID = (short)( (GetCur_DEX()+10) * 0.8f + GetCur_LEVEL() * 0.5f );
 	} else {
@@ -486,6 +495,7 @@ int CUserDATA::Cal_AvoidRATE ()
 //-------------------------------------------------------------------------------------------------
 int CUserDATA::Cal_CRITICAL ()
 {
+	// Numenor: Computed by the server
 
 	if ( this->GetCur_MOVE_MODE() > MOVE_MODE_RUN && IsTAIWAN() ) {
 		m_Battle.m_iCritical  = (int)( GetCur_SENSE() + ( GetCur_CON() + 20 ) * 0.2f );
@@ -507,6 +517,8 @@ int CUserDATA::Cal_CRITICAL ()
 //-------------------------------------------------------------------------------------------------
 int CUserDATA::Cal_RESIST ()
 {
+	// Numenor: Computed by the server
+
 	int iTotRES=0, iTotGradeRES=0;
 
 	// 모든 아이템에 항마력이 입력될수 있다..
@@ -536,6 +548,8 @@ int CUserDATA::Cal_RESIST ()
 //-------------------------------------------------------------------------------------------------
 int CUserDATA::Cal_HIT ()
 {
+	// Numenor: Computed by the server
+
 	int iHitRate;
 	tagITEM*pRightWPN; 
 
@@ -587,6 +601,8 @@ int CUserDATA::Cal_IMMUNITY ()
 //-------------------------------------------------------------------------------------------------
 int CUserDATA::Cal_DEFENCE ()
 {
+	// Numenor: Computed by the server
+
 	int iTotDEF=0, iTotGradeDEF=0, iTotGRADE=0;
 
 	// 모든 아이템에 방어력이 입력될수 있다..
@@ -638,6 +654,8 @@ int CUserDATA::Cal_DEFENCE ()
 //-------------------------------------------------------------------------------------------------
 int CUserDATA::Cal_ATTACK ()
 {
+	// Numenor: Computed by the server
+
 	int iAP = 0;
 
 	tagITEM	*pRightWPN = this->Get_EquipItemPTR( EQUIP_IDX_WEAPON_R );
@@ -808,6 +826,8 @@ int CUserDATA::Cal_ATTACK ()
 //-------------------------------------------------------------------------------------------------
 float CUserDATA::Cal_RunSPEED ()
 {
+	// Numenor: Computed by the server
+
 /*
 	* 뛸 때의 이동 속도. (걷기는 디폴트 속도로 모든 아바타가 같다)
 	* 장착되어 있는 방어구나 무기의 무게의 합이 높을수록 이동속도가 저하된다.
@@ -2222,6 +2242,12 @@ void  CUserDATA::SetCur_HP (short nValue)
 
 	this->m_GrowAbility.m_nHP=nValue;				
 }	// 생명력
+
+void CUserDATA::SetCur_MaxHP(short nValue)
+{
+	this->m_GrowAbility.m_MaxHP = nValue;
+}
+
 
 //-------------------------------------------------------------------------------------------------
 /// 2차전직 때문에 상승되는 능력치 적용

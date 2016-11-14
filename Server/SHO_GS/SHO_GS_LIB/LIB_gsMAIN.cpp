@@ -464,7 +464,8 @@ CLIB_GameSRV::CLIB_GameSRV ( EXE_GS_API *pExeAPI )
 #ifdef FRAROSE
 	COMPILE_TIME_ASSERT( sizeof(tagGrowAbility) < 394 );
 #else
-	COMPILE_TIME_ASSERT( sizeof(tagGrowAbility) < 384 );
+	//COMPILE_TIME_ASSERT( sizeof(tagGrowAbility) < 384 );
+	COMPILE_TIME_ASSERT( sizeof(tagGrowAbility) < 388 ); // Numenor: HP fix
 #endif
 	COMPILE_TIME_ASSERT( (sizeof(__int64) + sizeof(tagITEM)*INVENTORY_TOTAL_SIZE) == sizeof(CInventory) );
 

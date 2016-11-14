@@ -152,6 +152,8 @@ struct tagMaintainSTATUS {
  * \author	wookSang.Jo
  * \brief	사용자 케릭터의 성장 능력치 데이타 보관 구조체
  */
+//Numenor: not used anymore:
+/*
 struct tagGrowAbility_old {
 	union {
 		struct {
@@ -179,17 +181,18 @@ struct tagGrowAbility_old {
 
 			short	m_nPKFlag;			// 2004. 6. 17 추가..
 			short	m_nSTAMINA;			// 2004. 7. 23 추가..
-		/*
-			char	m_cChaos;			// 성향
-			short	m_nBattle_LV;		// 베틀레벨
-			short	m_nPK_LV;			//
-		*/
+		
+			//char	m_cChaos;			// 성향
+			//short	m_nBattle_LV;		// 베틀레벨
+			//short	m_nPK_LV;			//
+	
 //#ifdef	__INC_PLATINUM
 			tagMaintainSTATUS	m_STATUS[ MAX_MAINTAIN_STATUS ];
 //#endif
 		} ;
 	};
 };
+*/
 
 /**
  * \ingroup SHO_GS_LIB
@@ -202,6 +205,9 @@ struct tagGrowAbility {
 		struct {
 			short	m_nHP;				///< 0~2000
 			short	m_nMP;				///< 0~1000
+
+			short	m_MaxHP;
+			short	m_MaxMP;
 
 			__int64	m_lEXP;				///< 경험치 1~100000
 			short	m_nLevel;			///< 0~250
@@ -751,6 +757,8 @@ public :
 
 	short GetDef_MaxHP ()			{	return	this->m_Battle.m_nMaxHP;			}
 	short GetDef_MaxMP ()			{	return	this->m_Battle.m_nMaxMP;			}
+
+	void  SetCur_MaxHP (short nValue);
 
 	short GetCur_MaxWEIGHT ()		{	return	this->m_Battle.m_nMaxWEIGHT;		}
 	int	  GetCur_MAG ()				{	return	this->m_Battle.m_nMAG;				}	// 마법력

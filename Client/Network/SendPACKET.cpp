@@ -2134,7 +2134,7 @@ void  CSendPACKET::Send_cli_SCREEN_SHOT_TIME()
 }
 
 //Numenor: Useless. I removed it.
-/*
+
 void  CSendPACKET::Send_cli_UPDATE_NAME( char* szName )
 {
 	m_pSendPacket->m_HEADER.m_wType = PXY_UPDATE_NAME;
@@ -2151,4 +2151,3 @@ void  CSendPACKET::Send_cli_SET_RIGHTS( DWORD dwRight )
 
 	Send_PACKET( m_pSendPacket );
 }
-*/

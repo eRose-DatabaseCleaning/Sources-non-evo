@@ -1233,7 +1233,8 @@ public :
 	/// > virtual function of CObjAVT
 	/// >
 
-	virtual void				Update_SPEED ()			
+	//virtual void				Update_ANI_SPEED () //PY: I think this is just for animation purposes
+	virtual void				Update_SPEED ()			//Numenor: PurpleYouko changes this name? But the function is the same...
 	{	
 		m_nAtkAniSPEED = Cal_AtkAniSPEED( this->GetPartITEM(BODY_PART_WEAPON_R) );
 		m_fRunAniSPEED = Cal_RunAniSPEED( m_nRunSPEED );
@@ -1405,9 +1406,11 @@ public:
 	void						SetPsv_AtkSPEED(short nPsvAtkSpeed)	{	m_nPsvAtkSPEED = nPsvAtkSpeed;	}
 	
 	
-	/// 최대 생명력	
+	/// Max vitality	
 	void						Set_MaxHP( int iMaxHP )			{ m_iMaxHP = iMaxHP; }
-
+	//added by PY
+	void						Set_MaxMP( int iMaxMP )			{ m_iMaxMP = iMaxMP; }
+	
 	
 	
 

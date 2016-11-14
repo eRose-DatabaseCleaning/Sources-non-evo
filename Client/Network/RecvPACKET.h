@@ -289,10 +289,10 @@ public   :
 	void Recv_gsv_SCREEN_SHOT_TIME();
 
 	//Numenor: Useless. I removed it:
-	/*
+	
 	// Updates a player name
 	void Recv_gsv_UPDATE_NAME();
-	*/
+	
 } ;
 
 //-------------------------------------------------------------------------------------------------

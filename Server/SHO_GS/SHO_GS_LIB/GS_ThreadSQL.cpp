@@ -81,7 +81,8 @@ GS_CThreadSQL::GS_CThreadSQL () : CSqlTHREAD( true ), m_csUserLIST( 4000 ), m_Tm
 #ifdef FRAROSE
 	COMPILE_TIME_ASSERT( sizeof( tagGrowAbility )	<= 394	);
 #else
-	COMPILE_TIME_ASSERT( sizeof( tagGrowAbility )	<= 384	);
+	//COMPILE_TIME_ASSERT( sizeof( tagGrowAbility )	<= 384	);
+	COMPILE_TIME_ASSERT( sizeof( tagGrowAbility )	<= 388	); // Numenor: HP fix
 #endif
 	COMPILE_TIME_ASSERT( sizeof( tagSkillAbility )	<= 240	);
 	COMPILE_TIME_ASSERT( sizeof( CInventory )		<= 2048 );

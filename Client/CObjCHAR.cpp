@@ -2954,7 +2954,7 @@ void CObjCHAR::RecoverHP( short nRecoverMODE )
 			m_ReviseHP = 0;
 		}
 	}
-
+#endif
 	int iMaxHP = Get_MaxHP();
 	if( Get_HP() > Get_MaxHP() )
 		Set_HP( Get_MaxHP() );					
@@ -3008,7 +3008,7 @@ void CObjCHAR::RecoverMP( short nRecoverMODE )
 			m_ReviseMP = 0;
 		}
 	}
-
+#endif
 	if( Get_MP() > Get_MaxMP() )
 		Set_MP( Get_MaxMP() );			
 }

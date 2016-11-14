@@ -5290,9 +5290,9 @@ void CRecvPACKET::Recv_gsv_CHAR_STAT_INFO()
 		if( pCHAR->IsUSER() )
 		{
 			((CObjAVT*)pCHAR)->SetOri_RunSPEED( m_pRecvPacket->m_gsv_CHAR_STAT_INFO.m_CurMSPD );	//update move speed for all in visible range
-			ClientLog (LOG_NORMAL, " 0x07ed Avatar move speed set to %i", pCHAR->GetOri_RunSPEED());
-			((CObjAVT*)pCHAR)->Update_ANI_SPEED();		//PY Animation speed only
-			ClientLog (LOG_NORMAL, " 0x07ed Avatar move speed after Update_SPEED: %i", pCHAR->GetOri_RunSPEED());
+			//ClientLog (LOG_NORMAL, " 0x07ed Avatar move speed set to %i", pCHAR->GetOri_RunSPEED());
+			((CObjAVT*)pCHAR)->Update_SPEED();		//PY Animation speed only
+			//ClientLog (LOG_NORMAL, " 0x07ed Avatar move speed after Update_SPEED: %i", pCHAR->GetOri_RunSPEED());
 			if( pCHAR->IsA( OBJ_USER ) && g_pAVATAR ) //pCHAR is my avatar. I'm the only one who needs to see this stuff
 			{
 				//pCHAR->SetWeightRate(m_pRecvPacket->m_gsv_CHAR_STAT_INFO.m_CurMaxWeight);
@@ -6786,7 +6786,7 @@ void  CRecvPACKET::Recv_gsv_SCREEN_SHOT_TIME()
 
 }
 //Numenor: Useless. I removed it:
-/*
+
 void CRecvPACKET::Recv_gsv_UPDATE_NAME()
 {
 	short nOffset = sizeof( gsv_UPDATE_NAME );
@@ -6803,4 +6803,3 @@ void CRecvPACKET::Recv_gsv_UPDATE_NAME()
 
 	pAVT->SetAvataName( szMsg );
 }
-*/

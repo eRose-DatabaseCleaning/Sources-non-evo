@@ -711,11 +711,11 @@ void CNetwork::Proc_ZonePacket ()
 				 break;
 
 				 //Numenor: Useless. I removed it:
-				 /*
+				 
 			 case SRV_UPDATE_NAME:
 				Recv_gsv_UPDATE_NAME();
 				break;
-				*/
+				
 			default :
 				//_ASSERT(0);
 				LogString (LOG_NORMAL, "received Invalid packet type ... type: 0x%x , size: %d \n", m_pRecvPacket->m_HEADER.m_wType, m_pRecvPacket->m_HEADER.m_nSize);

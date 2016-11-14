@@ -50,13 +50,15 @@ enum AVTTBL_COL_IDX {
 //-------------------------------------------------------------------------------------------------
 CWS_ThreadSQL::CWS_ThreadSQL () : CSqlTHREAD( true )
 {
-	COMPILE_TIME_ASSERT( sizeof( tagGrowAbility )	<= 384	);
+	//COMPILE_TIME_ASSERT( sizeof( tagGrowAbility )	<= 384	);
+	COMPILE_TIME_ASSERT( sizeof( tagGrowAbility )	<= 388	); // Numenor: HP fix
 #ifdef __KCHS_BATTLECART__ 
 	COMPILE_TIME_ASSERT( sizeof( tagGrowAbility )	== 383	);
 	COMPILE_TIME_ASSERT( sizeof( CInventory )		== (140*14+8) );	// 1954
 	COMPILE_TIME_ASSERT( MAX_RIDING_PART			== 5 );
 #else
-	COMPILE_TIME_ASSERT( sizeof( tagGrowAbility )	== 383	);
+	//COMPILE_TIME_ASSERT( sizeof( tagGrowAbility )	== 383	);
+	COMPILE_TIME_ASSERT( sizeof( tagGrowAbility )	== 387	); // Numenor: HP fix
 	COMPILE_TIME_ASSERT( sizeof( CInventory )		== (139*14+8) );	// 1954
 	COMPILE_TIME_ASSERT( MAX_RIDING_PART			== 4 );
 #endif
