@@ -40,107 +40,29 @@ __int64 CCal::Get_NeedRawEXP (int iLevel)
 	if ( iLevel > MAX_LEVEL )
 		iLevel = MAX_LEVEL;
 
-	if ( IsTAIWAN() ) {
-		// [레벨 15이하일 경우]   필요 경험치 = { (LV + 3) * (LV + 5 ) * (LV + 10) * 0.7 }
-		if ( iLevel <= 15 )
-			return (__int64)( (iLevel+3)*(iLevel+5)*(iLevel+10)*0.7 );
-
-		// [레벨 50이하일 경우]   필요 경험치 = { (LV - 5) * (LV + 2 ) * (LV + 2) * 2.2 }
-		if ( iLevel <= 50 ) 
-			return (__int64)( (iLevel-5)*(iLevel+2)*(iLevel+2)*2.2 );
-
-		// [레벨 100이하일 경우]  필요 경험치 = { (LV - 5) * ( LV +2 ) * (LV -38 ) * 9 }
-		if ( iLevel <= 100 ) 
-			return (__int64)( (iLevel-5)*(iLevel+2)*(iLevel-38)*9 );
-
-		// [레벨 139이하일 경우]  필요 경험치 = { (LV + 27) * (LV +34 ) * (LV + 220) }
-		if ( iLevel <= 139 ) 
-			return (__int64)( (iLevel+27)*(iLevel+34)*(iLevel+220) );
-
-		// [레벨 200이하일 경우]  필요 경험치 = { (LV - 15) * (LV +7 ) * (LV - 126) * 41 }
-		return (__int64)( (iLevel-15)*(iLevel+7)*(iLevel-126) * 41 );
-/*
-		// <대만 적용 계산식> 2005.04.25
-		//²	[레벨 8이하일 경우] 필요 경험치 = ( (iLevel+3)*(iLevel+5)*(iLevel+10)*0.6 )
-		if ( iLevel <= 8 )
-			return (int)( (iLevel+3)*(iLevel+5)*(iLevel+10)*0.6 );
-		//²	[레벨 9일 경우] 필요 경험치 = ( iLevel+2)*(iLevel+4)*(iLevel+3)*1.9 )
-		if ( iLevel == 9 )
-			return (int)( (iLevel+2 )*(iLevel+4 )*(iLevel+3 )*1.9 );
-
-		//²	[레벨 28이하일 경우] 필요 경험치 = ( (iLevel+3 )*(iLevel+1 )*(iLevel+3 )*1.2 )
-		if ( iLevel <= 28  )
-			return (int)( (iLevel+3 )*(iLevel+1 )*(iLevel+3 )*1.2 );
-		//²	[레벨 29일 경우] 필요 경험치 = ( (iLevel+9 )*(iLevel+10 )*(iLevel+10 )*2 )
-		if ( iLevel == 29  )
-			return (int)( (iLevel+9 )*(iLevel+10 )*(iLevel+10 )*2 );
-
-		//²	[레벨 48이하일 경우] 필요 경험치 = ( (iLevel-5 )*(iLevel+2 )*(iLevel+2 )*1.8 )
-		if ( iLevel <= 48  )
-			return (int)( (iLevel-5 )*(iLevel+2 )*(iLevel+2 )*1.8 );
-		//²	[레벨 49일 경우] 필요 경험치 = ( (iLevel+10 )*(iLevel+10 )*(iLevel+15 )*3.2 )
-		if ( iLevel == 49  )
-			return (int)( (iLevel+10 )*(iLevel+10 )*(iLevel+15 )*3.2 );
-
-		//²	[레벨 68이하일 경우] 필요 경험치 = ( (iLevel-5 )*(iLevel+3 )*(iLevel+2 )*1.9 )
-		if ( iLevel <= 68  )
-			return (int)( (iLevel-5 )*(iLevel+3 )*(iLevel+2 )*1.9 );
-		//²	[레벨 69일 경우] 필요 경험치 = ( (iLevel+10 )*(iLevel+10 )*(iLevel+20 )*3.4 )
-		if ( iLevel == 69  )
-			return (int)( (iLevel+10 )*(iLevel+10 )*(iLevel+20 )*3.4 );
-
-		//²	[레벨 98이하일 경우] 필요 경험치 = ( (iLevel-11 )*(iLevel+0 )*(iLevel-3 )*2.4 )
-		if ( iLevel <= 98  )
-			return (int)( (iLevel-11 )*(iLevel+0 )*(iLevel-3 )*2.4 );
-		//²	[레벨 99일 경우] 필요 경험치 = ( (iLevel+4 )*(iLevel+9 )*(iLevel+4 )*6 )
-		if ( iLevel == 99  )
-			return (int)( (iLevel+4 )*(iLevel+9 )*(iLevel+4 )*6 );
-
-		//²	[레벨 148이하일 경우] 필요 경험치 = ( (iLevel-11 )*(iLevel+0 )*(iLevel+4 )*4 )
-		if ( iLevel <= 148  )
-			return (int)( (iLevel-11 )*(iLevel+0 )*(iLevel+4 )*4 );
-		//²	[레벨 149일 경우] 필요 경험치 = ( (iLevel-31 )*(iLevel-20 )*(iLevel+4 )*16 )
-		if ( iLevel == 149  ) 
-			return (int)( (iLevel-31 )*(iLevel-20 )*(iLevel+4 )*16 );
-
-		//²	[레벨 178이하일 경우] 필요 경험치 = ( (iLevel-67 )*(iLevel-20 )*(iLevel-10 )*9 )
-		if ( iLevel <= 178  )
-			return (int)( (iLevel-67 )*(iLevel-20 )*(iLevel-10 )*9 );
-
-		//²	[레벨 200이하일 경우] 필요 경험치 =( (iLevel-67 )*(iLevel-20 )*(iLevel-10 )*(iLevel-170 ) )
-		return (int)( (iLevel-67 )*(iLevel-20 )*(iLevel-10 )*(iLevel-170 ) );
-*/
-	}
-
-
-	// 한국 계산식...2005.05.25(수정) ~
-	if ( iLevel <= 60 ) {
-		if ( iLevel <= 15 ) {
-			// [레벨 15 이하일 경우]  필요 경험치 = { (LV + 3) * (LV + 5 ) * (LV + 10) * 0.7 } 
+	// LZO updated the structure and comments (lvl -> lvl)
+	if ( iLevel <= 15 ) {
+			// 0 -> 15 | [레벨 15 이하일 경우]  필요 경험치 = { (LV + 3) * (LV + 5 ) * (LV + 10) * 0.7 } 
 			return (__int64)( ( (iLevel+3) * (iLevel+5) * (iLevel+10)*0.7f ) );
-		}
-
-		// [레벨 60 이하일 경우]  필요 경험치 = { (LV - 5) * (LV + 2 ) * (LV + 2) * 2.2 } 
+	}
+	if ( iLevel <= 60 ) {
+		// 16 -> 60 | [레벨 60 이하일 경우]  필요 경험치 = { (LV - 5) * (LV + 2 ) * (LV + 2) * 2.2 } 
 		return (__int64)( ( (iLevel-5) * (iLevel+2) * (iLevel+2)*2.2f ) );
 	}
-
 	if ( iLevel <= 113 ) {
-		// [레벨 113이하일 경우]  필요 경험치 = { (LV - 11) * ( LV ) * (LV + 4) * 2.5 } 
+		// 61 -> 113 | [레벨 113이하일 경우]  필요 경험치 = { (LV - 11) * ( LV ) * (LV + 4) * 2.5 } 
 		return (__int64)( ( (iLevel-11) * (iLevel) * (iLevel+4)*2.5f ) );
 	}
-
 	if ( iLevel <= 150 ) {
-		// [레벨 150이하일 경우]  필요 경험치 = { (LV - 31) * (LV - 20 ) * (LV + 4) * 3.8 } 
+		// 114 -> 150 | [레벨 150이하일 경우]  필요 경험치 = { (LV - 31) * (LV - 20 ) * (LV + 4) * 3.8 } 
 		return (__int64)( ( (iLevel-31) * (iLevel-20) * (iLevel+4)*3.8f ) );
 	}
-
-//	if ( iLevel <= 176 ) {
 	if ( iLevel <= 189 ) {
-		// [레벨 189이하일 경우]  필요 경험치 = { (LV - 67) * (LV - 20 ) * (LV - 10) * 6 } 
+		// 151 -> 189 | [레벨 189이하일 경우]  필요 경험치 = { (LV - 67) * (LV - 20 ) * (LV - 10) * 6 } 
 		return (__int64)( ( (iLevel-67) * (iLevel-20) * (iLevel-10)*6.f ) );
 	}
 
-	// [레벨 200이하일 경우]  필요 경험치 = { (LV - 90) * (LV - 120) * (LV - 60) * (LV - 170) * (LV -188)}
+	// 190 -> max... | [레벨 200이하일 경우]  필요 경험치 = { (LV - 90) * (LV - 120) * (LV - 60) * (LV - 170) * (LV -188)}
 	return (__int64)( (iLevel-90) * (iLevel-120) * (iLevel-60) * (iLevel-170) * (iLevel-188) );
 }
 
@@ -191,16 +113,8 @@ bool CCal::Get_DropITEM (int iLevelDiff, CObjMOB *pMobCHAR, tagITEM &sITEM, int 
 	*/
 	iLevelDiff = 0;
 
-	if( IsTAIWAN () ) {
-		// 대만 6-14 kchs
-		if( iLevelDiff < 9 )
-			iDrop_VAR = (int)( ( ::Get_WorldDROP() + NPC_DROP_ITEM( pMobCHAR->Get_CharNO() ) - (1+RANDOM(100))- ((iLevelDiff+16)*3.5f)-10 + iDropRate ) * 0.38f ); // * ( NPC_DROP_MONEY( pMobCHAR->Get_CharNO() ) + 30 ) / 130;
-		else
-			iDrop_VAR = (int)( ( ::Get_WorldDROP() + NPC_DROP_ITEM( pMobCHAR->Get_CharNO() ) - (1+RANDOM(100))- ((iLevelDiff+20)*5.5f)-10 + iDropRate ) * 0.23f ); // * ( NPC_DROP_MONEY( pMobCHAR->Get_CharNO() ) + 30 ) / 130;
-	} else {
-		iDrop_VAR = (int)( ( ::Get_WorldDROP() + NPC_DROP_ITEM( pMobCHAR->Get_CharNO() ) - (1+RANDOM(100))- ((iLevelDiff+16)*3.5f)-10 + iDropRate ) * 0.38f ); // * ( NPC_DROP_MONEY( pMobCHAR->Get_CharNO() ) + 30 ) / 130;
-	}
-
+	iDrop_VAR = (int)( ( ::Get_WorldDROP() + NPC_DROP_ITEM( pMobCHAR->Get_CharNO() ) - (1+RANDOM(100))- ((iLevelDiff+16)*3.5f)-10 + iDropRate ) * 0.38f ); // * ( NPC_DROP_MONEY( pMobCHAR->Get_CharNO() ) + 30 ) / 130;
+	
 	if ( iDrop_VAR <= 0 ) {
 		// 드롭 확률 저조 !!! 생성안됨.
 		return false;
@@ -266,63 +180,66 @@ bool CCal::Get_DropITEM (int iLevelDiff, CObjMOB *pMobCHAR, tagITEM &sITEM, int 
 		// 소켓 갯수 :: 05.05.25 대만 오베이후에는 드롭 아이템에 소켓 없다.
 		// short nRareType = IsTAIWAN() ? 0 : ITEM_RARE_TYPE( sITEM.GetTYPE(), sITEM.GetItemNO() );
 		short nRareType = ITEM_RARE_TYPE( sITEM.GetTYPE(), sITEM.GetItemNO() );
-		if ( IsTAIWAN() && nRareType < 3 ) {
-			nRareType = 0;
-		}
-
+		// LZO : 
+		//  RareType    |        list of items
+		//  ----------------------------------------------
+		//   0/null     |       almost all items
+		//     1        |   unique weapon & socket rings
+		//     2        |   all weapons&shields lvl >30
 		switch( nRareType ) {
-			case 3 :	// 대만 레어 아이템 
-				sITEM.m_nGEM_OP = 100 + RANDOM(41);
-				break;
-			case 1 :	// 무조건
+//LZO useless code (specific to Taiwan)
+//			case 3 :	// 대만 레어 아이템 
+//				sITEM.m_nGEM_OP = 100 + RANDOM(41);
+//				break;
+			case 1 :	// 무조건   LZO : if rareType 1 => Always socket !
 				sITEM.m_bHasSocket = 1;
 				sITEM.m_bIsAppraisal = 1;
 				break;
-			case 2 :	// 계산
+			case 2 :	// 계산   LZO : if rareType 2 => around 20-30% chance of getting socket. 
 				if ( ITEM_QUALITY( sITEM.GetTYPE(), sITEM.GetItemNO() ) + 60 - RANDOM(400) > 0 ) {
 					sITEM.m_bHasSocket = 1;
 					sITEM.m_bIsAppraisal = 1;
-					break;
+					break;    //LZO  if no socket, jump to default (no break)
 				}
-			case 0 :
+			//	case 0 :    LZO : I prefer to use default, in case we have odd value in DB :)
+			default:
 			{
+				//sITEM.m_bHasSocket = 0; // LZO : to add if needed to fix all drops are socket
+			
 				iTEMP = 1+RANDOM(100);
 				if ( sITEM.GetTYPE() != ITEM_TYPE_JEWEL ) {
-					// 장비는 각 stb의 기본 품질 값을 설정.
+					// 장비는 각 stb의 기본 품질 값을 설정. 
+					// LZO % chance to have stats (depend on MobLevel and MobDropRate and Charm)
+						//  here below is with 20Charm. It's around +1% chance / 5 charm
+						//	+------------+-----+-----+-----+-----+-----+
+						//	| droprate : | 40  | 47  | 60  | 80  | 90  |
+						//	+------------+-----+-----+-----+-----+-----+
+						//	| level 10   | 14% | 19% | 29% | 44% | 53% |
+						//	| level 30   | 15% | 21% | 31% | 46% | 54% |
+						//	| level 50   | 17% | 22% | 32% | 47% | 56% |
+						//	| level 70   | 18% | 24% | 34% | 49% | 57% |
+						//	| level 90   | 20% | 25% | 35% | 50% | 59% |
+						//	| level 110  | 21% | 27% | 37% | 52% | 60% |
+						//	| level 130  | 23% | 28% | 38% | 53% | 62% |
+						//	| level 150  | 24% | 30% | 40% | 55% | 63% |
+						//	| level 170  | 26% | 31% | 41% | 56% | 65% |
+						//	| level 190  | 27% | 33% | 43% | 58% | 66% |
+						//	+------------+-----+-----+-----+-----+-----+
 					int iITEM_OP = (int)( ( ( pMobCHAR->Get_LEVEL()*0.4f + ( NPC_DROP_ITEM( pMobCHAR->Get_CharNO() )-35 )*4 + 80 - iTEMP + iCharm ) * 24 / ( iTEMP + 13 ) ) - 100 );
+					
 					if ( iITEM_OP > 0 ) {
-						if ( IsTAIWAN() ) {
-							int iOption = RANDOM(100);
-							if ( iOption <= 35 ) {	// 1-6
-								iOption = 1 + RANDOM(7-1);
-							} else
-							if ( iOption <= 70 ) {	// 7-48
-								iOption = 7 + RANDOM(49-7);
-							} else
-							if ( iOption <= 85 ) {	// 49-64
-								iOption = 49 + RANDOM(65-49);
-							} else
-							if ( iOption <= 95 ) {	// 65-72
-								iOption = 65 + RANDOM(73-65);
-							} else {				// 73-80
-								iOption = 73 + RANDOM(81-73);
-							}
-							sITEM.m_nGEM_OP = iOption;
-							sITEM.m_bIsAppraisal = 1;
-						} else {
-							if ( pMobCHAR->Get_LEVEL() < 230 )
-								sITEM.m_nGEM_OP = iITEM_OP % ( pMobCHAR->Get_LEVEL()+70 );
-							else
-								sITEM.m_nGEM_OP = iITEM_OP % 301;
-
-							sITEM.m_bIsAppraisal = sITEM.m_nGEM_OP ? 0 : 1;
-						}
+						if ( pMobCHAR->Get_LEVEL() < 230 )
+							sITEM.m_nGEM_OP = iITEM_OP % ( pMobCHAR->Get_LEVEL()+70 );
+						else
+							sITEM.m_nGEM_OP = iITEM_OP % 301;
+						
+						sITEM.m_bIsAppraisal = sITEM.m_nGEM_OP ? 0 : 1;
 					}
 				}
 				break;
 			}
 		}
-		sITEM.m_bHasSocket = 1;
+		//sITEM.m_bHasSocket = 1;  LZO commented to remove the rule socket on all
 
 		// 내구도 결정
 		iTEMP = (int)( ITEM_DURABITY( sITEM.GetTYPE(), sITEM.GetItemNO() ) * ( pMobCHAR->Get_LEVEL()*0.3f+NPC_DROP_ITEM( pMobCHAR->Get_CharNO() )*2 + 320 ) * 0.5f / ( RANDOM(100)+201 ) );
@@ -334,31 +251,26 @@ bool CCal::Get_DropITEM (int iLevelDiff, CObjMOB *pMobCHAR, tagITEM &sITEM, int 
 		if ( iTEMP > MAX_ITEM_LIFE ) iTEMP = MAX_ITEM_LIFE;
 		sITEM.m_nLife = iTEMP;
 
-		if ( IsTAIWAN() ) {
-			// 05.05.25 대만 오베 이후에는 재련 없다
-			sITEM.m_cGrade = 0;
-		} else {
-			switch( sITEM.GetTYPE() ) {
-				case ITEM_TYPE_WEAPON	:
-				case ITEM_TYPE_SUBWPN	:
-				case ITEM_TYPE_HELMET	:
-				case ITEM_TYPE_ARMOR	:
-				case ITEM_TYPE_GAUNTLET	:
-				case ITEM_TYPE_BOOTS	:
-				case ITEM_TYPE_RIDE_PART:
-				{
-					// 제련등급 결정.
-					iTEMP = 1+RANDOM(100);
-					// ITEM_GRADE = [ { (DROP_ITEM-5)*3 + 150 - MOB_LV*1.5 - TEMP + CHA } * 0.4 / ( TEMP + 30 ) ] - 1
-					int iITEM_GRADE = (int)( ( (NPC_DROP_ITEM( pMobCHAR->Get_CharNO() ) - 5 ) * 3 + 150 - pMobCHAR->Get_LEVEL()*1.5f - iTEMP + iCharm ) * 0.4f / ( iTEMP + 30 ) ) - 1;
-					if ( iITEM_GRADE >= 1 ) {
-						if ( iITEM_GRADE >=3 )
-							sITEM.m_cGrade = 3;
-						else
-							sITEM.m_cGrade = iITEM_GRADE;
-					}
-					break;
+		switch( sITEM.GetTYPE() ) {
+			case ITEM_TYPE_WEAPON	:
+			case ITEM_TYPE_SUBWPN	:
+			case ITEM_TYPE_HELMET	:
+			case ITEM_TYPE_ARMOR	:
+			case ITEM_TYPE_GAUNTLET	:
+			case ITEM_TYPE_BOOTS	:
+			case ITEM_TYPE_RIDE_PART:
+			{
+				// 제련등급 결정.
+				iTEMP = 1+RANDOM(100);
+				// ITEM_GRADE = [ { (DROP_ITEM-5)*3 + 150 - MOB_LV*1.5 - TEMP + CHA } * 0.4 / ( TEMP + 30 ) ] - 1
+				int iITEM_GRADE = (int)( ( (NPC_DROP_ITEM( pMobCHAR->Get_CharNO() ) - 5 ) * 3 + 150 - pMobCHAR->Get_LEVEL()*1.5f - iTEMP + iCharm ) * 0.4f / ( iTEMP + 30 ) ) - 1;
+				if ( iITEM_GRADE >= 1 ) {
+					if ( iITEM_GRADE >=3 )
+						sITEM.m_cGrade = 3;
+					else
+						sITEM.m_cGrade = iITEM_GRADE;
 				}
+				break;
 			}
 		}
 	}
