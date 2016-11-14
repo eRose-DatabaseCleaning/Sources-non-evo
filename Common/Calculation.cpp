@@ -202,7 +202,7 @@ bool CCal::Get_DropITEM (int iLevelDiff, CObjMOB *pMobCHAR, tagITEM &sITEM, int 
 		//	case 0 :    LZO : I prefer to use default, in case we have odd value in DB :)
 			default:
 			{
-				sITEM.m_bHasSocket = 0; // added by LZO to fix all drops are socket
+				//sITEM.m_bHasSocket = 0; // LZO : to add if needed to fix all drops are socket
 				
 				iTEMP = 1+RANDOM(100);
 				if ( sITEM.GetTYPE() != ITEM_TYPE_JEWEL ) {
