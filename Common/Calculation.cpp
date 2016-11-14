@@ -202,6 +202,8 @@ bool CCal::Get_DropITEM (int iLevelDiff, CObjMOB *pMobCHAR, tagITEM &sITEM, int 
 		//	case 0 :    LZO : I prefer to use default, in case we have odd value in DB :)
 			default:
 			{
+				sITEM.m_bHasSocket = 0; // added by LZO to fix all drops are socket
+				
 				iTEMP = 1+RANDOM(100);
 				if ( sITEM.GetTYPE() != ITEM_TYPE_JEWEL ) {
 					// 장비는 각 stb의 기본 품질 값을 설정. 
@@ -228,7 +230,6 @@ bool CCal::Get_DropITEM (int iLevelDiff, CObjMOB *pMobCHAR, tagITEM &sITEM, int 
 						else
 							sITEM.m_nGEM_OP = iITEM_OP % 301;
 					
-						sITEM.m_bHasSocket = 0; // added by LZO to fix all drops are socket
 						sITEM.m_bIsAppraisal = sITEM.m_nGEM_OP ? 0 : 1;				
 					}
 				}
