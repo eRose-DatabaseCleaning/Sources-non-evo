@@ -19,14 +19,19 @@ char *l_szAbility[] = {
 	NULL
 } ;
 
-DWORD classUSER::A_Cheater ()
+DWORD classUSER::A_Cheater ()   // LZO    dword is 4 byte(0x00 00 00 00) = 32 bits (0000-0000 0000-0000 0000-0000 0000-0000)
 {
-#ifdef	__INC_WORLD
+#ifdef	__INC_WORLD   //LZO this seems to be declared in VC project... to confirm soon...
 	return this->m_dwRIGHT & 0x7fffffff;
 #else
 	if ( CLIB_GameSRV::GetInstance()->IsTestServer() ) {
 		// 테섭 : 마스타, 개발자
-		return this->m_dwRIGHT & ( RIGHT_MASTER | RIGHT_DEV );
+		return this->m_dwRIGHT & ( RIGHT_MASTER | RIGHT_DEV );  
+			//LZO logical operation :
+			// RIGHT_Master(0x00800)  OR  RIGHT_DEV(0x00400)  = 0x00C00 (in bits : 0000 0000 1100 0000 0000)
+			// dwright AND ( 0x00C00 )     = test with AND operator to know if user got admin right
+			// if part of dwright is 0000 0000 XX00 0000 0000, A_Cheater will be not null
+			
 	} else {
 		// 본섭 : 마스타
 		return this->m_dwRIGHT & RIGHT_MASTER;
