@@ -25,10 +25,10 @@ DWORD classUSER::A_Cheater ()
 	return this->m_dwRIGHT & 0x7fffffff;
 #else
 	if ( CLIB_GameSRV::GetInstance()->IsTestServer() ) {
-		// ≈◊º∑ : ∏∂Ω∫≈∏, ∞≥πﬂ¿⁄
+		// ÌÖåÏÑ≠ : ÎßàÏä§ÌÉÄ, Í∞úÎ∞úÏûê
 		return this->m_dwRIGHT & ( RIGHT_MASTER | RIGHT_DEV );
 	} else {
-		// ∫ªº∑ : ∏∂Ω∫≈∏
+		// Î≥∏ÏÑ≠ : ÎßàÏä§ÌÉÄ
 		return this->m_dwRIGHT & RIGHT_MASTER;
 	}
 #endif
@@ -36,37 +36,37 @@ DWORD classUSER::A_Cheater ()
 DWORD classUSER::B_Cheater ()
 {
 	if ( CLIB_GameSRV::GetInstance()->IsTestServer() ) {
-		// ≈◊º∑ : ∏∂Ω∫≈∏, ∞≥πﬂ¿⁄, ∏∂Ω∫≈∏gm, ¿œπ›gm
+		// ÌÖåÏÑ≠ : ÎßàÏä§ÌÉÄ, Í∞úÎ∞úÏûê, ÎßàÏä§ÌÉÄgm, ÏùºÎ∞ògm
 		return this->m_dwRIGHT & ( RIGHT_MASTER | RIGHT_DEV | RIGHT_MG | RIGHT_NG );
 	} else {
-		// ∫ªº∑ : ∏∂Ω∫≈∏, ∏∂Ω∫≈∏gm,
+		// Î≥∏ÏÑ≠ : ÎßàÏä§ÌÉÄ, ÎßàÏä§ÌÉÄgm,
 		return this->m_dwRIGHT & ( RIGHT_MASTER | RIGHT_MG );
 	}
 }
 DWORD classUSER::C_Cheater ()
 {
-	// ∏∂Ω∫≈Õ, ∞≥πﬂ¿⁄, ∏∂Ω∫≈∏gm, ¿œπ› gm
+	// ÎßàÏä§ÌÑ∞, Í∞úÎ∞úÏûê, ÎßàÏä§ÌÉÄgm, ÏùºÎ∞ò gm
 	return this->m_dwRIGHT & ( RIGHT_MASTER | RIGHT_DEV | RIGHT_MG | RIGHT_NG );
 }
 DWORD classUSER::GM_Cheater ()
 {
 	if ( CLIB_GameSRV::GetInstance()->IsTestServer() ) {
-		// ≈◊º∑ : ∏∂Ω∫≈∏, ∞≥πﬂ¿⁄, ∏∂Ω∫≈∏gm, ¿œπ›gm
+		// ÌÖåÏÑ≠ : ÎßàÏä§ÌÉÄ, Í∞úÎ∞úÏûê, ÎßàÏä§ÌÉÄgm, ÏùºÎ∞ògm
 		return this->m_dwRIGHT & ( RIGHT_MASTER | RIGHT_DEV | RIGHT_MG | RIGHT_NG );
 	} else {
-		// ∫ªº∑ : ∏∂Ω∫≈∏, ∏∂Ω∫≈∏gm,
+		// Î≥∏ÏÑ≠ : ÎßàÏä§ÌÉÄ, ÎßàÏä§ÌÉÄgm,
 		return this->m_dwRIGHT & ( RIGHT_MASTER | RIGHT_MG | RIGHT_NG );
 	}
 }
 
 DWORD classUSER::TWGM_Cheater ()
 {
-	// kchs : 2005-08-17 , 512øÕ 256øÕ ¡ﬂ∞£ ±««—
+	// kchs : 2005-08-17 , 512ÏôÄ 256ÏôÄ Ï§ëÍ∞Ñ Í∂åÌïú
 	return this->m_dwRIGHT & ( RIGHT_TWG | RIGHT_MG | RIGHT_DEV | RIGHT_MASTER );
 }
 
 //-------------------------------------------------------------------------------------------------
-// CµÓ±ﬁ..
+// CÎì±Í∏â..
 short classUSER::Cheat_where (CStrVAR *pStrVAR, char *pArg1/*szCharName*/, char *pArg2/*szAccount*/, char *szCode )
 {
 	classUSER *pUSER=NULL;
@@ -84,26 +84,26 @@ short classUSER::Cheat_where (CStrVAR *pStrVAR, char *pArg1/*szCharName*/, char 
 			this->Send_gsv_WHISPER( pUSER->Get_NAME(), pStrVAR->Get() );
 		}
 	} else {
-		// ø˘µÂ º≠πˆ∑Œ ¿¸º€.
+		// ÏõîÎìú ÏÑúÎ≤ÑÎ°ú Ï†ÑÏÜ°.
 		g_pSockLSV->Send_gsv_CHEAT_REQ( this, this->m_dwWSID, 0, szCode );
 	}
 	return CHEAT_NOLOG;
 }
-// CµÓ±ﬁ..
+// CÎì±Í∏â..
 short classUSER::Cheat_account (char *pArg1, char *szCode )
 {
-	// ƒ…∏Ø ¿Ã∏ß¿∏∑Œ ∞Ë¡§ æÚ±‚
+	// ÏºÄÎ¶≠ Ïù¥Î¶ÑÏúºÎ°ú Í≥ÑÏ†ï ÏñªÍ∏∞
 	classUSER *pUSER=NULL;
 	pUSER = g_pUserLIST->Find_CHAR( pArg1 );
 	if ( pUSER && pUSER->m_dwRIGHT <= RIGHT_DEV ) {
 		this->Send_gsv_WHISPER( pUSER->Get_NAME(), pUSER->Get_ACCOUNT() );
 	} else {
-		// ø˘µÂ º≠πˆ∑Œ ¿¸º€.
+		// ÏõîÎìú ÏÑúÎ≤ÑÎ°ú Ï†ÑÏÜ°.
 		g_pSockLSV->Send_gsv_CHEAT_REQ( this, this->m_dwWSID, 0, szCode );
 	}
 	return CHEAT_NOLOG;
 }
-// CµÓ±ﬁ..
+// CÎì±Í∏â..
 short classUSER::Cheat_move (char *pArg1, char *pArg2, char *szCode )
 {
 	classUSER *pUSER=NULL;
@@ -119,12 +119,12 @@ short classUSER::Cheat_move (char *pArg1, char *pArg2, char *szCode )
 			this->Proc_TELEPORT( pUSER->GetZONE()->Get_ZoneNO(), pUSER->m_PosCUR );	// "/move"
 		}
 	} else {
-		// ø˘µÂ º≠πˆ∑Œ ¿¸º€.
+		// ÏõîÎìú ÏÑúÎ≤ÑÎ°ú Ï†ÑÏÜ°.
 		g_pSockLSV->Send_gsv_CHEAT_REQ( this, this->m_dwWSID, 0, szCode );
 	}
 	return CHEAT_NOLOG;
 }
-// CµÓ±ﬁ..
+// CÎì±Í∏â..
 short classUSER::Cheat_mm (short nZoneNO, char *pArg2, char *pArg3)
 {
 	if ( !this->Is_CartGuest() && g_pZoneLIST->IsValidZONE(nZoneNO) ) {
@@ -137,7 +137,7 @@ short classUSER::Cheat_mm (short nZoneNO, char *pArg2, char *pArg3)
 		PosSEC.x = (short) ( PosWARP.x / g_pZoneLIST->GetSectorSIZE(nZoneNO) );
 		PosSEC.y = (short) ( PosWARP.y / g_pZoneLIST->GetSectorSIZE(nZoneNO) );
 
-		// y√‡ √º≈©¥¬ æ»µ  - ∑Œƒ√¡∏¿Ã æ∆¥“∞ÊøÏ g_pZoneLIST->GetZONE(nZoneNO)->Get_SectorYCNT()ø°º≠ ª∂~~
+		// yÏ∂ï Ï≤¥ÌÅ¨Îäî ÏïàÎê® - Î°úÏª¨Ï°¥Ïù¥ ÏïÑÎãêÍ≤ΩÏö∞ g_pZoneLIST->GetZONE(nZoneNO)->Get_SectorYCNT()ÏóêÏÑú Îªë~~
 		if ( PosSEC.x >= 0 && PosSEC.y >= 0 )
 		{
 			this->Proc_TELEPORT( nZoneNO, PosWARP );		// "/mm"
@@ -146,7 +146,7 @@ short classUSER::Cheat_mm (short nZoneNO, char *pArg2, char *pArg3)
 	}
 	return CHEAT_INVALID;
 }
-// CµÓ±ﬁ
+// CÎì±Í∏â
 short classUSER::Cheat_call ( char *pArg1, char *pArg2, char *szCode )
 {
 	classUSER *pUSER=NULL;
@@ -158,18 +158,18 @@ short classUSER::Cheat_call ( char *pArg1, char *pArg2, char *szCode )
 	}
 	if ( pUSER ) {
 		if ( this->m_dwRIGHT >= pUSER->m_dwRIGHT ) {
-			// pUSERø°∞‘ πŸ∑Œ Send_gsv_TELEPORT_REPLY¿ª ≥Ø∏Æ¥¬∞Õ¿∫ 
-			// pUSER¿« ¡∏¿Ã NULL¿Ã µ«æÓ øÓ¿Ã ≥™ª⁄∏È pUSER∑Á«¡Ω√ ª∂~~~
+			// pUSERÏóêÍ≤å Î∞îÎ°ú Send_gsv_TELEPORT_REPLYÏùÑ ÎÇ†Î¶¨ÎäîÍ≤ÉÏùÄ 
+			// pUSERÏùò Ï°¥Ïù¥ NULLÏù¥ ÎêòÏñ¥ Ïö¥Ïù¥ ÎÇòÏÅòÎ©¥ pUSERÎ£®ÌîÑÏãú Îªë~~~
 			pUSER->Send_gsv_RELAY_REQ( RELAY_TYPE_RECALL, this->GetZONE()->Get_ZoneNO(), this->m_PosCUR );
 		}
 	} else {
-		// ø˘µÂ º≠πˆ∑Œ ¿¸º€.
-		// ≥™¿« ¡∏/¡¬«•∏¶ ¿¸º€«œø© ªÛ¥ÎπÊ¿∏∑Œ «œø©±› ø¿∞‘≤˚...
+		// ÏõîÎìú ÏÑúÎ≤ÑÎ°ú Ï†ÑÏÜ°.
+		// ÎÇòÏùò Ï°¥/Ï¢åÌëúÎ•º Ï†ÑÏÜ°ÌïòÏó¨ ÏÉÅÎåÄÎ∞©ÏúºÎ°ú ÌïòÏó¨Í∏à Ïò§Í≤åÎÅî...
 		g_pSockLSV->Send_gsv_CHEAT_REQ( this, this->m_dwWSID, 0, szCode );
 	}
 	return CHEAT_INVALID;
 }
-// CµÓ±ﬁ..
+// CÎì±Í∏â..
 short classUSER::Cheat_out ( char *pArg1, char *pArg2, char *szCode )
 {
 	classUSER *pUSER=NULL;
@@ -179,7 +179,7 @@ short classUSER::Cheat_out ( char *pArg1, char *pArg2, char *szCode )
 
 	if ( pUSER ) {
 		if ( this->m_dwRIGHT >= pUSER->m_dwRIGHT ) {
-			// ±««—¿Ã ∞∞∞≈≥™ ≥Ùæ∆æﬂ...
+			// Í∂åÌïúÏù¥ Í∞ôÍ±∞ÎÇò ÎÜíÏïÑÏïº...
 			pUSER->Send_gsv_GM_COMMAND( this->Get_NAME(), GM_CMD_LOGOUT );
 			return CHEAT_PROCED;
 		}
@@ -188,7 +188,7 @@ short classUSER::Cheat_out ( char *pArg1, char *pArg2, char *szCode )
 	}
 	return CHEAT_INVALID;
 }
-// CµÓ±ﬁ..
+// CÎì±Í∏â..
 short classUSER::Cheat_shut ( char *pArg1, char *pArg2, char *pArg3, char *szCode )
 {
 	WORD wBlockTIME = 1;
@@ -214,7 +214,7 @@ short classUSER::Cheat_shut ( char *pArg1, char *pArg2, char *pArg3, char *szCod
 	return CHEAT_INVALID;
 }
 
-// º±≈√¿˚...
+// ÏÑ†ÌÉùÏ†Å...
 short classUSER::Cheat_npc ( CStrVAR *pStrVAR, CObjNPC *pNPC, int iNpcIDX, char *pArg2, char *pArg3, char *pArg4 )
 {
 	if ( pArg2 ) {
@@ -224,7 +224,7 @@ short classUSER::Cheat_npc ( CStrVAR *pStrVAR, CObjNPC *pNPC, int iNpcIDX, char 
 		if ( !strcmpi(pArg2, "DISABLE" ) ) {
 			;
 		} else
-		if ( !strcmpi(pArg2, "MOVE") ) {	// ∏µŒ ∞°¥…
+		if ( !strcmpi(pArg2, "MOVE") ) {	// Î™®Îëê Í∞ÄÎä•
 			if ( pNPC->GetZONE() && pNPC->GetZONE()->Get_ZoneNO() ) {
 				this->Proc_TELEPORT( pNPC->GetZONE()->Get_ZoneNO(), pNPC->m_PosCUR );
 			}
@@ -319,10 +319,10 @@ short classUSER::Cheat_add ( char *pArg1, char *pArg2, char *pArg3, char *szCode
 		} else {
 			classUSER *pUSER=NULL;
 			if ( pArg3 ) {
-				// ø√∑¡¡Ÿ ¥ÎªÛ¿Ã ¿÷¥¬∞° ?
+				// Ïò¨Î†§Ï§Ñ ÎåÄÏÉÅÏù¥ ÏûàÎäîÍ∞Ä ?
 				pUSER = g_pUserLIST->Find_CHAR( pArg3 );
 				if ( NULL == pUSER ) {
-					// ø˘µÂ º≠πˆ∑Œ ¿¸º€.
+					// ÏõîÎìú ÏÑúÎ≤ÑÎ°ú Ï†ÑÏÜ°.
 					g_pSockLSV->Send_gsv_CHEAT_REQ( this, this->m_dwWSID, 0, szCode );
 					return CHEAT_PROCED;
 				}
@@ -336,7 +336,7 @@ short classUSER::Cheat_add ( char *pArg1, char *pArg2, char *pArg3, char *szCode
 				int iExp = atoi(pArg2);
 				if ( iExp < 0 ) iExp = 1;
 
-				// ∞Ê«Ëƒ°∏¶ ø√∑¡¡Ÿ ¥ÎªÛ¿Ã ¿÷¥¬∞° ?
+				// Í≤ΩÌóòÏπòÎ•º Ïò¨Î†§Ï§Ñ ÎåÄÏÉÅÏù¥ ÏûàÎäîÍ∞Ä ?
 				pUSER->Add_EXP( iExp, true, 0 );
 				return CHEAT_PROCED;
 			} else
@@ -373,7 +373,7 @@ short classUSER::Cheat_add ( char *pArg1, char *pArg2, char *pArg3, char *szCode
 				pUSER->Add_CurMONEY( atoi(pArg2) );
 				return CHEAT_PROCED;
 			} else
-			if ( !strcmpi(pArg1, "SKILL") ) {	// Ω∫≈≥¿ª πËøÓ∞Õ¿∏∑Œ...
+			if ( !strcmpi(pArg1, "SKILL") ) {	// Ïä§ÌÇ¨ÏùÑ Î∞∞Ïö¥Í≤ÉÏúºÎ°ú...
 				short nSkillIDX = atoi( pArg2 );
 				if ( nSkillIDX >= 1 && nSkillIDX < g_SkillList.Get_SkillCNT() ) {
 					if ( SKILL_ICON_NO( nSkillIDX ) ) {
@@ -512,7 +512,7 @@ short classUSER::Cheat_get ( CStrVAR *pStrVAR, char *pArg1, char *pArg2, char *s
 				this->Send_gsv_WHISPER( pUSER->Get_NAME(), pStrVAR->Get() );
 			}
 		} else {
-			// ø˘µÂ º≠πˆ∑Œ ¿¸º€.
+			// ÏõîÎìú ÏÑúÎ≤ÑÎ°ú Ï†ÑÏÜ°.
 			g_pSockLSV->Send_gsv_CHEAT_REQ( this, this->m_dwWSID, 0, szCode );
 		}
 		return CHEAT_NOLOG;
@@ -581,7 +581,7 @@ short classUSER::Cheat_get ( CStrVAR *pStrVAR, char *pArg1, char *pArg2, char *s
 	return CHEAT_INVALID;
 }
 
-// A µÓ±ﬁ
+// A Îì±Í∏â
 short classUSER::Cheat_item ( char *pArg1, char *pArg2, char *pArg3, char *pArg4 )
 {
 	if ( B_Cheater() ) {
@@ -609,7 +609,7 @@ short classUSER::Cheat_item ( char *pArg1, char *pArg2, char *pArg3, char *pArg4
 				if ( ITEM_ICON_NO( iItemTYPE, iItemNO ) <= 0 )
 					return CHEAT_INVALID;
 
-				// º“∏ ±‚≈∏...
+				// ÏÜåÎ™® Í∏∞ÌÉÄ...
 				if ( iDupCNT > 100 )	iDupCNT = 100;
 				else if ( iDupCNT < 1 )	iDupCNT = 1;
 
@@ -618,15 +618,15 @@ short classUSER::Cheat_item ( char *pArg1, char *pArg2, char *pArg3, char *pArg4
 				if ( ITEM_ICON_NO( iItemTYPE, iItemNO ) <= 0 )
 					return CHEAT_INVALID;
 
-				// ¿Â∫Ò ...
+				// Ïû•ÎπÑ ...
 				sITEM.m_nLife = MAX_ITEM_LIFE;
 				sITEM.m_cDurability = ITEM_DURABITY( sITEM.m_cType, sITEM.m_nItemNo );
 				sITEM.m_nGEM_OP = iDupCNT % 301;
 				sITEM.m_bIsAppraisal = 1;
 				if ( 0 == sITEM.m_nGEM_OP ) {
-					// ø…º«¿Ã æ¯¥Ÿ..
+					// ÏòµÏÖòÏù¥ ÏóÜÎã§..
 					if( pArg4 && ITEM_RARE_TYPE( sITEM.GetTYPE(), sITEM.GetItemNO() ) ) {
-						// 0¿Ã æ∆¥œ∏È º“ƒœ¿Ã ∫Ÿ¿ªºˆ ¿÷¥¬ æ∆¿Ã≈€¿Ã¥Ÿ..
+						// 0Ïù¥ ÏïÑÎãàÎ©¥ ÏÜåÏºìÏù¥ Î∂ôÏùÑÏàò ÏûàÎäî ÏïÑÏù¥ÌÖúÏù¥Îã§..
 						if ( atoi(pArg4) )
 							sITEM.m_bHasSocket = 1;
 					}
@@ -635,7 +635,7 @@ short classUSER::Cheat_item ( char *pArg1, char *pArg2, char *pArg3, char *pArg4
 
 			short nInvIDX = this->Add_ITEM( sITEM );
 			if ( nInvIDX >= 0 ) {
-				// nInvIDX == 0 or sITEM.m_cType == ITEM_TYPE_MONEY ¿Ã∏È µ∑...
+				// nInvIDX == 0 or sITEM.m_cType == ITEM_TYPE_MONEY Ïù¥Î©¥ Îèà...
 				this->Send_gsv_SET_INV_ONLY( (BYTE)nInvIDX, &sITEM );
 				return CHEAT_PROCED;
 			}
@@ -645,7 +645,7 @@ short classUSER::Cheat_item ( char *pArg1, char *pArg2, char *pArg3, char *pArg4
 }
 
 
-// BµÓ±ﬁ..
+// BÎì±Í∏â..
 short classUSER::Cheat_mon ( char *pArg1, char *pArg2 )
 {
 	if ( B_Cheater() ) {
@@ -683,7 +683,7 @@ short classUSER::Cheat_mon2 ( char *pArg1, char *pArg2, char *pArg3, char *pArg4
 	return CHEAT_INVALID;
 }
 
-// BµÓ±ﬁ..
+// BÎì±Í∏â..
 short classUSER::Cheat_damage( char *pArg1, char *pArg2, char *pArg3 )
 {
 	if ( B_Cheater() ) {
@@ -702,8 +702,8 @@ short classUSER::Cheat_damage( char *pArg1, char *pArg2, char *pArg3 )
 		if ( pArg3 ) {
 			int iDamageType = atoi( pArg3 );
 			switch( iDamageType ) {
-				case 1 : sDamage.m_wDamage |= DMG_BIT_HITTED;	break;	// ∏¬¥¬ µø¿€¿ª «—¥Ÿ.
-				case 2 : sDamage.m_wDamage |= DMG_BIT_CRITICAL;	break;	// ≈©∏Æ∆ºƒ√ µ•πÃ¡ˆ¥Ÿ
+				case 1 : sDamage.m_wDamage |= DMG_BIT_HITTED;	break;	// ÎßûÎäî ÎèôÏûëÏùÑ ÌïúÎã§.
+				case 2 : sDamage.m_wDamage |= DMG_BIT_CRITICAL;	break;	// ÌÅ¨Î¶¨Ìã∞Ïª¨ Îç∞ÎØ∏ÏßÄÎã§
 			}
 		}
 
@@ -767,9 +767,9 @@ short classUSER::Cheat_set ( classUSER *pUSER, char *pArg1, char *pArg2, char *p
 			short nWantJob = atoi(pArg2);
 			short nJob, nJob10, nJob100;
 
-			nJob = ( nWantJob % 10 );		// 1¥‹¿ß 0~
+			nJob = ( nWantJob % 10 );		// 1Îã®ÏúÑ 0~
 			if ( nJob && nJob < 3 ) {
-				nJob10  = ( ( nWantJob % 100 ) / 10 ) % 4;	// 10 ¥‹¿ß
+				nJob10  = ( ( nWantJob % 100 ) / 10 ) % 4;	// 10 Îã®ÏúÑ
 				nJob100 = ( nWantJob / 100 ) % 5;
 				if ( nJob10 && nJob100 ) {
 					nJob += ( nJob10 * 10 );
@@ -782,7 +782,7 @@ short classUSER::Cheat_set ( classUSER *pUSER, char *pArg1, char *pArg2, char *p
 		if ( !strcmpi(pArg1, "LEV") ) {
 			pUSER->Set_LEVEL( atoi(pArg2) );
 			return CHEAT_SEND;
-		/*	¡∏ ∫–«“∑Œ øÓøµΩ√ ø˘µÂ º≠πˆø°º≠ ∆ƒ∆º øÓøµµ…ºˆ ¿÷µµ∑œ ¿¸º€«œ¥¯...
+		/*	Ï°¥ Î∂ÑÌï†Î°ú Ïö¥ÏòÅÏãú ÏõîÎìú ÏÑúÎ≤ÑÏóêÏÑú ÌååÌã∞ Ïö¥ÏòÅÎê†Ïàò ÏûàÎèÑÎ°ù Ï†ÑÏÜ°ÌïòÎçò...
 		#ifndef	__INC_WORLD
 			g_pSockLSV->Send_gsv_LEVEL_UP( LEVELUP_OP_USER, pUSER->m_dwWSID, pUSER->Get_LEVEL(), pUSER->m_GrowAbility.m_lEXP );
 		#endif
@@ -979,7 +979,7 @@ short classUSER::Cheat_regen ( CStrVAR *pStrVAR, char *pArg1, char *pArg2 )
 }
 
 //-------------------------------------------------------------------------------------------------
-// 2005-08-17 : kchs , «ˆ¿Áº”µµ∏¶ fRate(∫Ò¿≤)∏∏≈≠ ¡ı∞°Ω√≈¥
+// 2005-08-17 : kchs , ÌòÑÏû¨ÏÜçÎèÑÎ•º fRate(ÎπÑÏú®)ÎßåÌÅº Ï¶ùÍ∞ÄÏãúÌÇ¥
 short classUSER::Cheat_speed ( char * pArg1 )
 {
 	float fRate = (float)atof( pArg1 );
@@ -1004,4 +1004,4 @@ short classUSER::Cheat_speed ( char * pArg1 )
 }
 
 //-------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------- 
