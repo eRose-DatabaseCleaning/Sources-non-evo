@@ -130,13 +130,55 @@ short classUSER::Cheat_move (char *pArg1, char *pArg2, char *szCode )
 	return CHEAT_NOLOG;
 }
 // C등급..
-short classUSER::Cheat_mm (short nZoneNO, char *pArg2, char *pArg3)
+short classUSER::Cheat_mm (short nZoneNO, char *pArg2, char *pArg3)  // LZO ex1 : /mm 2 || ex2 : /mm 2 4800 4800 || NB : It's now 4800 and not 480
 {
 	if ( !this->Is_CartGuest() && g_pZoneLIST->IsValidZONE(nZoneNO) ) {
-		tPOINTF PosWARP;
-
-		PosWARP.x = atoi( pArg2 ) * 1000.f;
-		PosWARP.y = atoi( pArg3 ) * 1000.f;
+		tPOINTF PosWARP;  // LZO struct with x(float) and y(float) position in LIB_Util/CshoSOCKET.cpp
+		if (pArg2 == 0 && pArg3 == 0){
+			switch(nZoneNO){    //LZO table to fill before publishing
+				case 1: /*Canyon City of Zant*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 2: /*City of Junon Polis*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 3: /*Dolphin Island*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 5: /*Junon Cartel*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 6: /*Crusader Training Camp*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 8: /*Lion's Plains*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 11: /*Junon Clan Field*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 20: /*Birth Island*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 21: /*Valley of Luxem Tower*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 22: /*Adventurer's Plains*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 23: /*Breezy Hills*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 24: /*El Verloon Desert*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 25: /*Anima Lake*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 26: /*Forest of Wisdom*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 27: /*Kenji Beach*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 28: /*Gorge of Silence*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 29: /*Desert of the Dead*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 31: /*Goblin Cave (B1)*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 32: /*Goblin Cave (B2)*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 33: /*Goblin Cave (B3)*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 34: /*Cave of Ulverick (B1)*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 35: /*Cave of Ulverick (B2)*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 36: /*Cave of Ulverick (B3)*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 37: /*Sunshine Coast*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 38: /*Santa Planetoid*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 40: /*Grand Ballroom*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 51: /*Magic City of the Eucar*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 52: /*Mana Snowfields*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 53: /*Arumic Valley*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 54: /*Crystal Snowfields*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 55: /*Freezing Plateau*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 56: /*Forgotten Temple (B1)*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 57: /*Forgotten Temple (B2)*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 59: /*Luna Clan Field*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 61: /*Refuge Xita*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 62: /*Shady Jungle*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				default: PosWARP.x = 4800 * 100.f; PosWARP.y = 4800 * 100.f; break;
+			}
+		}
+		else{
+			PosWARP.x = atoi( pArg2 ) * 100.f;
+			PosWARP.y = atoi( pArg3 ) * 100.f;
+		}
 
 		POINTS  PosSEC;
 		PosSEC.x = (short) ( PosWARP.x / g_pZoneLIST->GetSectorSIZE(nZoneNO) );
