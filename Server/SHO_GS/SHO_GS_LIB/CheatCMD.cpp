@@ -139,10 +139,14 @@ short classUSER::Cheat_mm (short nZoneNO, char *pArg2, char *pArg3)  // LZO ex1 
 				case 1: /*Canyon City of Zant*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
 				case 2: /*City of Junon Polis*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
 				case 3: /*Dolphin Island*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 4: /*[Title Junon]*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
 				case 5: /*Junon Cartel*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
 				case 6: /*Crusader Training Camp*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
 				case 8: /*Lion's Plains*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 9: /*[JPVP05]*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
 				case 11: /*Junon Clan Field*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 15: /*[Junon-Agit01]*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
+				case 19: /*[Junon-JMOV01]*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
 				case 20: /*Birth Island*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
 				case 21: /*Valley of Luxem Tower*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
 				case 22: /*Adventurer's Plains*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
