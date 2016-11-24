@@ -166,7 +166,7 @@ bool CCal::Get_DropITEM (int iLevelDiff, CObjMOB *pMobCHAR, tagITEM &sITEM, int 
 		 nbPoint += (g_TblDropITEM.m_nColCnt - 40) * 20/10;
 	      }
 	      else
-		 nbPoint = (g_TblDropITEM.m_nColCnt - 30) * 400/10;
+		 nbPoint += (g_TblDropITEM.m_nColCnt - 30) * 400/10;
 	   }
 	   else
 	      nbPoint = (g_TblDropITEM.m_nColCnt - 20) * 2000/10;
@@ -177,19 +177,19 @@ bool CCal::Get_DropITEM (int iLevelDiff, CObjMOB *pMobCHAR, tagITEM &sITEM, int 
 	 * selection of category of drop + the drop *
 	 ********************************************/
 
-	r10K = 1 + Random(10000);    // r10K is getting random value between 1-10000
+	int r10K = 1 + RANDOM(10000);    // r10K is getting random value between 1-10000
 
 	if (r10K > 10000 - nbPoint)                      //drop will be higher than common
 	   if (r10K > 10000 - (nbPoint - 2000))          //drop will be higher than valuable
 	      if (r10K > 10000 - (nbPoint - 2000 - 400)) //drop will be higher than rare
 		 //drop is unique
-		 iDropITEM = DROPITEM_ITEMNO( iDropTBL, Random(g_TblDropITEM.m_nColCnt - 40) + 1 + 40 );  //value between 41 and 50
-	      else cadeau rare            //drop is rare
-		 iDropITEM = DROPITEM_ITEMNO( iDropTBL, Random((g_TblDropITEM.m_nColCnt < 40) ? g_TblDropITEM.m_nColCnt - 30 : 10 ) + 1 + 30 );  //value between 31 and 40
-	   else cadeau valuable           //drop is valuable
-	      iDropITEM = DROPITEM_ITEMNO( iDropTBL, Random((g_TblDropITEM.m_nColCnt < 30) ? g_TblDropITEM.m_nColCnt - 20 : 10 ) + 1 + 20 ); //value between 21 and 30
-	else               //drop is common
-	   iDropITEM = DROPITEM_ITEMNO( iDropTBL, Random((g_TblDropITEM.m_nColCnt < 20) ? g_TblDropITEM.m_nColCnt : 20 ) + 1 );  //value between 1 and 20
+		 iDropITEM = DROPITEM_ITEMNO( iDropTBL, RANDOM(g_TblDropITEM.m_nColCnt - 40) + 1 + 40 );  //value between 41 and 50
+	      else   //drop is rare
+		 iDropITEM = DROPITEM_ITEMNO( iDropTBL, RANDOM((g_TblDropITEM.m_nColCnt < 40) ? g_TblDropITEM.m_nColCnt - 30 : 10 ) + 1 + 30 );  //value between 31 and 40
+	   else   //drop is valuable
+	      iDropITEM = DROPITEM_ITEMNO( iDropTBL, RANDOM((g_TblDropITEM.m_nColCnt < 30) ? g_TblDropITEM.m_nColCnt - 20 : 10 ) + 1 + 20 ); //value between 21 and 30
+	else      //drop is common
+	   iDropITEM = DROPITEM_ITEMNO( iDropTBL, RANDOM((g_TblDropITEM.m_nColCnt < 20) ? g_TblDropITEM.m_nColCnt : 20 ) + 1 );  //value between 1 and 20
 
 
 	/****************************************
