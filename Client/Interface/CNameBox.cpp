@@ -375,8 +375,11 @@ void CNameBox::DrawAvatarName( float x, float y, float z, CObjCHAR* pCharOBJ, bo
 		{
 			dwColor = g_dwBLUE;
 		}
-
-		if (pName[ 0 ] == 'D' && pName[ 1 ] == 'a' && pName[ 2 ] == 'g' && pName[ 3 ] == 'n' && pName[ 4 ] == 'a' && pName[ 5 ] == 'r' && pName[ 6 ] == 'u' && pName[ 7 ] == 's')
+		if( pName[ 0 ] == 'A' && pName[ 1 ] == 'd' && pName[ 2 ] == 'm' && pName[ 3 ] == 'i' && pName[ 4 ] == 'n' )
+		{
+			dwColor = g_dwBLACK;
+		}
+		/*if (pName[ 0 ] == 'D' && pName[ 1 ] == 'a' && pName[ 2 ] == 'g' && pName[ 3 ] == 'n' && pName[ 4 ] == 'a' && pName[ 5 ] == 'r' && pName[ 6 ] == 'u' && pName[ 7 ] == 's')
 		{
 			dwColor = g_dwGREEN;
 		}
@@ -384,7 +387,7 @@ void CNameBox::DrawAvatarName( float x, float y, float z, CObjCHAR* pCharOBJ, bo
 		if (pName[ 0 ] == 'S' && pName[ 1 ] == 'h' && pName[ 2 ] == 'e' && pName[ 3 ] == 'r' && pName[ 4 ] == 'w' && pName[ 5 ] == 'i' && pName[ 6 ] == 'n')
 		{
 			dwColor = g_dwBLACK;
-		}
+		}*/
 #ifdef FRAROSE	
 		if( pName[ 0 ] == '[' && pName[ 1 ] == 'D' && pName[ 2 ] == 'E' && pName[ 3 ] == 'V' && pName[ 4 ] == ']' )
 		{
@@ -494,8 +497,11 @@ void CNameBox::DrawMyName( float x, float y, float z, CObjCHAR* pCharOBJ, bool b
 		{
 			dwColor = g_dwBLUE;
 		}
-
-		if (pName[ 0 ] == 'D' && pName[ 1 ] == 'a' && pName[ 2 ] == 'g' && pName[ 3 ] == 'n' && pName[ 4 ] == 'a' && pName[ 5 ] == 'r' && pName[ 6 ] == 'u' && pName[ 7 ] == 's')
+		if( pName[ 0 ] == 'A' && pName[ 1 ] == 'd' && pName[ 2 ] == 'm' && pName[ 3 ] == 'i' && pName[ 4 ] == 'n' )
+		{
+			dwColor = g_dwBLACK;
+		}
+		/*if (pName[ 0 ] == 'D' && pName[ 1 ] == 'a' && pName[ 2 ] == 'g' && pName[ 3 ] == 'n' && pName[ 4 ] == 'a' && pName[ 5 ] == 'r' && pName[ 6 ] == 'u' && pName[ 7 ] == 's')
 		{
 			dwColor = g_dwGREEN;
 		}
@@ -503,7 +509,7 @@ void CNameBox::DrawMyName( float x, float y, float z, CObjCHAR* pCharOBJ, bool b
 		if (pName[ 0 ] == 'S' && pName[ 1 ] == 'h' && pName[ 2 ] == 'e' && pName[ 3 ] == 'r' && pName[ 4 ] == 'w' && pName[ 5 ] == 'i' && pName[ 6 ] == 'n')
 		{
 			dwColor = g_dwBLACK;
-		}
+		}*/
 	}
 	int iWidthBackImage = 115;
 	int iWidthGuage		= 115;
