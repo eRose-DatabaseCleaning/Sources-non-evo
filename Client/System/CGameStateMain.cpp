@@ -300,20 +300,46 @@ void CGameStateMain::Render_GameMENU()
 	//CTutorialEventManager::GetSingleton().Draw();
 	::endSprite();	
 
-
+	//Numenor: This part prints some debug info with Alt+d
 	if( g_GameDATA.m_bDisplayDebugInfo )
 	{
-			::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], 
-						false, 5, 120, g_dwYELLOW, "bCastingStart[ %d ], DoingSkill[ %d ], Command[ %d ]",					
+		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 370, 5, g_dwYELLOW, "%d FPS, Tile[ %d, %d ], Pos[ %.2f, %.2f, %.2f ]",
+		g_pCApp->DisplayFrameRate (),
+		g_GameDATA.m_PosPATCH.x, g_GameDATA.m_PosPATCH.y,
+		g_pAVATAR->Get_CurPOS().x,	 g_pAVATAR->Get_CurPOS().y, g_pAVATAR->Get_CurPOS().z );
+
+		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 370, 25, g_dwYELLOW, "RENDERING -- Total: %d, Buildings : %d, Drops : %d, Decoration: %d, Monsters: %d, Effects (for all): %d, Tiles: %d ", 
+		g_pObjMGR->Get_ObjectCount(),
+		g_pObjMGR->Get_ObjectCount( OBJ_CNST ), 
+		g_pObjMGR->Get_ObjectCount( OBJ_ITEM ), 
+		g_pObjMGR->Get_ObjectCount( OBJ_GROUND ),
+		g_pObjMGR->Get_ObjectCount( OBJ_MOB ),
+		g_pEffectLIST->GetCount(),
+		CTERRAIN::m_RegistedPatchCnt );			
+
+		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 370, 45, g_dwYELLOW, "Atk speed: %d, m-speed: %.f, server m-speed: %.f",
+				( g_pAVATAR->GetPetMode() < 0 )? g_pAVATAR->Get_nAttackSPEED() : g_pAVATAR->m_pObjCART->Get_nAttackSPEED(), 
+				( g_pAVATAR->GetPetMode() < 0 )? g_pAVATAR->Get_MoveSPEED() : g_pAVATAR->m_pObjCART->Get_MoveSPEED(), 
+				( g_pAVATAR->GetPetMode() < 0 )? g_pAVATAR->Get_DefaultSPEED() : g_pAVATAR->m_pObjCART->Get_DefaultSPEED() );
+
+		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 370, 65, g_dwYELLOW, "World time: %d, Zone time: %d, Blend factor: %f",
+					g_DayNNightProc.GetWorldTime(), g_DayNNightProc.GetZoneTime(), g_DayNNightProc.GetBlendFactor() );
+
+		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 370, 85, g_dwYELLOW, "WorldRATE: %d, WorldPROD:%d, Country Code:%d",
+			Get_WorldRATE(), Get_WorldPROD (), CCountry::GetSingleton().GetCountryCode() );
+		
+		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], 
+						false, 155, 120, g_dwYELLOW, "Casting in progress[ %d ], Doing Skill[ %d ], Command in progress[ %d ]",					
 						g_pAVATAR->m_bCastingSTART, g_pAVATAR->m_nDoingSkillIDX, g_pAVATAR->Get_COMMAND() );
 
+
 			//----------------------------------------------------------------------------------------------------
-			/// 임시 소환몹 개수
+			/// Number of summons
 			//----------------------------------------------------------------------------------------------------
 			if( g_pAVATAR->GetCur_SummonCNT() > 0 )
 			{
 				::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], 
-								false, 5, 150, g_dwYELLOW, "[ 현재 소환된 몹 수[ %d ] , 현재 사용한 소환량[%d] ]/ 현재 소환가능한 소환량[%d]",					
+								false, 155, 140, g_dwYELLOW, "Info summons -- Number of mobs currently summoned: %d  |  Jauge summon: %d / %d",					
 								g_pAVATAR->GetCur_SummonCNT(), 
 								g_pAVATAR->GetCur_SummonUsedCapacity(),
 								g_pAVATAR->GetCur_SummonMaxCapacity() );
@@ -321,46 +347,26 @@ void CGameStateMain::Render_GameMENU()
 
 			
 			//----------------------------------------------------------------------------------------------------
-			/// 스태미너
+			/// Stamina
 			//----------------------------------------------------------------------------------------------------
 			::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], 
-							false, 5, 180, g_dwYELLOW, "현재 스태미너[ %d ] \n", g_pAVATAR->m_GrowAbility.m_nSTAMINA );
+							false, 155, 160, g_dwYELLOW, "Stamina: %d ", g_pAVATAR->m_GrowAbility.m_nSTAMINA );
 
-			::drawFontf( g_GameDATA.m_hFONT[ FONT_NORMAL ], false, 5, 220, g_dwYELLOW, "Skill command delay %d",
+			::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 155, 180, g_dwYELLOW, "Skill command delay %d",
 															CSkillCommandDelay::GetSingleton().GetSkillCommandDelayProgressRatio() );
 			
 			
 			/// UseItem delay
-			::drawFontf( g_GameDATA.m_hFONT[ FONT_NORMAL ], false, 5, 250, g_dwRED, 
-					"HP:%d, MP:%d, Others",
+			::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 155, 200, g_dwYELLOW, 
+					"Delay before using again a recovery item: HP:%d, MP:%d, Others",
 					g_UseItemDelay.GetUseItemDelay( USE_ITEM_HP ), 
 					g_UseItemDelay.GetUseItemDelay( USE_ITEM_MP ),
 					g_UseItemDelay.GetUseItemDelay( USE_ITEM_OTHERS ) );
 
-			::drawFontf( g_GameDATA.m_hFONT[ FONT_NORMAL ], false, 220, 25, g_dwBLUE, "%d FPS, Patch[ %d, %d ], Pos[ %f, %f, %f ]",
-					g_pCApp->DisplayFrameRate (),
-					g_GameDATA.m_PosPATCH.x, g_GameDATA.m_PosPATCH.y,
-					g_pAVATAR->Get_CurPOS().x,	 g_pAVATAR->Get_CurPOS().y, g_pAVATAR->Get_CurPOS().z );
 
-			::drawFontf( g_GameDATA.m_hFONT[ FONT_NORMAL ], false, 220, 40, g_dwRED, "TotOBJ: %d, CnstOBJ: %d, Item : %d, TreeOBJ: %d, MobCNT: %d, EffectCNT: %d, PatchCNT: %d ", 
-					g_pObjMGR->Get_ObjectCount(),
-					g_pObjMGR->Get_ObjectCount( OBJ_CNST ), 
-					g_pObjMGR->Get_ObjectCount( OBJ_ITEM ), 
-					g_pObjMGR->Get_ObjectCount( OBJ_GROUND ),
-					g_pObjMGR->Get_ObjectCount( OBJ_MOB ),
-					g_pEffectLIST->GetCount(),
-					CTERRAIN::m_RegistedPatchCnt );			
 
-			::drawFontf( g_GameDATA.m_hFONT[ FONT_NORMAL ], false, 220, 60, g_dwRED, "( 공속: %d, 이속: %f 기본속도: %f )",
-					( g_pAVATAR->GetPetMode() < 0 )? g_pAVATAR->Get_nAttackSPEED() : g_pAVATAR->m_pObjCART->Get_nAttackSPEED(), 
-					( g_pAVATAR->GetPetMode() < 0 )? g_pAVATAR->Get_MoveSPEED() : g_pAVATAR->m_pObjCART->Get_MoveSPEED(), 
-					( g_pAVATAR->GetPetMode() < 0 )? g_pAVATAR->Get_DefaultSPEED() : g_pAVATAR->m_pObjCART->Get_DefaultSPEED() );
 
-			::drawFontf( g_GameDATA.m_hFONT[ FONT_NORMAL ], false, 220, 80, g_dwRED, "( 월드타입: %d, 존타임:%d, 블랜딩비율:%f )",
-															g_DayNNightProc.GetWorldTime(), g_DayNNightProc.GetZoneTime(), g_DayNNightProc.GetBlendFactor() );
 
-			::drawFontf( g_GameDATA.m_hFONT[ FONT_NORMAL ], false, 220, 100, g_dwRED, "( WorldRATE: %d, WorldPROD:%d, Country Code:%d )",
-				Get_WorldRATE(), Get_WorldPROD (), CCountry::GetSingleton().GetCountryCode() );
 
 			
 
@@ -426,9 +432,11 @@ int CGameStateMain::ProcKeyboardInput(UINT uiMsg, WPARAM wParam, LPARAM lParam )
 			UINT vk = MapVirtualKey( oemScan, 1 );
 			switch( vk )
 			{
-			case VK_CONTROL:
-				g_GameDATA.m_bShowDropItemInfo = false;
-				break;
+			//case VK_CONTROL:
+				//Numenor: Disable this function to make a simple 'toggle' (see same case when key is down)
+				//g_GameDATA.m_bShowDropItemInfo = false;
+				
+				//break;
 
 				//Numenor: This part is about keyboard shortcut. Here, the Z triggers the skill 'SIT'. I removed it since it was not wanted.
 				/*
@@ -793,7 +801,9 @@ bool CGameStateMain::On_WM_KEYDOWN (WPARAM wParam, LPARAM lParam)
 	
 		case VK_CONTROL:
 			{
-				g_GameDATA.m_bShowDropItemInfo = true;
+				if (GetKeyState(VK_RCONTROL) & 0x8000){ //Numenor we change this shortcut so it uses Right-control instead of control (and so Atl+Gr won't work anymore...)
+					g_GameDATA.m_bShowDropItemInfo = g_GameDATA.m_bShowDropItemInfo ? false : true;
+				}
 			}
 			break;
 

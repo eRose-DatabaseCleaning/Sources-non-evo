@@ -601,6 +601,10 @@ short classUSER::Cheat_item ( char *pArg1, char *pArg2, char *pArg3, char *pArg4
 		}
 		if ( iItemNO >= g_pTblSTBs[ iItemTYPE ]->m_nDataCnt )
 			return CHEAT_INVALID;
+		
+		bool pArg3isNegative = (atoi(pArg3) < 0) ? true : false;
+		if(pArg3[0] == '-') pArg3[0] = '0';
+		
 		int iDupCNT   = atoi( pArg3 );
 
 		tagITEM sITEM;
@@ -615,7 +619,7 @@ short classUSER::Cheat_item ( char *pArg1, char *pArg2, char *pArg3, char *pArg4
 					return CHEAT_INVALID;
 
 				// 소모 기타...
-				if ( iDupCNT > 100 )	iDupCNT = 100;
+				if ( iDupCNT > 999 )	iDupCNT = 999;
 				else if ( iDupCNT < 1 )	iDupCNT = 1;
 
 				sITEM.m_uiQuantity = iDupCNT;
@@ -627,11 +631,11 @@ short classUSER::Cheat_item ( char *pArg1, char *pArg2, char *pArg3, char *pArg4
 				sITEM.m_nLife = MAX_ITEM_LIFE;
 				sITEM.m_cDurability = ITEM_DURABITY( sITEM.m_cType, sITEM.m_nItemNo );
 				sITEM.m_nGEM_OP = iDupCNT % 301;
-				sITEM.m_bIsAppraisal = 1;
+				sITEM.m_bIsAppraisal = (pArg3isNegative) ? 0 : 1; // Numenor: If the arg 3 is negative then the item is apparaisal
 				if ( 0 == sITEM.m_nGEM_OP ) {
-					// 옵션이 없다..
+					// No options...
 					if( pArg4 && ITEM_RARE_TYPE( sITEM.GetTYPE(), sITEM.GetItemNO() ) ) {
-						// 0이 아니면 소켓이 붙을수 있는 아이템이다..
+						// If it is not 0, it is an item that can be attached to the socket...
 						if ( atoi(pArg4) )
 							sITEM.m_bHasSocket = 1;
 					}

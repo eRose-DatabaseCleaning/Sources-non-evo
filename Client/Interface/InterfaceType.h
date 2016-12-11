@@ -13,26 +13,26 @@
 
 enum{
 DLG_TYPE_NONE			= 0,
-DLG_TYPE_MENU,			//1			//기본창 
+DLG_TYPE_MENU,			//1			//Main window
 DLG_TYPE_CHAT,			//2			//채팅창
-DLG_TYPE_DIALOG,		//3			//npc 대화창, 기존질의창
-DLG_TYPE_MAKE,			//4			//제조창
+DLG_TYPE_DIALOG,		//3			//npc Dialog window, existing query window
+DLG_TYPE_MAKE,			//4			//Manufacturing (=crafting) window
 DLG_TYPE_COMMUNITY,		//5			//커뮤니티
 DLG_TYPE_STORE,			//6			//상점
-DLG_TYPE_DEAL,			//7			//거래창
+DLG_TYPE_DEAL,			//7			//Trading Window
 DLG_TYPE_QUICKBAR,		//8			//퀵바 
 DLG_TYPE_CHAR,			//9			//캐릭터창 
 DLG_TYPE_MINIMAP,		//10		//미니맵창
 DLG_TYPE_PARTYOPTION,	//11		//파티옵션창
 DLG_TYPE_RESTART,		//12		//리스타트창
-DLG_TYPE_SYSTEM,		//13		//시스템창
+DLG_TYPE_SYSTEM,		//13		//System window
 DLG_TYPE_QUEST,			//14		//퀘스트창
 DLG_TYPE_EXCHANGE,		//15		//교환창
 DLG_TYPE_SKILL,			//16		//스킬창
-DLG_TYPE_SYSTEMMSG,		//17		//시스템 메세지창( 공지사항, 헬프...)
+DLG_TYPE_SYSTEMMSG,		//17		//System message window (notice, help ...)
 DLG_TYPE_N_INPUT,		//18		//숫자입력기
-DLG_TYPE_MSGBOX,		//19		///공통 메세지 박스
-DLG_TYPE_OPTION,		//20		//옵션 설정 창
+DLG_TYPE_MSGBOX,		//19		///Common message box
+DLG_TYPE_OPTION,		//20		//Option setting window
 DLG_TYPE_TARGET_MENU,	///21		///더이상 사용안하지만 인덱스 문제로 그대로 둔다.
 DLG_TYPE_PARTY,			///22		///파티 관련 창
 DLG_TYPE_BANK,			///23		///은행( 계정창고 )창
@@ -53,7 +53,7 @@ DLG_TYPE_CLAN,			/// 클랜
 DLG_TYPE_CLAN_ORGANIZE, /// 클랜 창설
 DLG_TYPE_CLAN_NOTICE,	/// 공지 등록
 DLG_TYPE_CHATFILTER,	///채팅 필터링 Setting 
-DLG_TYPE_MSGBOX_SPECIAL,///특별한 메세지 박스 - 오직 한개만 화면에 띄울수 있다.
+DLG_TYPE_MSGBOX_SPECIAL,///Special message boxes - only one can be displayed on the screen.
 DLG_TYPE_SELECTEVENT,	
 DLG_TYPE_EVENTDIALOG,	
 DLG_TYPE_NOTIFY,			

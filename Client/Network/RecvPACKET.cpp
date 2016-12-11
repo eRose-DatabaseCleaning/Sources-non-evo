@@ -5191,7 +5191,7 @@ void CRecvPACKET::Recv_gsv_APPRAISAL_REPLY()
 	{
 		g_itMGR.OpenMsgBox(STR_FAIL_IDENTIFY );
 	}
-	CGame::GetInstance().EndAppraisal();
+	//CGame::GetInstance().EndAppraisal(); //Numenor: Commenting this allows to not close the apparaisal mode once one item has been apparaised.
 }
 
 

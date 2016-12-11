@@ -157,7 +157,7 @@ CGAMEDATA::CGAMEDATA ()
 
 	m_bFilmingMode			= false;
 	m_bShowCursor			= true;
-	m_bShowDropItemInfo		= false;
+	m_bShowDropItemInfo		= true; //Numenor: let's turn this by default
 
 	m_iWorldStaminaVal		= 0;
 

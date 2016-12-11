@@ -773,7 +773,8 @@ bool CSevenHeartUserInput::ClickObject( int iTarget, D3DXVECTOR3& PickPos, WPARA
 
 bool CSevenHeartUserInput::RButtonDown( int iTarget, D3DXVECTOR3& PickPos, WPARAM wParam )
 {
-	ClearMouseState();	
+	//Numenor: If this is not commented, a right-click will unselect your target
+	//ClearMouseState();	
 
 	return false;
 }

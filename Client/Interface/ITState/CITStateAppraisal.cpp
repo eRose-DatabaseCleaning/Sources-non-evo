@@ -45,14 +45,14 @@ unsigned CITStateAppraisal::Process( unsigned uiMsg, WPARAM wParam, LPARAM lPara
 		if( pDlg->Process( uiMsg, wParam,lParam ) )
 		{
 			if( uiMsg == WM_LBUTTONDOWN )
-				g_itMGR.MoveDlg2ListEnd( pDlg );///iterator가 파괴될수 있다 항상 loop를 벗어날것
+				g_itMGR.MoveDlg2ListEnd( pDlg );///iterator can always be destroyed
 
 			uiRet = uiMsg;
 			iProcessDialogType = pDlg->GetDialogType();
 			break;
 		}
 
-		///모달 다이얼로그일 경우는 다음 다이얼로그를 처리할필요가 없다.
+		///In the case of a modal dialog, there is no need to process the next dialog.
 		if( pDlg->IsVision() && pDlg->IsModal() )
 		{
 			DWORD dwDialgType = pDlg->GetDialogType();		
@@ -64,7 +64,9 @@ unsigned CITStateAppraisal::Process( unsigned uiMsg, WPARAM wParam, LPARAM lPara
 	{
 	case WM_LBUTTONDOWN:
 		{
-			if( iProcessDialogType != DLG_TYPE_ITEM /*&& iProcessDialogType != DLG_TYPE_DIALOG*/ )
+			// Numenor: If we click anywhere else than in the inventory window, then it closes the window
+			// Numenor: And it is not a DIALOG that pops up but a MSGBOX
+			if( iProcessDialogType != DLG_TYPE_ITEM && iProcessDialogType != DLG_TYPE_MSGBOX /*!= DLG_TYPE_DIALOG*/)
 				CGame::GetInstance().EndAppraisal();
 			break;
 		}
