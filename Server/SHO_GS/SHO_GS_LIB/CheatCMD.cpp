@@ -134,7 +134,7 @@ short classUSER::Cheat_mm (short nZoneNO, char *pArg2, char *pArg3)  // LZO ex1 
 {
 	if ( !this->Is_CartGuest() && g_pZoneLIST->IsValidZONE(nZoneNO) ) {
 		tPOINTF PosWARP;  // LZO struct with x(float) and y(float) position in LIB_Util/CshoSOCKET.cpp
-		if (pArg2 == 0 && pArg3 == 0){
+		if (atoi( pArg2 ) == 0 && atoi( pArg3 ) == 0){
 			switch(nZoneNO){    //LZO table to fill before publishing
 				case 1: /*Canyon City of Zant*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
 				case 2: /*City of Junon Polis*/ PosWARP.x = 00 * 100.f; PosWARP.y = 00 * 100.f; break;
