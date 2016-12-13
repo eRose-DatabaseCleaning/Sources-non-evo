@@ -451,14 +451,18 @@ short classUSER::Parse_CheatCODE (char *szCode)
 		if ( !strcmpi( pToken, "/mm" ) ) {
 			// pArg1 // zone no
 			short nZoneNO = atoi( pArg1 );
-			pArg2 = pStrVAR->GetTokenNext (pDelimiters);	// x pos	
-			pArg3 = pStrVAR->GetTokenNext (pDelimiters);	// y pos
-			if ( pArg2 && pArg3 ) {
-				return Cheat_mm( nZoneNO, pArg2, pArg3 );
-			} else return Cheat_mm( nZoneNO, 0, 0 ); // LZO added the else if option, in case we don't provide XY position.
-				
-				
-			
+			if(nZoneNO){
+				pArg2 = pStrVAR->GetTokenNext (pDelimiters);	// x pos	
+				pArg3 = pStrVAR->GetTokenNext (pDelimiters);	// y pos
+				if ( pArg2 && pArg3 ) {
+					return Cheat_mm( nZoneNO, pArg2, pArg3 );
+				} else return Cheat_mm( nZoneNO, 0, 0 ); // LZO added the else if option, in case we don't provide XY position.
+			}
+			else {
+				//LZO "nProcMODE = CHEAT_SEND", without return to be able to execute sending packet at end of this loong function :)
+				nProcMODE = CHEAT_SEND;
+				szCode = "test output\nby Laurenzzo"; //LZO trying to provide information for chat via the existing var
+			}
 		}
 		if ( !strcmpi( pToken, "/NPC") ) {
 			// pArg1 == npc no
