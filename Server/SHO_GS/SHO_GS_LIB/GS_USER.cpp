@@ -455,10 +455,8 @@ short classUSER::Parse_CheatCODE (char *szCode)
 			pArg3 = pStrVAR->GetTokenNext (pDelimiters);	// y pos
 			if ( pArg2 && pArg3 ) {
 				return Cheat_mm( nZoneNO, pArg2, pArg3 );
-			} else  // LZO added the else if option, in case we don't provide XY position.
-			if ( nZoneNO ) {
-				return Cheat_mm( nZoneNO, 0, 0 );
-			}
+			} else return Cheat_mm( nZoneNO, 0, 0 ); // LZO added the else if option, in case we don't provide XY position.
+				
 				
 			
 		}
