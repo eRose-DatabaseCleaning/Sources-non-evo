@@ -863,9 +863,9 @@ const DWORD c_dwIngFLAG[] = {
 #define	MAX_UNION_COUNT			10								/// 최대 조합 갯수
 
 
-#define	ITEM_OBJ_FREE_TIME		  (    30 * 1000 )						/// 아이템 소유권이 없는 시간...
-#define	ITEM_OBJ_LIVE_TIME		( (    60 * 1000 )+ITEM_OBJ_FREE_TIME )	/// 아이템 처름 생성시 사라지기 까지 시간.
-#define	ITEM_OBJ_DROP_TIME		( (30*(60 * 1000))+ITEM_OBJ_FREE_TIME )	/// 인벤토리가 모자라 바닦에 떨어진 아이템
+#define	ITEM_OBJ_FREE_TIME		  (    5*30 * 1000 )						/// Time without item ownership ...
+#define	ITEM_OBJ_LIVE_TIME		( (    5*60 * 1000 )+ITEM_OBJ_FREE_TIME )	/// Time to disappear when creating items.
+#define	ITEM_OBJ_DROP_TIME		( (30*(60 * 1000))+ITEM_OBJ_FREE_TIME )	/// Items that fall on the floor due to lack of inventory
 
 #define	MIN_OBJECTS				1
 #define	MAX_SERVER_OBJECTS		0x0ffff

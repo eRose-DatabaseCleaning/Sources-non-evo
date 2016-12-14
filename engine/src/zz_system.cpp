@@ -624,9 +624,12 @@ void zz_system::sleep ()
 	diff = end - start;
 
 	float current_swap_msec = float(ZZ_TIME_TO_MSEC(diff));
-	float max_swap_msec = 1000.0f/float(get_rs()->max_framerate); // 30 frame/sec = (30/1000) (frame / msec). -> (1000/30) msec / frame
-	float min_swap_msec = 1000.0f/float(get_rs()->min_framerate);
+	//float max_swap_msec = 1000.0f/float(get_rs()->max_framerate); // 30 frame/sec = (30/1000) (frame / msec). -> (1000/30) msec / frame
+	//Numenor: For a reason that I don't get, the max_framerate is set to 1000... It is waayyyy to much, I force the FPS to ~60.
+	float max_swap_msec = 1000.0f/60.0f;
+	float min_swap_msec = 1000.0f/float(get_rs()->min_framerate); //Numenor: min_framerate is 15, as wanted
 
+	//Numenor: This writes into error.txt in the directory of the client :-)
 	//ZZ_LOG("system: sleep() min_swap_msec = %f, max_framerate(%f), current_swap_msec(%f)\n",
 	//	min_swap_msec, float(get_rs()->max_framerate), current_swap_msec);
 
