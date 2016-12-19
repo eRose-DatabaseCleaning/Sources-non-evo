@@ -933,6 +933,7 @@ bool CGameStateMain::On_WM_LBUTTONDOWN (WPARAM wParam, LPARAM lParam)
 //    9/14 현재 기능제거.. (카메라 워크와 충돌 )
 //----------------------------------------------------------------------------------------------------
 
+//Numenor: if you Ctrl+Right-click on a char, pop up information
 bool CGameStateMain::On_WM_RBUTTONDOWN (WPARAM wParam, LPARAM lParam)
 {
 	if ( NULL == g_pAVATAR )
@@ -945,9 +946,10 @@ bool CGameStateMain::On_WM_RBUTTONDOWN (WPARAM wParam, LPARAM lParam)
 		return true;
 
 	
-	/// 입력은 서버의 결과와는 상관없다.
+	/// The input is independent of the server's result.
 	if( g_pAVATAR->bCanUserInput() )
 	{
+		if( GetAsyncKeyState( VK_CONTROL ) < 0) {
 		g_UserInputSystem.RButtonDown( this->m_iPickedOBJ, this->m_PosPICK, wParam  );	
 		if (m_iPickedOBJ > 0)
 		{
@@ -959,6 +961,7 @@ bool CGameStateMain::On_WM_RBUTTONDOWN (WPARAM wParam, LPARAM lParam)
 					if (RightClickedOnChar == false)
 					{
 						g_UserInputSystem.ClickObject( this->m_iPickedOBJ, this->m_PosPICK, wParam  );
+						//Numenor: For the moment, this opens the DLG_TYPE_CHAR window of... the current player, not the targeted one. Obvisouly. This should be fixed one day.
 						g_itMGR.OpenDialog(DLG_TYPE_CHAR, true, this->m_PosRButtonClick.m_nX, this->m_PosRButtonClick.m_nY);
 						RightClickedOnChar = true;
 					}
@@ -989,7 +992,7 @@ bool CGameStateMain::On_WM_RBUTTONDOWN (WPARAM wParam, LPARAM lParam)
 	{
 		g_itMGR.AppendChatMsg( STR_DOING_SKILL_ACTION, IT_MGR::CHAT_TYPE_SYSTEM );
 	}*/
-	
+	}
 	CGame::GetInstance().ResetAutoRun();
 	return true;
 }
