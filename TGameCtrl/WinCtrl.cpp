@@ -184,3 +184,14 @@ bool	CWinCtrl::GetSizeFit()
 {
 	return m_bSizeFit;
 }
+void	CWinCtrl::SetText(const char * szText)
+{
+	RECT rc;
+	SetRect( &rc,
+			0,
+			2,
+			m_iWidth,
+			m_iHeight );
+	CSinglelineString* pSingleline = new CSinglelineString;
+	pSingleline->set_string( szText, rc);
+}

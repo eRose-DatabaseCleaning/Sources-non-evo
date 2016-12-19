@@ -118,6 +118,17 @@ UINT CLogin::Process( UINT uiMsg, WPARAM wParam, LPARAM lParam )
 	CWinCtrl*  pCtrl	= NULL;
 	CTEditBox* pEditBox = NULL;
 
+	//Numenor: Force reprinting of new values of ID and password
+	static bool printItOnce = true;
+	if(printItOnce){
+		printItOnce = false;
+		if(g_GameDATA.m_Account.Get()){
+			SetID( g_GameDATA.m_Account.Get() );
+		}
+		if( g_GameDATA.m_Password.Get() ){
+			SetPassword(g_GameDATA.m_Password.Get());
+		}
+	}
 	if( uiMsg == WM_KEYDOWN )
 	{
 		switch( wParam )
@@ -227,6 +238,13 @@ bool CLogin::SetID( const char* strID )
 
 	g_GameDATA.m_Account.Set( m_strID );
 
+	CWinCtrl * pCtrl;
+	pCtrl = Find( IID_EDIT_ID );
+	if( pCtrl && pCtrl->GetControlType() == CTRL_EDITBOX )
+	{				
+		pCtrl->SetText( m_strID );
+	}
+
 	return true;
 }
 
@@ -241,6 +259,12 @@ bool CLogin::SetPassword( const char* strPassword )
 	strcpy( m_strPassword, strPassword );
 
 	g_GameDATA.m_Password.Set( m_strPassword );
+
+	CWinCtrl * pCtrl;
+	if( pCtrl = Find( IID_EDIT_PWD ) )
+	{
+		pCtrl->SetText(m_strPassword);
+	}
 
 	return true;
 }
@@ -267,6 +291,7 @@ void CLogin::SendLoginReq( )
 				CGame::GetInstance().SetJapanPartnerString( pItem->GetValue() );
 
 				g_pNet->Send_cli_LOGIN_REQ( (char*)(temp_id.c_str()), m_strPassword ,!g_GameDATA.m_is_NHN_JAPAN );
+				//Numenor: in our version g_GameDATA.m_is_NHN_JAPAN is always false (and so the last arg is set to true here)
 
 				g_ClientStorage.SetJapanRoute( pCombo->GetSelectedItemIndex() );
 				g_ClientStorage.SaveJapanRoute();
@@ -502,63 +527,79 @@ void CLogin::Draw()
 
 bool CLogin::ConnectLoginServer()
 {
-	if( !g_GameDATA.m_is_NHN_JAPAN )
-	{
-		CWinCtrl* pCtrl     = Find( IID_EDIT_ID );
-		CTEditBox* pEditBox = NULL;
-		char*	szTxt = NULL;
-		if( pCtrl && pCtrl->GetControlType() == CTRL_EDITBOX )
+	if(g_GameDATA.m_Account.Get()){
+		SetID( g_GameDATA.m_Account.Get() ); //Numenor: Used to prefill the ID login box
+	}
+	if(g_GameDATA.m_Password.Get()){
+		SetPassword(g_GameDATA.m_Password.Get()); //Numenor: Used to prefill the password login box
+	}
+	if(g_GameDATA.m_Account.Get() && g_GameDATA.m_Password.Get() ){
+		//Numenor: if we already have ID and password, no need for using the normal procedure-->let's auto log into the game!
+	}
+	else{
+
+		if( !g_GameDATA.m_is_NHN_JAPAN )
 		{
-			pEditBox = (CTEditBox*)pCtrl;
-			szTxt = pEditBox->get_text();
-			if( szTxt && strlen( szTxt ) >= 1)
+			CWinCtrl* pCtrl     = Find( IID_EDIT_ID );
+			CTEditBox* pEditBox = NULL;
+			char*	szTxt = NULL;
+			if( pCtrl && pCtrl->GetControlType() == CTRL_EDITBOX )
 			{
-				SetID( szTxt );
-			}
-			else
-			{
-				pEditBox->SetFocus( true );
-				LogString (LOG_DEBUG, "Empty ID EditBox in CLogin::SendLoginReq()\n" );
-				return false;
-			}
-		}
-		else
-		{
-			LogString (LOG_DEBUG, "Not Found ID EditBox in CLogin::SendLoginReq()\n" );
-			return false;
-		}
+				pEditBox = (CTEditBox*)pCtrl;
+				szTxt = pEditBox->get_text();
+				if( szTxt && strlen( szTxt ) >= 1)
+				{
 	
-		pCtrl = Find( IID_EDIT_PWD );
-		if( pCtrl && pCtrl->GetControlType() == CTRL_EDITBOX )
-		{
-			pEditBox = ( CTEditBox*) pCtrl;
-			szTxt = pEditBox->get_text();
-			if( szTxt && strlen( szTxt ) >= 4 )
-			{
-				SetPassword( szTxt );
-				pEditBox->clear_text();
+					SetID( szTxt );
+				}
+				else
+				{
+					pEditBox->SetFocus( true );
+					LogString (LOG_DEBUG, "Empty ID EditBox in CLogin::SendLoginReq()\n" );
+					return false;
+				}
 			}
 			else
 			{
-				pEditBox->SetFocus( true );
-				LogString (LOG_DEBUG, "Empty Password EditBox in CLogin::SendLoginReq()\n" );
+				LogString (LOG_DEBUG, "Not Found ID EditBox in CLogin::SendLoginReq()\n" );
 				return false;
 			}
-		}
-		else
-		{
-			LogString (LOG_DEBUG, "Not Found ID EditBox in CLogin::SendLoginReq()\n" );
-			return false;
+		
+			pCtrl = Find( IID_EDIT_PWD );
+			if( pCtrl && pCtrl->GetControlType() == CTRL_EDITBOX )
+			{
+				pEditBox = ( CTEditBox*) pCtrl;
+				szTxt = pEditBox->get_text();
+				if( szTxt && strlen( szTxt ) >= 4 )
+				{
+					SetPassword( szTxt );
+					pEditBox->clear_text();
+				}
+				else
+				{
+					pEditBox->SetFocus( true );
+					LogString (LOG_DEBUG, "Empty Password EditBox in CLogin::SendLoginReq()\n" );
+					return false;
+				}
+			}
+			else
+			{
+				LogString (LOG_DEBUG, "Not Found ID EditBox in CLogin::SendLoginReq()\n" );
+				return false;
+			}
 		}
 	}
-
 	CTCommand* pCmd = new CTCmdExit;
 	g_EUILobby.ShowMsgBox(STR_WAIT_CONNECT_LOGIN_SERVER,CTMsgBox::BT_CANCEL ,true ,EUI_LOGIN ,NULL, pCmd );
 	// 서버 포트 임의 설정 가능하도록 수정...
 	// if ( !g_pNet->ConnectToServer( g_GameDATA.m_ServerIP.Get(), TCP_LSV_PORT, NS_CON_TO_LSV ) )
 	if ( !g_pNet->ConnectToServer( g_GameDATA.m_ServerIP.Get(), g_GameDATA.m_wServerPORT, NS_CON_TO_LSV ) )
 	{
+		g_GameDATA.m_Account.Del();
+		g_GameDATA.m_Password.Del();
+		g_GameDATA.m_is_NHN_JAPAN = false;
 		g_EUILobby.ShowMsgBox( STR_LOGIN_FAIL,CTMsgBox::BT_OK ,true ,EUI_LOGIN , pCmd, NULL );
+
 		return false;
 	}
 

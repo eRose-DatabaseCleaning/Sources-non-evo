@@ -12,6 +12,18 @@ CSinglelineString::~CSinglelineString(void)
 {
 }
 
+void	CSinglelineString::set_string( const char* msg, const RECT& rect)
+{
+	_ASSERT( msg );
+	if( msg == NULL ) return;
+
+	clear();
+	m_msg			= msg;
+
+	set_rect( rect );
+}
+
+
 void	CSinglelineString::set_string( const char* msg, const RECT& rect , int ifont )
 {
 	_ASSERT( msg );

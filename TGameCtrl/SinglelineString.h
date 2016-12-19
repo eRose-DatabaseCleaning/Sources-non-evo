@@ -16,6 +16,7 @@ class TGAMECTRL_API CSinglelineString
 public:
 	CSinglelineString(void);
 	~CSinglelineString(void);
+	void	set_string( const char* msg, const RECT& rect);
 	void	set_string( const char* msg, const RECT& rect , int ifont );
 	void	set_rect( const RECT& rect );
 	void	set_color( DWORD color );

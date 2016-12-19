@@ -6,6 +6,7 @@
 #include "itdraw.h"
 #include "ActionListenerList.h"
 #include <string>
+#include "SinglelineString.h"
 
 #define STATUS_VISION			0x0001
 #define STATUS_FOCUS			0x0002
@@ -102,6 +103,9 @@ public:
 	virtual	void Draw(){}
 	virtual void Draw( POINT ptDraw ){};///임의의 좌표에 그린다.저장되지는 않는다.
 	virtual	bool	IsInside( int x, int y );
+
+	virtual void	SetText(const char * szText);
+
 	/// 초기화 
 	virtual void	Init( DWORD dwType,int iScrX, int iScrY, int iWidth, int iHeight );	//초기화함수 
 

@@ -270,52 +270,69 @@ bool CRecvPACKET::Recv_lsv_LOGIN_REPLY ()
 		&& RESULT_LOGIN_REPLY_TAIWAN_OK != btResult
 		&& RESULT_LOGIN_REPLY_JAPAN_OK != btResult )
 	{
+
+		CTCommand* pCmd = NULL;
+		
+		CTDialog* pDlg = g_EUILobby.GetEUI( EUI_LOGIN ) ;
+		assert( pDlg );
+		if( pDlg && pDlg->IsVision()==false )
+		{
+			pDlg->Show();
+		}
+
+		//Numenor: Automatic login fails, erase values stored for account and password
+		if(g_GameDATA.m_Account.Get())	g_GameDATA.m_Account.Del();
+		if(g_GameDATA.m_Password.Get()) g_GameDATA.m_Password.Del();
+		if(g_GameDATA.m_is_NHN_JAPAN) g_GameDATA.m_is_NHN_JAPAN = false;
+		//pCmd = new CTCmdExit; //Numenor: Can be used if we want to kill client if wrong login.
+		
+
 		switch( btResult ) 
 		{
 		case RESULT_LOGIN_REPLY_NO_RIGHT_TO_CONNECT:
-			g_EUILobby.ShowMsgBox(STR_LOGIN_REPLY_NO_RIGHT_TO_CONNECT, CTMsgBox::BT_OK ,true , pLogin->GetDialogType() );
+			g_EUILobby.ShowMsgBox(STR_LOGIN_REPLY_NO_RIGHT_TO_CONNECT, CTMsgBox::BT_OK ,true , pLogin->GetDialogType(), pCmd );
 			return false;
 		case RESULT_LOGIN_REPLY_FAILED               :// 오류
-			g_EUILobby.ShowMsgBox(STR_COMMON_ERROR,CTMsgBox::BT_OK ,true , pLogin->GetDialogType() );
+			g_EUILobby.ShowMsgBox(STR_COMMON_ERROR,CTMsgBox::BT_OK ,true , pLogin->GetDialogType(), pCmd );
 			return false;
 		case RESULT_LOGIN_REPLY_NOT_FOUND_ACCOUNT    :// 계정 없다.
-			g_EUILobby.ShowMsgBox(STR_NOT_FOUND_ACCOUNT,CTMsgBox::BT_OK ,true , pLogin->GetDialogType() );
+			g_EUILobby.ShowMsgBox(STR_NOT_FOUND_ACCOUNT,CTMsgBox::BT_OK ,true , pLogin->GetDialogType(), pCmd );
 			return false;
 		case RESULT_LOGIN_REPLY_INVALID_PASSWORD     :// 비번 오류
-			g_EUILobby.ShowMsgBox(STR_INVALID_PASSWORD,CTMsgBox::BT_OK ,true ,pLogin->GetDialogType());
+			g_EUILobby.ShowMsgBox(STR_INVALID_PASSWORD,CTMsgBox::BT_OK ,true ,pLogin->GetDialogType(), pCmd);
 			return false;
 		case RESULT_LOGIN_REPLY_ALREADY_LOGGEDIN     :// 이미 로그인 중이다
-			g_EUILobby.ShowMsgBox(STR_ALREADY_LOGGEDIN,CTMsgBox::BT_OK ,true , pLogin->GetDialogType() );
+			g_EUILobby.ShowMsgBox(STR_ALREADY_LOGGEDIN,CTMsgBox::BT_OK ,true , pLogin->GetDialogType(), pCmd );
 			return false;
 		case RESULT_LOGIN_REPLY_REFUSED_ACCOUNT      :// 서버에서 거부된 계정이다.혹은 블럭된 계정입니다.
-			g_EUILobby.ShowMsgBox(STR_REFUSED_ACCOUNT,CTMsgBox::BT_OK ,true , pLogin->GetDialogType());
+			g_EUILobby.ShowMsgBox(STR_REFUSED_ACCOUNT,CTMsgBox::BT_OK ,true , pLogin->GetDialogType(), pCmd);
 			return false;
 		case RESULT_LOGIN_REPLY_NEED_CHARGE          :// 충전이 필요한다
-			g_EUILobby.ShowMsgBox( STR_BILL_AT_ROSEONLINE_HOMEPAGE	,CTMsgBox::BT_OK ,true ,pLogin->GetDialogType()); //로즈온라인 홈페이지에서 결제 신청을 해주세요~
+			g_EUILobby.ShowMsgBox( STR_BILL_AT_ROSEONLINE_HOMEPAGE	,CTMsgBox::BT_OK ,true ,pLogin->GetDialogType(), pCmd); //로즈온라인 홈페이지에서 결제 신청을 해주세요~
 			return false;		   			
 		case RESULT_LOGIN_REPLY_TOO_MANY_USER:
-			g_EUILobby.ShowMsgBox(STR_LOGIN_REPLY_TOO_MANY_USER,CTMsgBox::BT_OK ,true ,pLogin->GetDialogType());
+			g_EUILobby.ShowMsgBox(STR_LOGIN_REPLY_TOO_MANY_USER,CTMsgBox::BT_OK ,true ,pLogin->GetDialogType(), pCmd);
 			return false;
 		case RESULT_LOGIN_REPLY_NO_REAL_NAME:
-			g_EUILobby.ShowMsgBox(STR_RESULT_LOGIN_REPLY_NO_REAL_NAME, CTMsgBox::BT_OK ,true ,pLogin->GetDialogType());
+			g_EUILobby.ShowMsgBox(STR_RESULT_LOGIN_REPLY_NO_REAL_NAME, CTMsgBox::BT_OK ,true ,pLogin->GetDialogType(), pCmd);
 			return false;
 		case RESULT_LOGIN_REPLY_OUT_OF_IP:
-			g_EUILobby.ShowMsgBox( STR_INSUFFICIENCY_IP, CTMsgBox::BT_OK ,true ,pLogin->GetDialogType()); //"접속 가능한 ip 수가 초과 되었습니다"
+			g_EUILobby.ShowMsgBox( STR_INSUFFICIENCY_IP, CTMsgBox::BT_OK ,true ,pLogin->GetDialogType(), pCmd); //"접속 가능한 ip 수가 초과 되었습니다"
 			return false;
 		case RESULT_LOGIN_REPLY_TAIWAN_FAILED:
 			switch( m_pRecvPacket->m_srv_LOGIN_REPLY.m_wPayType )
 			{
 			case 7:
-				g_EUILobby.ShowMsgBox(STR_NOT_FOUND_ACCOUNT,CTMsgBox::BT_OK ,true , pLogin->GetDialogType() );
+				g_EUILobby.ShowMsgBox(STR_NOT_FOUND_ACCOUNT,CTMsgBox::BT_OK ,true , pLogin->GetDialogType(), pCmd );
 				break;
 			default:
-				g_EUILobby.ShowMsgBox(STR_COMMON_ERROR,CTMsgBox::BT_OK ,true , pLogin->GetDialogType() );
+				g_EUILobby.ShowMsgBox(STR_COMMON_ERROR,CTMsgBox::BT_OK ,true , pLogin->GetDialogType(), pCmd );
 				break;
 			}
 
 			return false;
 		default:
-			g_EUILobby.ShowMsgBox("Login Failed", CTMsgBox::BT_OK ,true ,pLogin->GetDialogType());
+			g_EUILobby.ShowMsgBox("Login Failed", CTMsgBox::BT_OK ,true ,pLogin->GetDialogType(), pCmd);
 			return false;
 		}
 	}

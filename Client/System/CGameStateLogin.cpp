@@ -38,6 +38,23 @@ CGameStateLogin::~CGameStateLogin(void)
 
 int	CGameStateLogin::Update( bool bLostFocus )
 {
+		//Numenor: if options are given to the launcher (ID, password...) already fill the boxes... and if possible auto-login into the game!
+		if(g_GameDATA.m_Account.Get() || (g_GameDATA.m_Password.Get() || g_GameDATA.m_is_NHN_JAPAN) )
+		{
+			static bool OneTimeProc = true;
+			if(OneTimeProc)
+			{	
+				OneTimeProc = false;
+				CTDialog* pDlg = g_EUILobby.GetEUI( EUI_LOGIN ) ;
+				assert( pDlg );
+				if( pDlg )
+				{
+					CLogin*	pLoginDlg = (CLogin*)pDlg;
+					pLoginDlg->ConnectLoginServer();
+				}
+			}
+		}
+
 	g_EUILobby.Update();
 	
 	g_pCamera->Update ();

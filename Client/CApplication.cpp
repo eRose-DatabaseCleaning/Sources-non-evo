@@ -242,6 +242,8 @@ bool CApplication::ParseArgument (char *pStr)
 	char *pDelimiters = " ,\t\n";
 
 	bool bPassLuncher = false;
+	bool bIDisSet = false;
+	bool isMD5 = false;
 #ifdef _DEBUG
 	bPassLuncher = true;
 #endif
@@ -331,20 +333,42 @@ bool CApplication::ParseArgument (char *pStr)
 			g_GameDATA.m_is_NHN_JAPAN = true;
 
 
+		//Numenor: Writes your user name in the ID box. If _pw or _pwMD5 is given, it logs you automatically
 		if ( !strcmpi( pToken, "_userid" ) ) 
 		{
 			pToken = CStr::GetTokenNext (pDelimiters);
 			if ( pToken ) {
 				g_GameDATA.m_Account.Set( pToken );
+				bIDisSet = true;
+				if(isMD5) g_GameDATA.m_is_NHN_JAPAN = true; //Numenor: all those conditions allow the options to be set in any order.
 			}
 		}
 
+		//Numenor: Writes your password in the password box. If _userid is given, it logs you automatically
 		if ( !strcmpi( pToken, "_pw" ) ) 
 		{
 			pToken = CStr::GetTokenNext (pDelimiters);
 			if ( pToken )
 			{
 				//GetMD5 ( g_GameDATA.m_PasswordMD5, (unsigned char*)pToken, strlen(pToken) );
+				g_GameDATA.m_Password.Set( pToken );
+				//CopyMemory( g_GameDATA.m_PasswordMD5, pToken, strlen( pToken ) );
+				//Numenor: if _pw is set, force it to use encryption
+				g_GameDATA.m_is_NHN_JAPAN = false;
+				isMD5 = false;
+			}
+		}
+
+		//Numenor: if _userid find an argument, you can use _pdMD5 to give your password in md5 to log automatically..
+		//Numenor: if _pw is already set or if _userid is not set, this option won't be used.
+		if ( !strcmpi( pToken, "_pwMD5" ) && !g_GameDATA.m_Password.Get() )
+		{
+			pToken = CStr::GetTokenNext (pDelimiters);
+			if ( pToken )
+			{
+				isMD5 = true;
+				//GetMD5 ( g_GameDATA.m_PasswordMD5, (unsigned char*)pToken, strlen(pToken) ); //transform token into md5
+				if(bIDisSet) g_GameDATA.m_is_NHN_JAPAN = true; //Numenor: if NHN_JAPAN is true, then sends passwords already in md5 format
 				CopyMemory( g_GameDATA.m_PasswordMD5, pToken, strlen( pToken ) );
 			}
 		}
