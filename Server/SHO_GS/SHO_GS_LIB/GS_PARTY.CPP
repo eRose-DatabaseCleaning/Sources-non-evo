@@ -606,7 +606,8 @@ extern bool IsTAIWAN();
 BYTE CParty::Add_PartyUSER (classUSER *pUSER)
 {
 	// 05.05.25 대만 오베이후는 파티원은 무조건 5명 !!!
-	short nMaxUser = IsTAIWAN() ? 6 : this->m_btPartyLEV / 5 + 4;
+	//short nMaxUser = IsTAIWAN() ? 6 : this->m_btPartyLEV / 5 + 4;
+	short nMaxUser = IsTAIWAN() ? 6 : this->m_btPartyLEV / 5 + 6; //Numenor: This is a super temporary fix to be able to play together. We will refine this later!
 
 	// 기존 유저에게 새로운 유저 들왔다고 전송...
     classPACKET *pCPacket = Packet_AllocNLock ();
