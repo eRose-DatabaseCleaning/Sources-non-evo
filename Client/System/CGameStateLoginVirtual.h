@@ -3,8 +3,8 @@
 #include "cgamestate.h"
 
 /**
-* CGameStateSelectAvatar에서 CGameStateSelectSvr로 이동하기 위한 중간 State Class
-*	- 로그인서버에 다시 접속해야하기 때문에 아이디와 패스워드를 보관하였다가 자동으로 서버선택창까지 진행되는 구조이다
+* Intermediate State Class for moving from CGameStateSelectAvatar to CGameStateSelectSvr
+* - Because you need to connect to the login server again, it keeps the ID and password and automatically goes to the server selection window
 *
 * @Author		최종진
 * @Date			2005/9/15

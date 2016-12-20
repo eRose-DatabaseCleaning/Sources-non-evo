@@ -214,7 +214,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <AdditionalIncludeDirectories>.\;.\interface;$(IROSE_ROOT)\engine\include;$(IROSE_ROOT)\3rdParty\include;$(IROSE_ROOT)\TGameCtrl;$(IROSE_ROOT)\tools\TriggerVFS\include;$(IROSE_ROOT)\tools\TriggerInfo\src;$(IROSE_ROOT)\3rdParty\include\lua401;$(IROSE_ROOT)\Common;$(IROSE_ROOT)\3rdParty\dx90csdk\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_NEW_UI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_NEW_UI;_ONLY_ONE_SERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>

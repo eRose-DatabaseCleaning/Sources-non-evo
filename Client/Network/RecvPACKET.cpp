@@ -447,7 +447,7 @@ bool CRecvPACKET::Recv_lsv_LOGIN_REPLY ()
 
 	g_EUILobby.HideMsgBox();
 
-	///한프레임을 그려주어야 Loading이 나온다.
+	///One frame must be drawn before Loading occurs.
 	g_EUILobby.ShowMsgBox( "Loading...",CTMsgBox::BT_NONE, true, pSelectServer->GetDialogType() );
 	//CGame::GetInstance().UpdateCurrentState();
 	//->

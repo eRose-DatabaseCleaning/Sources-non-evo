@@ -43,6 +43,11 @@ UINT CSelectServer::Process( UINT uiMsg,WPARAM wParam,LPARAM lParam )
 	if( !IsVision() || m_bWaitServerReply )
 		return Ret;
 
+	//Numenor: force automatic login with the server (since we only have one option...)
+#ifdef _ONLY_ONE_SERVER
+	SendSelectChannel();
+#endif
+
 	if( uiMsg == WM_KEYDOWN )
 	{
 		switch( wParam )
@@ -284,12 +289,23 @@ void CSelectServer::SendSelectChannel()
 	CTListBox* pListBox = (CTListBox*)pCtrl;
 	DWORD dwServerID = FindSvrId(pListBox->GetSelectedItemID());
 
+#ifdef _ONLY_ONE_SERVER
+	dwServerID=1;
+#endif
 	pCtrl = Find( IID_LISTBOX_CHANNEL );
+#ifdef _ONLY_ONE_SERVER
+	if( pCtrl /*&& pCtrl->GetControlType() == CTRL_LISTBOX*/ )
+#else
 	if( pCtrl && pCtrl->GetControlType() == CTRL_LISTBOX )
+#endif
 	{
+
 		CTListBox* pListBox = (CTListBox*)pCtrl;
 		int iChannelNo = FindChannelNo( pListBox->GetSelectedItemID());
 		assert( iChannelNo );
+#ifdef _ONLY_ONE_SERVER
+		iChannelNo=1;
+#endif
 		if( iChannelNo )
 		{
 			CTCommand* pCmd = new CTCmdExit;

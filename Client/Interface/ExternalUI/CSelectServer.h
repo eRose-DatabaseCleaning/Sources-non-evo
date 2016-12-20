@@ -95,6 +95,7 @@ public:
 		MSG_TYPE_EXIT,
 		MSG_TYPE_NORMAL
 	};
+	void	SendSelectChannel();
 protected:
 
 	void	OnLButtonUp( unsigned iProcID );
@@ -104,7 +105,6 @@ protected:
 	unsigned int	FindSvrId( short ItemID );
 	int				FindChannelNo(  int iIndex );
 
-	void	SendSelectChannel();
 	void	SendSelectServerReq();
 };
 

@@ -39,6 +39,20 @@ CGameStateSelectSvr::~CGameStateSelectSvr(void)
 }
 int CGameStateSelectSvr::Update( bool bLostFocus )
 {
+#ifdef _ONLY_ONE_SERVER
+	static bool OneTimeProc = true;
+		if(OneTimeProc)
+		{
+			OneTimeProc = false;
+			CTDialog* pDlg = g_EUILobby.GetEUI( EUI_SELECT_SERVER ) ;
+			assert( pDlg );
+			if( pDlg )
+			{
+				CSelectServer*	pLoginDlg = (CSelectServer*)pDlg;
+				pLoginDlg->SendSelectChannel();
+			}
+		}
+#endif
 	g_EUILobby.Update();
 	
 	g_pCamera->Update ();
