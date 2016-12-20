@@ -303,12 +303,12 @@ void CGameStateMain::Render_GameMENU()
 	//Numenor: This part prints some debug info with Alt+d
 	if( g_GameDATA.m_bDisplayDebugInfo )
 	{
-		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 370, 5, g_dwYELLOW, "%d FPS, Tile[ %d, %d ], Pos[ %.2f, %.2f, %.2f ]",
+		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 370, 25, g_dwYELLOW, "%d FPS, Tile[ %d, %d ], Pos[ %.2f, %.2f, %.2f ]",
 		g_pCApp->DisplayFrameRate (),
 		g_GameDATA.m_PosPATCH.x, g_GameDATA.m_PosPATCH.y,
 		g_pAVATAR->Get_CurPOS().x,	 g_pAVATAR->Get_CurPOS().y, g_pAVATAR->Get_CurPOS().z );
 
-		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 370, 25, g_dwYELLOW, "RENDERING -- Total: %d, Buildings : %d, Drops : %d, Decoration: %d, Monsters: %d, Effects (for all): %d, Tiles: %d ", 
+		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 370, 45, g_dwYELLOW, "RENDERING -- Total: %d, Buildings : %d, Drops : %d, Decoration: %d, Monsters: %d, Effects (for all): %d, Tiles: %d ", 
 		g_pObjMGR->Get_ObjectCount(),
 		g_pObjMGR->Get_ObjectCount( OBJ_CNST ), 
 		g_pObjMGR->Get_ObjectCount( OBJ_ITEM ), 
@@ -317,15 +317,15 @@ void CGameStateMain::Render_GameMENU()
 		g_pEffectLIST->GetCount(),
 		CTERRAIN::m_RegistedPatchCnt );			
 
-		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 370, 45, g_dwYELLOW, "Atk speed: %d, m-speed: %.f, server m-speed: %.f",
+		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 370, 65, g_dwYELLOW, "Atk speed: %d, m-speed: %.f, server m-speed: %.f",
 				( g_pAVATAR->GetPetMode() < 0 )? g_pAVATAR->Get_nAttackSPEED() : g_pAVATAR->m_pObjCART->Get_nAttackSPEED(), 
 				( g_pAVATAR->GetPetMode() < 0 )? g_pAVATAR->Get_MoveSPEED() : g_pAVATAR->m_pObjCART->Get_MoveSPEED(), 
 				( g_pAVATAR->GetPetMode() < 0 )? g_pAVATAR->Get_DefaultSPEED() : g_pAVATAR->m_pObjCART->Get_DefaultSPEED() );
 
-		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 370, 65, g_dwYELLOW, "World time: %d, Zone time: %d, Blend factor: %f",
+		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 370, 85, g_dwYELLOW, "World time: %d, Zone time: %d, Blend factor: %f",
 					g_DayNNightProc.GetWorldTime(), g_DayNNightProc.GetZoneTime(), g_DayNNightProc.GetBlendFactor() );
 
-		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 370, 85, g_dwYELLOW, "WorldRATE: %d, WorldPROD:%d, Country Code:%d",
+		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], false, 370, 105, g_dwYELLOW, "WorldRATE: %d, WorldPROD:%d, Country Code:%d",
 			Get_WorldRATE(), Get_WorldPROD (), CCountry::GetSingleton().GetCountryCode() );
 		
 		::drawFontf( g_GameDATA.m_hFONT[ FONT_LARGE_BOLD ], 
@@ -438,7 +438,7 @@ int CGameStateMain::ProcKeyboardInput(UINT uiMsg, WPARAM wParam, LPARAM lParam )
 				
 				//break;
 
-				//Numenor: This part is about keyboard shortcut. Here, the Z triggers the skill 'SIT'. I removed it since it was not wanted.
+				//Numenor: This part is about keyboard shortcut. Here, the Z triggers the skill 'SIT'. I changed the shortcut to Alt+Z (see below)
 				/*
 			case 0x5A://z : 앉기/서기 토글
 				if(	CTControlMgr::GetInstance()->GetKeyboardInputType() == CTControlMgr::INPUTTYPE_NORMAL &&
@@ -664,7 +664,20 @@ int CGameStateMain::ProcKeyboardInput(UINT uiMsg, WPARAM wParam, LPARAM lParam )
 				//		g_GameDATA.m_bNoUI = !g_GameDATA.m_bNoUI;
 				//	}
 				//	break;
-				
+				case 0x5A://z : Numenor: Alt+Z to sit or unsit
+				if(	CTControlMgr::GetInstance()->GetKeyboardInputType() == CTControlMgr::INPUTTYPE_NORMAL &&
+					NULL == CTEditBox::s_pFocusEdit )
+				{
+					assert( g_pAVATAR );
+					CSkillSlot* pSkillSlot = g_pAVATAR->GetSkillSlot();
+					assert( pSkillSlot );
+
+					CSkill* pSkill = pSkillSlot->GetSkillBySkillIDX( SKILLINDEX_SIT );
+					assert( pSkill );
+					if( pSkill )
+						pSkill->Execute();
+				}
+				break;
 				/// 'D'
 				case 0x44:
 					/*char* d_right;
