@@ -451,11 +451,26 @@ short classUSER::Parse_CheatCODE (char *szCode)
 		if ( !strcmpi( pToken, "/mm" ) ) {
 			// pArg1 // zone no
 			short nZoneNO = atoi( pArg1 );
-			pArg2 = pStrVAR->GetTokenNext (pDelimiters);	// x pos	
-			pArg3 = pStrVAR->GetTokenNext (pDelimiters);	// y pos
-			if ( pArg2 && pArg3 ) {
-				return Cheat_mm( nZoneNO, pArg2, pArg3 );
+			if( pArg1[0] == 'h') {
+				//Numenor: print help and the list of zone where you can tp
+				this->Send_gsv_WHISPER( "<SERVER>::", "The command /mm will tp you on an other map.");
+				this->Send_gsv_WHISPER( "<SERVER>::", "Usage 1: /mm mapNo" );
+				this->Send_gsv_WHISPER( "<SERVER>::", "Usage 2: /mm mapNo [Xcoordinate] [Ycoordinate]" );
+
+				for( short zone = 1; zone < g_pZoneLIST->GetZoneCNT(); zone++){
+					if( g_pZoneLIST->IsValidZONE(zone) )this->Send_gsv_WHISPER( "<SERVER>::", CStr::Printf("%d : %s", zone, g_pZoneLIST->GetZONE(zone)->Get_NAME() ));
+				}
 			}
+			else if(nZoneNO){
+				pArg2 = pStrVAR->GetTokenNext (pDelimiters);	// x pos	
+				pArg3 = pStrVAR->GetTokenNext (pDelimiters);	// y pos
+				if ( pArg2 != 0 && pArg3 != 0 ) {
+					return Cheat_mm( nZoneNO, pArg2, pArg3 );
+				} else{
+					return Cheat_mm( nZoneNO, "0", "0" ); // LZO added the else if option, in case we don't provide XY position. Numenor: Be careful, the function asks for a string, so "0" and not 0.
+				}
+				}
+
 		}
 		if ( !strcmpi( pToken, "/NPC") ) {
 			// pArg1 == npc no

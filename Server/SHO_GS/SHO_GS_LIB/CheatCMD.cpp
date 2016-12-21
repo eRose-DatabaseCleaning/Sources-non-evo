@@ -130,13 +130,21 @@ short classUSER::Cheat_move (char *pArg1, char *pArg2, char *szCode )
 	return CHEAT_NOLOG;
 }
 // C등급..
-short classUSER::Cheat_mm (short nZoneNO, char *pArg2, char *pArg3)
+short classUSER::Cheat_mm (short nZoneNO, char *pArg2, char *pArg3)  // LZO ex1 : /mm 2 || ex2 : /mm 2 4800 4800 || NB : It's now 4800 and not 480
 {
 	if ( !this->Is_CartGuest() && g_pZoneLIST->IsValidZONE(nZoneNO) ) {
-		tPOINTF PosWARP;
+		tPOINTF PosWARP;  // LZO struct with x(float) and y(float) position in LIB_Util/CshoSOCKET.cpp
+		if (atoi( pArg2 ) == 0 && atoi( pArg3 ) == 0){
+			//Numenor: Use the starting position of the zone as a standard coordinate
+			tPOINTF	PosREVIVE = g_pZoneLIST->GetZONE(nZoneNO)->Get_StartPOS();
+			PosWARP.x = PosREVIVE.x;
+			PosWARP.y = PosREVIVE.y;
 
-		PosWARP.x = atoi( pArg2 ) * 1000.f;
-		PosWARP.y = atoi( pArg3 ) * 1000.f;
+		}
+		else{
+			PosWARP.x = atoi( pArg2 ) * 100.f;
+			PosWARP.y = atoi( pArg3 ) * 100.f;
+		}
 
 		POINTS  PosSEC;
 		PosSEC.x = (short) ( PosWARP.x / g_pZoneLIST->GetSectorSIZE(nZoneNO) );
