@@ -26,6 +26,10 @@
 #include <d3d9.h>
 #include <D3DX9.h>
 
+
+#define __KEYBOARD_DIALOG	// Using the keyboard dialog.
+
+
 // TODO: reference additional headers your program requires here
 //-------------------------------------------------------------------------------------------------
 

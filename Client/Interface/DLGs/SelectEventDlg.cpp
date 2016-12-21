@@ -182,6 +182,46 @@ void CSelectEventDlg::Show()
 unsigned CSelectEventDlg::Process( unsigned uiMsg, WPARAM wParam, LPARAM lParam )
 {
 	if( !IsVision() ) return 0;
+
+#ifdef __KEYBOARD_DIALOG //Numenor: Allows dialog with keyboard
+	if( uiMsg == WM_KEYDOWN )
+	{
+		switch( wParam ) 
+		{
+		case VK_ESCAPE:
+			{
+				Hide();
+				return uiMsg;
+			}
+			break;
+
+		default:
+			{
+				CWinCtrl* pCtrl = Find( IID_ZLISTBOX_EVENT );
+				assert( pCtrl );
+				if( pCtrl )
+				{
+					CZListBox* pListBox = (CZListBox*)pCtrl;
+
+					int iSelectItem = wParam-'1'+1;
+
+					if( iSelectItem >= 0 && pListBox->GetSize() > iSelectItem )
+					{
+						pListBox->SetSelected( iSelectItem );
+						//Numenor: If you take CDialogNpcScriptAnswerItemNew instead, it will be use by EVO
+						CDialogNpcScriptAnswerItem* pAnswerItem = (CDialogNpcScriptAnswerItem*)pListBox->GetItem(wParam-'1'+1);
+						if(pAnswerItem)
+						{
+							pAnswerItem->Set_Process();
+						}
+						return uiMsg;
+					}
+				}		
+			}
+		}		
+	}
+#endif
+
 	if( unsigned uiProcID = CTDialog::Process( uiMsg, wParam, lParam ) )
 	{
 		if( uiProcID == IID_BTN_CLOSE && uiMsg == WM_LBUTTONUP )
