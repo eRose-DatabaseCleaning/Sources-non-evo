@@ -58,10 +58,15 @@ unsigned CDialogNpcScriptAnswerItemNew::Process( unsigned uiMsg, WPARAM wParam, 
 	if( !IsInside( ptMouse.x, ptMouse.y )) return 0;
 	if( uiMsg == WM_LBUTTONUP )
 	{
-		if(m_fpEventHandle) 
-			m_fpEventHandle( m_iEventID );
+		Set_Process();
 	}
 	return 1;
+}
+
+void CDialogNpcScriptAnswerItemNew::Set_Process()
+{
+	if(m_fpEventHandle) 
+		m_fpEventHandle( m_iEventID );
 }
 
 void CDialogNpcScriptAnswerItemNew::Update( POINT ptMouse )

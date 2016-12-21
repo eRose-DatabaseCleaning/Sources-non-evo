@@ -19,8 +19,8 @@ public:
 
 	virtual void Draw();
 	virtual unsigned Process( unsigned uiMsg, WPARAM wParam, LPARAM lParam );
+	virtual void Set_Process();
 	virtual void Update( POINT ptMouse );
-
 protected:
 	int				m_iLineHeight;
 	int				m_iIndent;
