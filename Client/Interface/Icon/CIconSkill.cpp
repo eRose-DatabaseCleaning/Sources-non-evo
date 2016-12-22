@@ -111,7 +111,13 @@ void	CIconSkill::GetToolTip( CInfo& ToolTip,  DWORD dwDialogType, DWORD dwType )
 #ifdef _NEW_UI // 2nd SkillBar
 	case DLG_TYPE_QUICKBAR_EXT:
 #endif
+		//Numenor: When in the quickbar, if you right-click you know get more info on your skills
+		if( GetAsyncKeyState( VK_RBUTTON ) < 0 ){
+			dwType = INFO_STATUS_SIMPLE;
+		}
+		else{
 		dwType = INFO_STATUS_FEW;
+		}
 		break;
 	default:
 		if( GetAsyncKeyState( VK_RBUTTON ) < 0 )

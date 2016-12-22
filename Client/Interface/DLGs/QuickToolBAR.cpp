@@ -153,279 +153,65 @@ void CQuickBAR::Update( POINT ptMouse )
 //----------------------------------------------------------------------------------------------------
 unsigned int CQuickBAR::Process( UINT uiMsg, WPARAM wParam, LPARAM lParam )
 {
-	if( CTEditBox::s_pFocusEdit == NULL )///If there is no input focus (if not in the chat)
+//Numenor: don't use those shortcuts when in a dialog:
+	//CTEditBox::s_pFocusEdit == NULL : not in chat window
+	//EVENT_DLG_NPC : NPC dialog (NB: DLG is the short form for DiaLoG) --> DLG type: DLG_TYPE_DIALOG
+	//EVENT_DLG_WARP: Warp DiaLoG --> DLG type: DLG_TYPE_SELECTEVENT
+	//EVENT_DLG_EVENT_OBJECT: Event object DiaLoG --> DLG type: DLG_TYPE_EVENTDIALOG (the event box that pop ups for example for the mushroom part of the episode quest)
+	if( CTEditBox::s_pFocusEdit == NULL && !g_itMGR.IsDlgOpened( DLG_TYPE_DIALOG ) && !g_itMGR.IsDlgOpened(DLG_TYPE_SELECTEVENT) && !g_itMGR.IsDlgOpened(DLG_TYPE_EVENTDIALOG))
 	{
 	switch( uiMsg )
 	{
-	case WM_SYSKEYDOWN :	
-
-		if( GetQuickBarType() == QUICKBAR_TYPE_EXTENSION )
-		{
-			m_nCurrentPage = QSLOT_ALT;
-			UpdateHotIconSlot();
-		}	
-
-		switch( wParam )
-		{
-		//case '1':
-		case VK_F1:
-			if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
-			{
-				m_nCurrentPage = 0;
-				UpdateHotIconSlot();
-				return uiMsg;
-			}		
-			return 0;
-			
-
-			case VK_F2: //case '2':
-		case VK_F10:
-			if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
-			{
-				m_nCurrentPage = 1;
-				UpdateHotIconSlot();
-				return uiMsg;
-			}		
-			return 0;
-			
-			case VK_F3: //case '3':
-			if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
-			{
-				m_nCurrentPage = 2;
-				UpdateHotIconSlot();
-				return uiMsg;
-			}			
-			return 0;
-
-			case VK_F4: //case '4':
-			if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
-			{
-				m_nCurrentPage = 3;
-				UpdateHotIconSlot();
-				return uiMsg;
-			}			
-			return 0;
-
-			case 0x31:
-			case 0x32:
-			case 0x33:
-			case 0x34:
-			case 0x35:
-			case 0x36:
-			case 0x37:
-			case 0x38:
-			//ALT
-			if( GetQuickBarType() == QUICKBAR_TYPE_EXTENSION )
-			{	
-				CIcon* pIcon = m_QuickSlot[ wParam-0x31 ].GetIcon();			
-				if( pIcon )
-				{
-					pIcon->ExecuteCommand();
-				}				
-				return uiMsg;
-			}			
-			return 0;
-
-		default:
-			break;
-		}
-		break;
-	case WM_KEYUP:
+	case WM_KEYDOWN: //Numenor: On key down has one advantage: you can just hold it and it will repeat the skill again and again (useful to drop!). On the other side, if you keep pressing a key by mistake you will cry
 		{
 			switch ( wParam ) 
 			{
-				/**
-			case '1':
-			case '2':
-			case '3':
-			case '4':
-				{
-					if( IsApplyNewVersion() 
-						&& CTControlMgr::GetInstance()->GetKeyboardInputType() == CTControlMgr::INPUTTYPE_NORMAL 
-						&& NULL == CTEditBox::s_pFocusEdit
-						&& GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
-					{
-						m_nCurrentPage = wParam - '1';
-						UpdateHotIconSlot();
-						return uiMsg;
-					}
-				}
-				break;
-				**/
+
+			//Numenor: The normal bar uses 1 2 3 4 5 6 7 8 9 as shortcuts and Ctrl+1 2 3 4 to change bar
 			case 0x31:
-			case 0x32:
-			case 0x33:
-			case 0x34:
-			case 0x35:
-			case 0x36:
-			case 0x37:
-			case 0x38:
-				{
-					if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
-					{
-						CIcon* pIcon = m_QuickSlot[ wParam - 0x31 ].GetIcon();			
-						if( pIcon )
-							pIcon->ExecuteCommand();
-						return uiMsg;	
-					}				
-					else
-					{
-						if( GetAsyncKeyState( VK_CONTROL ) < 0 )
-						{
-							CIcon* pIcon = m_QuickSlot[ wParam - 0x31 ].GetIcon();			
-							if( pIcon )
-								pIcon->ExecuteCommand();
-							return uiMsg;	
-						}						
-					}					
-					return 0;					
-				}
-			case VK_F9:
-				if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
+				if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL && GetAsyncKeyState( VK_CONTROL ) < 0 )
 				{
 					m_nCurrentPage = 0;
 					UpdateHotIconSlot();
 					return uiMsg;
-				}								
-				return 0;
-
-			case VK_F11:
-				if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
-				{				
+				}		
+			case 0x32:
+				if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL && GetAsyncKeyState( VK_CONTROL ) < 0 )
+				{
+					m_nCurrentPage = 1;
+					UpdateHotIconSlot();
+					return uiMsg;
+				}		
+			case 0x33:
+				if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL && GetAsyncKeyState( VK_CONTROL ) < 0 )
+				{
 					m_nCurrentPage = 2;
 					UpdateHotIconSlot();
 					return uiMsg;
-				}								
-				return 0;
-
-			case VK_F12:
-				if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
+				}		
+			case 0x34:
+				if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL && GetAsyncKeyState( VK_CONTROL ) < 0 )
 				{
 					m_nCurrentPage = 3;
 					UpdateHotIconSlot();
 					return uiMsg;
-				}								
-				return 0;
-
-			default:
-				break;
-			}
-			break;
-		}
-
-	case WM_KEYDOWN:
-		{			
-			if( GetAsyncKeyState( VK_CONTROL ) < 0  && GetQuickBarType() == QUICKBAR_TYPE_EXTENSION )
-			{
-				m_nCurrentPage = QSLOT_CTRL;
-				UpdateHotIconSlot();
-			}
-		}		
-		
-	default:
-		break;
-	}
-
-	//Garnet
-	}
-	else
-	{
-
-
-		switch( uiMsg )
-	{
-	case WM_SYSKEYDOWN :	
-
-		if( GetQuickBarType() == QUICKBAR_TYPE_EXTENSION )
-		{
-			m_nCurrentPage = QSLOT_ALT;
-			UpdateHotIconSlot();
-		}	
-
-		switch( wParam )
-		{
-		case '1':
-			if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
-			{
-				m_nCurrentPage = 0;
-				UpdateHotIconSlot();
-				return uiMsg;
-			}		
-			return 0;
-			
-
-		case '2':
-		case VK_F10:
-			if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
-			{
-				m_nCurrentPage = 1;
-				UpdateHotIconSlot();
-				return uiMsg;
-			}		
-			return 0;
-			
-		case '3':
-			if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
-			{
-				m_nCurrentPage = 2;
-				UpdateHotIconSlot();
-				return uiMsg;
-			}			
-			return 0;
-		case '4':
-			if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
-			{
-				m_nCurrentPage = 3;
-				UpdateHotIconSlot();
-				return uiMsg;
-			}			
-			return 0;
-
-		case VK_F1:
-		case VK_F2:
-		case VK_F3:
-		case VK_F4:
-		case VK_F5:
-		case VK_F6:
-		case VK_F7:
-		case VK_F8:
-			//ALT
-			if( GetQuickBarType() == QUICKBAR_TYPE_EXTENSION )
-			{	
-				CIcon* pIcon = m_QuickSlot[ wParam-VK_F1 ].GetIcon();			
-				if( pIcon )
-				{
-					pIcon->ExecuteCommand();
-				}				
-				return uiMsg;
-			}			
-			return 0;
-
-		default:
-			break;
-		}
-		break;
-	case WM_KEYUP:
-		{
-			switch ( wParam ) 
-			{
-			case '1':
-			case '2':
-			case '3':
-			case '4':
-				{
-					if(/* IsApplyNewVersion() 
-						&& */CTControlMgr::GetInstance()->GetKeyboardInputType() == CTControlMgr::INPUTTYPE_NORMAL 
-						&& NULL == CTEditBox::s_pFocusEdit
-						&& GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
+				}		
+			case 0x35:
+			case 0x36:
+			case 0x37:
+			case 0x38:
+				if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
+				{	
+					CIcon* pIcon = m_QuickSlot[ wParam-0x31 ].GetIcon();			
+					if( pIcon )
 					{
-						m_nCurrentPage = wParam - '1';
-						UpdateHotIconSlot();
-						return uiMsg;
-					}
-				}
-				break;
-
+						pIcon->ExecuteCommand();
+					}				
+					return uiMsg;
+				}			
+				return 0;
+			
+			//Numenor: The additional bar uses F1->F8 to use skills and F9->F12 to switch between pages of this bar
 			case VK_F1:
 			case VK_F2:
 			case VK_F3:
@@ -434,51 +220,150 @@ unsigned int CQuickBAR::Process( UINT uiMsg, WPARAM wParam, LPARAM lParam )
 			case VK_F6:
 			case VK_F7:
 			case VK_F8:
+				if( GetQuickBarType() == QUICKBAR_TYPE_EXTENSION )
 				{
-					if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
-					{
-						CIcon* pIcon = m_QuickSlot[ wParam - VK_F1 ].GetIcon();			
-						if( pIcon )
-							pIcon->ExecuteCommand();
-						return uiMsg;	
-					}				
-					else
-					{
-						if( GetAsyncKeyState( VK_CONTROL ) < 0 )
-						{
-							CIcon* pIcon = m_QuickSlot[ wParam - VK_F1 ].GetIcon();			
-							if( pIcon )
-								pIcon->ExecuteCommand();
-							return uiMsg;	
-						}						
-					}					
-					return 0;					
+					CIcon* pIcon = m_QuickSlot[ wParam - VK_F1 ].GetIcon();			
+					if( pIcon )
+						pIcon->ExecuteCommand();
+					return uiMsg;
 				}
+				return 0;
 			case VK_F9:
-				if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
+				if( GetQuickBarType() == QUICKBAR_TYPE_EXTENSION )
 				{
-					m_nCurrentPage = 0;
+					m_nCurrentPage = 4;
 					UpdateHotIconSlot();
 					return uiMsg;
 				}								
 				return 0;
 
+			//Numenor: For some reason the F10 is only taken with a WM_SYSKEYDOWN
+
 			case VK_F11:
-				if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
+				if( GetQuickBarType() == QUICKBAR_TYPE_EXTENSION )
 				{				
-					m_nCurrentPage = 2;
+					m_nCurrentPage = 6;
 					UpdateHotIconSlot();
 					return uiMsg;
 				}								
 				return 0;
 
 			case VK_F12:
-				if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL )
+				if( GetQuickBarType() == QUICKBAR_TYPE_EXTENSION )
+				{
+					m_nCurrentPage = 7;
+					UpdateHotIconSlot();
+					return uiMsg;
+				}								
+				return 0;
+			
+			default:
+				break;
+			}
+			break;
+		}
+	case WM_SYSKEYDOWN: //Numenor: For some reason the F10 is only taken with a WM_SYSKEYDOWN
+		{
+			switch ( wParam ) 
+			{
+				case VK_F10:
+					if( GetQuickBarType() == QUICKBAR_TYPE_EXTENSION )
+					{
+						m_nCurrentPage = 5;
+						UpdateHotIconSlot();
+						return uiMsg;
+					}								
+					return 0;
+				default:
+					break;
+			}
+			break;
+		}
+	default:
+		break;
+	}
+	}
+	else
+	{
+	switch( uiMsg )
+	{
+		case WM_KEYDOWN: //Numenor: On key down has one advantage: you can just hold it and it will repeat the skill again and again (useful to drop!). On the other side, if you keep pressing a key by mistake you will cry ^^
+		{
+			switch ( wParam ) 
+			{			
+			//Numenor: The additional bar uses F1->F8 to use skills and F9->F12 to switch between pages of this bar
+			case VK_F1:
+			case VK_F2:
+			case VK_F3:
+			case VK_F4:
+			case VK_F5:
+			case VK_F6:
+			case VK_F7:
+			case VK_F8:
+				if( GetQuickBarType() == QUICKBAR_TYPE_EXTENSION )
+				{
+					CIcon* pIcon = m_QuickSlot[ wParam - VK_F1 ].GetIcon();			
+					if( pIcon )
+						pIcon->ExecuteCommand();
+					return uiMsg;
+				}
+				return 0;
+			case VK_F9:
+				if( GetQuickBarType() == QUICKBAR_TYPE_EXTENSION )
+				{
+					m_nCurrentPage = 4;
+					UpdateHotIconSlot();
+					return uiMsg;
+				}								
+				return 0;
+			case VK_F11:
+				if( GetQuickBarType() == QUICKBAR_TYPE_EXTENSION )
+				{				
+					m_nCurrentPage = 6;
+					UpdateHotIconSlot();
+					return uiMsg;
+				}								
+				return 0;
+			case VK_F12:
+				if( GetQuickBarType() == QUICKBAR_TYPE_EXTENSION )
+				{
+					m_nCurrentPage = 7;
+					UpdateHotIconSlot();
+					return uiMsg;
+				}								
+				return 0;
+			
+			case 0x31:
+				if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL && GetAsyncKeyState( VK_CONTROL ) < 0 )
+				{
+					m_nCurrentPage = 0;
+					UpdateHotIconSlot();
+					return uiMsg;
+				}
+				return 0;
+			case 0x32:
+				if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL && GetAsyncKeyState( VK_CONTROL ) < 0 )
+				{
+					m_nCurrentPage = 1;
+					UpdateHotIconSlot();
+					return uiMsg;
+				}
+				return 0;
+			case 0x33:
+				if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL && GetAsyncKeyState( VK_CONTROL ) < 0 )
+				{
+					m_nCurrentPage = 2;
+					UpdateHotIconSlot();
+					return uiMsg;
+				}
+				return 0;
+			case 0x34:
+				if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL && GetAsyncKeyState( VK_CONTROL ) < 0 )
 				{
 					m_nCurrentPage = 3;
 					UpdateHotIconSlot();
 					return uiMsg;
-				}								
+				}
 				return 0;
 
 			default:
@@ -486,27 +371,47 @@ unsigned int CQuickBAR::Process( UINT uiMsg, WPARAM wParam, LPARAM lParam )
 			}
 			break;
 		}
+		case WM_SYSKEYDOWN:
+		{
+			switch ( wParam ) 
+			{		
+				//Numenor: When a dialog window is open, the normal bar uses Alt+ 1 2 3 4 5 6 7 8 9 as shortcuts and Ctrl+1 2 3 4 to change bar (for this last part, see just above)
+				case 0x31:
+				case 0x32:
+				case 0x33:
+				case 0x34:
+				case 0x35:
+				case 0x36:
+				case 0x37:
+				case 0x38:
+					if( GetQuickBarType() == QUICKBAR_TYPE_NORMAL && GetAsyncKeyState( VK_MENU ) < 0  ) //If alt is hold
+					{	
+						CIcon* pIcon = m_QuickSlot[ wParam-0x31 ].GetIcon();			
+						if( pIcon )
+						{
+							pIcon->ExecuteCommand();
+						}				
+						return uiMsg;
+					}			
+					return 0;
 
-	case WM_KEYDOWN:
-		{			
-			if( GetAsyncKeyState( VK_CONTROL ) < 0  && GetQuickBarType() == QUICKBAR_TYPE_EXTENSION )
-			{
-				m_nCurrentPage = QSLOT_CTRL;
-				UpdateHotIconSlot();
+				case VK_F10:
+					if( GetQuickBarType() == QUICKBAR_TYPE_EXTENSION )
+					{
+						m_nCurrentPage = 5;
+						UpdateHotIconSlot();
+						return uiMsg;
+					}								
+					return 0;
+				default:
+					break;
 			}
-		}		
-		
+			break;
+		}
 	default:
 		break;
 	}
 	}
-
-
-
-
-
-
-
 
 
 
@@ -562,6 +467,47 @@ void CQuickBAR::UpdateHotIconSlot()
 	}
 	
 	UpdateCSlotPosition();	
+
+	//Numenor: This puts the correct number of the quick skill bar
+	CWinCtrl* pCtrl = Find( IID_NUMBER );
+	if( pCtrl )
+	{
+		CTImage* pImage = (CTImage*)pCtrl;
+		int iGraphicID = 0;
+		int iModuleID  = IMAGE_RES_UI;
+		switch( m_nCurrentPage )
+		{
+		case 0:
+			iGraphicID = CResourceMgr::GetInstance()->GetImageNID( iModuleID, "UI21_NUMBER_1");
+			break;
+		case 1:
+			iGraphicID = CResourceMgr::GetInstance()->GetImageNID( iModuleID, "UI21_NUMBER_2");
+			break;
+		case 2:
+			iGraphicID = CResourceMgr::GetInstance()->GetImageNID( iModuleID, "UI21_NUMBER_3");
+			break;
+		case 3:
+			iGraphicID = CResourceMgr::GetInstance()->GetImageNID( iModuleID, "UI21_NUMBER_4");
+			break;
+		case 4:
+			iGraphicID = CResourceMgr::GetInstance()->GetImageNID( iModuleID, "UI21_NUMBER_1");
+			break;
+		case 5:
+			iGraphicID = CResourceMgr::GetInstance()->GetImageNID( iModuleID, "UI21_NUMBER_2");
+			break;
+		case 6:
+			iGraphicID = CResourceMgr::GetInstance()->GetImageNID( iModuleID, "UI21_NUMBER_3");
+			break;
+		case 7:
+			iGraphicID = CResourceMgr::GetInstance()->GetImageNID( iModuleID, "UI21_NUMBER_4");
+			break;
+
+		default:
+			break;
+		}
+		pImage->SetImage(iGraphicID, iModuleID );
+	}
+
 }
 
 
