@@ -9,12 +9,18 @@
 //-------------------------------------------------------------------------------------------------
 
 /// 최대 단축 아이콘 등록 가능 갯수
-#define	MAX_HOT_ICONS		48
+
+//Numenor: _PA is not found... Let's be simple and force this to our value: 8 pages and 64 icons
+/*#define	MAX_HOT_ICONS		48
 #ifdef _PA
 	#define	MAX_ICONS_PAGES		6
 #else
 	#define	MAX_ICONS_PAGES		4
 #endif
+*/
+#define MAX_ICONS_PAGES		8 //4 normal + 4 ext
+#define MAX_HOT_ICONS		64
+
 #define	HOT_ICONS_PER_PAGE	8
 
 enum t_HotIconTYPE 
