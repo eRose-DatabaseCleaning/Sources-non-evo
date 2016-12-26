@@ -542,7 +542,7 @@ void IT_MGR::InitDLG()
 #ifdef _NEW_UI 
 	
 	pQuickBAR = new CQuickBAR( DLG_TYPE_QUICKBAR_EXT );
-	pQuickBAR->Create("DlgQuickBar");
+	pQuickBAR->Create("DlgQuickBar_2");
 	pQuickBAR->SetQuickBarType( QUICKBAR_TYPE_EXTENSION );
 	AppendDlg( DLG_TYPE_QUICKBAR_EXT, pQuickBAR, pQuickBAR->GetControlID() );
 #endif

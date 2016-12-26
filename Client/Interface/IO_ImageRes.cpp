@@ -222,7 +222,7 @@ bool CImageResManager::LoadImageResources()
 	if( m_ImageRes[ IMAGE_RES_NEWUI ].LoadRES( pFileSystem ) == false )
 		return false;
 
-	CResourceMgr::GetInstance()->AddResource("3DData\\Control\\Res\\UI2_strID.ID",IMAGE_RES_NEWUI);
+	CResourceMgr::GetInstance()->AddResource("3DData\\Control\\XML\\UI2_strID.ID",IMAGE_RES_NEWUI);
 #endif
 
 

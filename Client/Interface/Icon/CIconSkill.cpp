@@ -137,7 +137,7 @@ void	CIconSkill::GetToolTip( CInfo& ToolTip,  DWORD dwDialogType, DWORD dwType )
 
 	if( dwType & INFO_STATUS_FEW )
 	{
-		AddSkillName( iSkillNo, ToolTip );
+		AddSkillName( iSkillNo, ToolTip, false ); //Numenor: When in INFO_STATUS_FEW mode, don't print the level of the skill
 		AddSkillUseProperty( iSkillNo, ToolTip );
 	}
 	else

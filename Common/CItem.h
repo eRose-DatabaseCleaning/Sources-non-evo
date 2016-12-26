@@ -22,7 +22,7 @@
 
 
 #define	MAX_ITEM_LIFE			1000
-#define __ITEM_MAX
+//#define __ITEM_MAX
 
 #define	MAX_DUP_ITEM_QUANTITY	999
 #pragma pack (push, 1)
