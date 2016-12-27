@@ -25,6 +25,22 @@ CGameStateSelectAvatar::~CGameStateSelectAvatar(void)
 
 int	CGameStateSelectAvatar::Update( bool bLostFocus )
 {
+		//Numenor: if options are given to the launcher (ID, password...) already fill the boxes... and if possible auto-login into the game!
+		if(g_GameDATA.m_CharName.Get())
+		{
+			static bool OneTimeProc = true;
+			if(OneTimeProc)
+			{	
+				OneTimeProc = false;
+				CTDialog* pDlg = g_EUILobby.GetEUI( EUI_SELECT_AVATA ) ;
+				assert( pDlg );
+				if( pDlg )
+				{
+					CSelectAvata*	pAvatarDlg = (CSelectAvata*)pDlg;
+					pAvatarDlg->SendSelectAvataReq();
+				}
+			}
+		}
 
 	g_EUILobby.Update();
 	

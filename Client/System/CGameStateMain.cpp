@@ -1200,11 +1200,14 @@ void CGameStateMain::UpdateCheckFrame()
 			refGame.Get_MousePos( ptMouse );
 			int iCheckFlag = CheckMouseRegion( ptMouse.x, ptMouse.y );
 
-			if( iCheckFlag & SCREEN_LEFT )
+			//Numenor: let's remove those options to turn the camera when on the edge of the screen
+			/*if( iCheckFlag & SCREEN_LEFT )
 				refCursor.SetCursorType( CCursor::CURSOR_LEFT );
 			else if( iCheckFlag & SCREEN_RIGHT )
 				refCursor.SetCursorType( CCursor::CURSOR_RIGHT );
-			else if( g_itMGR.IsMouseOnInterface() )
+			else */
+				
+			if( g_itMGR.IsMouseOnInterface() )
 				refCursor.SetCursorType( CCursor::CURSOR_DEFAULT );
 			else if( m_bPickedPOS && (m_iPickedOBJ > 0) )
 			{	
@@ -1300,7 +1303,8 @@ void CGameStateMain::UpdateCameraPositionByMouse()
 	CGame::GetInstance().Get_MousePos( ptCurrMouse );
 	int iCheckFlag = CheckMouseRegion( ptCurrMouse.x, ptCurrMouse.y );
 
-	if( iCheckFlag & SCREEN_LEFT )
+	//Numenor: let's remove those options to turn the camera when on the edge of the screen
+	/*if( iCheckFlag & SCREEN_LEFT )
 	{
 		g_pCamera->Add_YAW( -CAMERA_MOVE_SPEED );
 		return;
@@ -1309,9 +1313,9 @@ void CGameStateMain::UpdateCameraPositionByMouse()
 
 	if( iCheckFlag & SCREEN_RIGHT )
 	{
-		g_pCamera->Add_YAW( CAMERA_MOVE_SPEED );
+		//g_pCamera->Add_YAW( CAMERA_MOVE_SPEED );
 		return;
-	}
+	}*/
 /*
 	if( iCheckFlag & SCREEN_UP )
 		g_pCamera->Add_PITCH( -CAMERA_MOVE_SPEED );

@@ -124,6 +124,7 @@ public:
 	CStrVAR				m_Account;
 	CStrVAR				m_Password;
 	unsigned char		m_PasswordMD5[32];
+	CStrVAR				m_CharName;
 
 	void Init ()		{	::InitializeCriticalSection( &m_csNZIN );	}
 	void Free ()		{	::DeleteCriticalSection( &m_csNZIN );		}

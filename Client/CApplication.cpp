@@ -372,6 +372,16 @@ bool CApplication::ParseArgument (char *pStr)
 				CopyMemory( g_GameDATA.m_PasswordMD5, pToken, strlen( pToken ) );
 			}
 		}
+
+		//Numenor: Gives the name of your char to auto-log it
+		if ( !strcmpi( pToken, "_charname" ) ) 
+		{
+			pToken = CStr::GetTokenNext (pDelimiters);
+			if ( pToken ) {
+				g_GameDATA.m_CharName.Set(pToken);
+			}
+		}
+
 		//----------------------------------------------------------/
 
 //#ifdef	_DEBUG

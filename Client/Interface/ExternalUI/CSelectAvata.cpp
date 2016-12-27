@@ -33,6 +33,10 @@ void CSelectAvata::SetEUIObserver( CExternalUIManager* pObserver )
 
 UINT CSelectAvata::Process( UINT uiMsg, WPARAM wParam, LPARAM lParam )
 {
+	if(g_GameDATA.m_CharName.Get()){
+		SendSelectAvataReq();
+	}
+
 	if( !IsVision() ) return 0;
 
 	switch( uiMsg )
@@ -84,6 +88,10 @@ UINT CSelectAvata::Process( UINT uiMsg, WPARAM wParam, LPARAM lParam )
 /// 캐릭터가 선택되고 서버에 알리기 전에 Msg Queue를 모두 지워서 두번 보내어지는것을 막는다. 2004 /6 /20
 void CSelectAvata::SendSelectAvataReq( )
 {
+	if(g_GameDATA.m_CharName.Get()){
+		CGameDataCreateAvatar::GetInstance().SelectAvatar(g_GameDATA.m_CharName.Get());
+	}
+
 	CGameDataCreateAvatar& refData = CGameDataCreateAvatar::GetInstance();
 
 
@@ -123,6 +131,9 @@ void CSelectAvata::SendSelectAvataReq( )
 	}
 	else
 		g_EUILobby.ShowMsgBox( STR_REQUEST_SELECT_CHARACTER, CTMsgBox::BT_OK | CTMsgBox::BT_CANCEL, true , GetDialogType() );
+
+g_GameDATA.m_CharName.Del();
+
 }
 
 void CSelectAvata::RecvAvataList( t_PACKET* recvPacket )
