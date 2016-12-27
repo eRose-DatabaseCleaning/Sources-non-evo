@@ -20,7 +20,8 @@
 
 #include "TIme2.h"
 CApplication* CApplication::m_pInstance = NULL;
-
+int CApplication::m_nScrX;
+int CApplication::m_nScrY;
 
 //#define DEFAULT_WINDOWED_STYLE ( WS_OVERLAPPEDWINDOW )
 //#define DEFAULT_WINDOWED_STYLE ( WS_OVERLAPPEDWINDOW | ~WS_MAXIMIZEBOX )
@@ -167,6 +168,9 @@ CApplication::CApplication ()
 	m_nScrWidth = 0;
 	m_nScrHeight = 0;
 
+	m_nScrX = 0;
+	m_nScrY = 0;
+
 	m_wActive = false;
 
 	CStr::Init ();
@@ -283,6 +287,20 @@ bool CApplication::ParseArgument (char *pStr)
 		if ( !strcmp( pToken, "_1280P" ) ) {
 			m_nScrWidth = 1280;
 			m_nScrHeight = 720;
+		}
+		//Numenor: Add an option to give the initial position of the game window
+		if ( !strcmpi( pToken, "_posX" ) ) {
+			pToken = CStr::GetTokenNext (pDelimiters);
+			if ( pToken ) {
+				m_nScrX = atoi(pToken);
+			}
+		}
+
+		if ( !strcmpi( pToken, "_posY" ) ) {
+			pToken = CStr::GetTokenNext (pDelimiters);
+			if ( pToken ) {
+				m_nScrY = atoi(pToken);
+			}
 		}
 
 		if ( !strcmpi( pToken, "_sight" ) ) {
@@ -417,7 +435,7 @@ bool CApplication::ParseArgument (char *pStr)
 /// 2. 현재 윈도우즈의 해상도보다 일정크기 이상으로 윈도우를 생성하거나 사이즈 변경이 되지 않는다.
 ///		- 현재 윈도우즈 해상도를 구해서 변경하고자하는 크기를 비교하자
 //-----------------------------------------------------------------------------------------------------------------
-void CApplication::ResizeWindowByClientSize( int& iClientWidth, int& iClientHeight, int iDepth , bool update_engine)
+void CApplication::ResizeWindowByClientSize(int& iClientWidth, int& iClientHeight, int iDepth , bool update_engine, int iClientX, int iClientY)
 {
 	if (m_bFullScreenMode) 
 	{
@@ -459,7 +477,7 @@ void CApplication::ResizeWindowByClientSize( int& iClientWidth, int& iClientHeig
 				resetScreen();
 			}
 
-			MoveWindow( m_hWND, 0,0, window_width, window_height, TRUE );
+			MoveWindow( m_hWND, iClientX, iClientY, window_width, window_height, TRUE ); //Numenor: I've changed this function to be able to create windows at different positions
 			
 			SetWIDTH( iClientWidth );
 			SetHEIGHT( iClientHeight );
@@ -524,11 +542,13 @@ void CApplication::ResizeWindowByClientSize( int& iClientWidth, int& iClientHeig
 }
 
 //-------------------------------------------------------------------------------------------------
-bool CApplication::CreateWND(char *szClassName, char *szWindowName, short nWidth, short nHeight,int iDepth, HINSTANCE hInstance)
+bool CApplication::CreateWND(char *szClassName, char *szWindowName, short nWidth, short nHeight,int iDepth, HINSTANCE hInstance, int iClientX, int iClientY)
 {
 /*    if ( ::FindWindow (szClassName, szWindowName) ) {
         return false;
 	}*/
+
+	//Numenor: by default : int iClientX = m_nScrX, int iClientY = m_nScrY
 
 	m_nScrWidth  = nWidth;
 	m_nScrHeight = nHeight;
@@ -558,8 +578,8 @@ bool CApplication::CreateWND(char *szClassName, char *szWindowName, short nWidth
             szClassName,			// pointer to registered class name
             szWindowName,			// pointer to window name
             DEFAULT_WINDOWED_STYLE,	// window style
-            0,						// (GetSystemMetrics (SM_CXSCREEN)-START_SCR_XLEN)/2,     // horizontal position of window
-            0,						//(GetSystemMetrics (SM_CYSCREEN)-START_SCR_YLEN)/2,     // vertical position of window
+            iClientX,					// (GetSystemMetrics (SM_CXSCREEN)-START_SCR_XLEN)/2,     // horizontal position of window
+            iClientY,						//(GetSystemMetrics (SM_CYSCREEN)-START_SCR_YLEN)/2,     // vertical position of window
             nWidth,					// window width
             nHeight,				// window height
             NULL,                   // handle to parent or owner window
@@ -570,7 +590,7 @@ bool CApplication::CreateWND(char *szClassName, char *szWindowName, short nWidth
 
 			int client_width  = m_nScrWidth;
 			int client_height = m_nScrHeight;
-			ResizeWindowByClientSize( client_width, client_height, iDepth , false );
+			ResizeWindowByClientSize(client_width, client_height, iDepth , false, iClientX, iClientY );
 
 
 	} else {

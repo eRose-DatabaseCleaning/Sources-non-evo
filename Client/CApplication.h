@@ -27,6 +27,9 @@ private :
 	bool		m_bViewWireMode;
 	short		m_nScrWidth;
 	short		m_nScrHeight;
+	
+	static int			m_nScrX;
+	static int			m_nScrY;
 
 	CStrVAR		m_Caption;
 
@@ -63,7 +66,7 @@ public  :
 	}
 
 	bool	ParseArgument (char *pStr);
-	bool	CreateWND (char *szClassName, char *szWindowName, short nWidth, short nHeight, int iDepth, HINSTANCE hInstance);
+	bool	CreateWND (char *szClassName, char *szWindowName, short nWidth, short nHeight, int iDepth, HINSTANCE hInstance, int iClientX = m_nScrX, int iClientY = m_nScrY);
 	void	DestroyWND (void);
 
 	void	SetCaption (char *szStr);
@@ -73,7 +76,7 @@ public  :
 	int		wm_COMMAND (WPARAM wParam);
 	LRESULT	MessageProc( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam );
 	void	ErrorBOX (char *szText, char *szCaption, UINT uType = (MB_OK | MB_TOPMOST));
-	void	ResizeWindowByClientSize( int& iClientWidth, int& iClientHeight,int iDepth, bool update_engine );
+	void	ResizeWindowByClientSize(int& iClientWidth, int& iClientHeight,int iDepth, bool update_engine, int iClientX = m_nScrX, int iClientY = m_nScrY );
 	
 	void	SetFullscreenMode (bool bFullScreenMode);
 } ;
