@@ -834,6 +834,11 @@ short classUSER::Cheat_set ( classUSER *pUSER, char *pArg1, char *pArg2, char *p
 			}
 			return CHEAT_PROCED;
 		}
+		//Numenor: Change the party level of the party the admin is in.
+		if ( !strcmpi(pArg1, "PARTYLEV") ) {
+			this->GetPARTY()->SetPartyLEV( atoi(pArg2) );
+			return CHEAT_SEND;
+		}
 	}
 
 	if ( B_Cheater() ) {

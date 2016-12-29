@@ -128,6 +128,7 @@ x	//bool Sub_PartyUSER (CDLList< tagPartyUSER >::tagNODE *pPartyNODE );
 
 	int  GetMemberCNT()		{	return	this->m_nMemberCNT;		}
 	BYTE GetPartyLEV()		{	return	this->m_btPartyLEV;		}
+	void SetPartyLEV(int newLevel)		{	this->m_btPartyLEV = newLevel ;	}
 	int	 GetAverageLEV()	{	return	this->m_iAverageLEV;	}
 	int  GetPartyEXP()		{	return	this->m_iPartyEXP;		}
 
