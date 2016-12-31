@@ -85,7 +85,7 @@ int CManufacture::GetCosumeMP()
 int CManufacture::GetSuccessRate()
 {
 	if( m_iSuccessRate >= 100 )
-		return 99;
+		return 100;
 
 	return m_iSuccessRate;
 }
@@ -690,16 +690,20 @@ void CManufacture::SetMakeItem( tagITEM& Item )
 		if( m_pMakeItem->GetItem().GetTYPE() == Item.GetTYPE() &&
 			m_pMakeItem->GetItem().GetItemNO() == Item.GetItemNO() )
 		{
-			///같은 아이템이 선택되었다.
+			///The same item was selected.
 			return;
 		}
 
 		delete m_pMakeItem;
 		m_pMakeItem = NULL;
 	}
+	//Numenor: Let's add some durability to this itme so it shows basic stat
+	Item.m_nLife = MAX_ITEM_LIFE;
+	Item.m_cDurability = ITEM_DURABITY( Item.m_cType, Item.m_nItemNo );
 
 	m_pMakeItem = new CItem;
 	m_pMakeItem->SetItem( Item );
+
 	
 	m_pEvent->SetID( CTEventManufacture::EID_CHANGE_TARGETITEM );
 	m_pEvent->SetItem( m_pMakeItem );
@@ -708,7 +712,7 @@ void CManufacture::SetMakeItem( tagITEM& Item )
 	NotifyObservers( m_pEvent );
 
 
-	///기존에 있던 재료들 다 뺀다.
+	///Remove all existing materials.
 	for( int i = 0 ; i < g_iMaxCountMaterial; ++i )
 	{
 		if( m_pFragmentItems[i] )
@@ -718,7 +722,7 @@ void CManufacture::SetMakeItem( tagITEM& Item )
 	}
 	
 	
-	///2. 성공확률은 0
+	///2. The probability of success is 0
 	m_iSuccessRate = 0;	
 
 	m_iSuccessPoints[0] = 0;
@@ -730,16 +734,16 @@ void CManufacture::SetMakeItem( tagITEM& Item )
 	m_iItemQuality	= ITEM_QUALITY( Item.GetTYPE(), Item.GetItemNO()); 
 	m_iNumMat		= 0;
 
-	///3. 필요 재료 Reload;
+	///3. Required material Reload;
 
-	/////아이템을 제조하기 위하여 필요한 재료들
+	/////Materials needed to make an item
 	int iMaterialNo			= ITEM_PRODUCT_IDX( Item.GetTYPE(), Item.GetItemNO() );///아이템을 만들기 위하여 필요한 재료들이 있는 STB의 Line Number
 	int iMaterialItemNo		= 0;
 	int iMaterialItemCount	= 0;
 
 
 
-	/////첫번째 슬롯의 경우는 원재료Column과 일반재료Column공유
+	/////In the case of the first slot, a raw material column and a general material column share
 	iMaterialItemNo		= PRODUCT_RAW_MATERIAL( iMaterialNo );
 	if( iMaterialItemNo <= 0 )
 		iMaterialItemNo	= PRODUCT_NEED_ITEM_NO( iMaterialNo, 0 );
@@ -767,7 +771,7 @@ void CManufacture::SetMakeItem( tagITEM& Item )
 		++m_iNumMat;
 	}
 
-	///두번째 슬롯 부터
+	///From the second slot
 	for( int i = 1; i < g_iMaxCountMaterial; ++i )
 	{
 		iMaterialItemNo		= PRODUCT_RAW_MATERIAL( iMaterialNo );

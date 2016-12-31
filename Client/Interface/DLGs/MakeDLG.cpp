@@ -172,19 +172,19 @@ void CMakeDLG::Draw()
 	
 	CManufacture& MakeData = CManufacture::GetInstance();
 	
-	///각 재료칸별 성공점 표시
+	///Show success points for each material box
 	DrawSuccessPoints();
 
 	/// SubSystem Draw
 	m_pCurrState->Draw();
 
-	/// 제조할 아이템 Draw
+	/// Items to be manufactured Draw
 	m_MakeItemSlot.Draw();
 
-	/// 인벤토리에서 옮긴 재료아이템 Draw
+	/// Material item moved from inventory Draw
 	for_each( m_listMaterialSlot.begin(), m_listMaterialSlot.end(), mem_fun_ref(&CSlot::Draw) );
 
-	/// 필요 재료 Draw
+	/// Required material Draw
 	D3DXMATRIX mat;	
 	D3DXMatrixTranslation( &mat, (float)m_sPosition.x, (float)m_sPosition.y,0.0f);
 	::setTransformSprite( mat );
@@ -216,12 +216,12 @@ void CMakeDLG::Draw()
 	}
 
 
-/*
-//홍근 : 제조 성공 확률 제거.
+
+	//Numenor: This draws the success probability.
 	///Text Draw
 	SetRect( &rcDraw, 79,379,79+34,379+15 );
 	drawFontf( g_GameDATA.m_hFONT[ FONT_NORMAL ], true, &rcDraw ,g_dwWHITE,DT_RIGHT,"%d", MakeData.GetSuccessRate() );
-*/
+
 
 	SetRect( &rcDraw, 176,379,176+34,379+15 );
 	drawFontf( g_GameDATA.m_hFONT[ FONT_NORMAL ], true, &rcDraw ,g_dwWHITE,DT_RIGHT,"%d", MakeData.GetCosumeMP() );
