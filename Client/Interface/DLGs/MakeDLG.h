@@ -21,9 +21,9 @@ class	CMakeComboClass;
 struct t_PACKET;
 class CDragItem;
 /**
-* 제조시에 사용되는 다이얼로그
+* 제조시에 사용되는 다이얼로그
 *
-* @Author		최종진
+* @Author		최종진
 * @Date			2005/9/14
 */
 class CMakeDLG : public CTDialog, public IObserver
@@ -89,8 +89,8 @@ private:
 	CMakeState*			m_pCurrState;
 	CMakeState*			m_pMakeState[STATE_MAX];
 
-	CSlot						m_MakeItemSlot;			///제조할 아이템 아이콘이 들어갈 슬롯
-	std::vector<CSlot>			m_listMaterialSlot;		///제조창에 올려진 아이템의 아이콘이 자리할 슬롯
+	CSlot						m_MakeItemSlot;			///Slots into which the item icon to be manufactured
+	std::vector<CSlot>			m_listMaterialSlot;		///The slot where the icon of the item placed in the manufacturing window will be placed
 
 	vector<CSinglelineString>	m_vecSingleString;
 };
