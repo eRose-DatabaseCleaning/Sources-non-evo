@@ -1748,11 +1748,12 @@ struct gsv_EFFECT_OF_SKILL : public t_PACKETHEADER {
 	WORD			m_wSpellObjIDX;
 
 // 홍근
-#ifdef _GBC
+//#ifdef _GBC
 	unsigned short	m_nSkillIDX;
 	unsigned short	m_nINT;
 	BYTE			m_btSuccessBITS;
-#else
+	unsigned int	m_iSpellerSKILL_DURATION; //Numenor: the server now sends one more info in this packet: the true duration of the skill
+/*#else
 	union {
 		struct {
 			unsigned short	m_nSkillIDX		: 12;
@@ -1765,7 +1766,7 @@ struct gsv_EFFECT_OF_SKILL : public t_PACKETHEADER {
 			unsigned short	m_nINT			: 10;	// 시전자의 지력
 		} ;
 	} ;
-#endif
+#endif*/
 
 } ;
 

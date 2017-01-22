@@ -34,7 +34,7 @@
 #include "../Country.h"
 #include "../common/CInventory.h"
 #include "system/System_Func.h"
-
+#include "Common/CUserDATA.h"
 
 extern CCamera * g_pCamera;
 
@@ -1756,7 +1756,7 @@ void CObjCHAR::Dead ()
 /// @brief  : 스킬결과를 액션프레임에 수행하기 위해 짱박아 둔다.
 //--------------------------------------------------------------------------------
 
-void CObjCHAR::PushEffectedSkillToList( int iSkillIDX, gsv_DAMAGE_OF_SKILL EffectedSkill, int iCasterINT, bool bDamageOfSkill )
+void CObjCHAR::PushEffectedSkillToList( int iSkillIDX, gsv_DAMAGE_OF_SKILL EffectedSkill, int iCasterINT, int iCasterSKILL_DURATION, bool bDamageOfSkill )
 {
 	stEFFECT_OF_SKILL steffectOfSkill;
 	
@@ -1764,6 +1764,7 @@ void CObjCHAR::PushEffectedSkillToList( int iSkillIDX, gsv_DAMAGE_OF_SKILL Effec
 	steffectOfSkill.iSkillIDX		= iSkillIDX;
 	steffectOfSkill.bDamageOfSkill	= bDamageOfSkill;
 	steffectOfSkill.iCasterINT		= iCasterINT;
+	steffectOfSkill.iCasterSKILL_DURATION			= iCasterSKILL_DURATION;
 
 	steffectOfSkill.EffectOfSkill = EffectedSkill;
 	m_EffectedSkillList.push_back( steffectOfSkill ); 
@@ -1896,7 +1897,7 @@ void CObjCHAR::ApplyEffectOfSkill( int iSkillIDX, int iObjIDX, CObjCHAR* pEffect
 				{
 					/// 일단 유져일경우만 속성객체 추가..
 					//if( pChar->IsA( OBJ_USER ) )
-					pEffectedChar->AddEnduranceEntity( iSkillIDX,	iStateIndex, SKILL_DURATION( iSkillIDX ), ENDURANCE_TYPE_SKILL ) ;
+					pEffectedChar->AddEnduranceEntity( iSkillIDX,	iStateIndex, pEffectOfSkill->iCasterSKILL_DURATION, ENDURANCE_TYPE_SKILL ) ;
 
 					/// 상태 타입..
 					int iStateType = STATE_TYPE( iStateIndex );

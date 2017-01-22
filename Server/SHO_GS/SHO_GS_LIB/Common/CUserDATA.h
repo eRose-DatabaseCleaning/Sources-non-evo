@@ -9,6 +9,8 @@
 #include "CInventory.h"
 #include "CHotICON.h"
 #include "Calculation.h"
+#include "IO_Skill.h"
+#include "DataTYPE.h"
 #pragma warning (disable:4201)
 //#define FRAROSE
 //-------------------------------------------------------------------------------------------------
@@ -353,24 +355,24 @@ struct tagSkillAbility {
 	{
 		::ZeroMemory( m_nSkillINDEX,	sizeof(short) * MAX_LEARNED_SKILL_CNT );
 
-		m_nSkillINDEX[ 0 ] = 11;	// 앉기
-		m_nSkillINDEX[ 1 ] = 12;	// 줍기
-		m_nSkillINDEX[ 2 ] = 16;	// 일반공격
-		m_nSkillINDEX[ 3 ] = 20;	// 거래신청
+		m_nSkillINDEX[ 0 ] = 11;	// Sit
+		m_nSkillINDEX[ 1 ] = 12;	// Pick
+		m_nSkillINDEX[ 2 ] = 16;	// Normal attack
+		m_nSkillINDEX[ 3 ] = 20;	// Apply for a deal
 
 		if ( !IsTAIWAN() )
 			return;
 
-		m_nSkillINDEX[  4 ] = 49;	// 화남
-		m_nSkillINDEX[  5 ] = 50;	// 박수
-		m_nSkillINDEX[  6 ] = 48;	// 절규
-		m_nSkillINDEX[  7 ] = 47;	// 파이팅
-		m_nSkillINDEX[  8 ] = 46;	// 웃기
-		m_nSkillINDEX[  9 ] = 43;	// 인사
-		m_nSkillINDEX[ 10 ] = 42;	// 인사
-		m_nSkillINDEX[ 11 ] = 41;	// 인사
-		m_nSkillINDEX[ 12 ] = 181;	// 인사
-		m_nSkillINDEX[ 13 ] = 22;	// 본인 타겟팅
+		m_nSkillINDEX[  4 ] = 49;	// aggro
+		m_nSkillINDEX[  5 ] = 50;	// clap (the emote?)
+		m_nSkillINDEX[  6 ] = 48;	// scream
+		m_nSkillINDEX[  7 ] = 47;	// fighting
+		m_nSkillINDEX[  8 ] = 46;	// funny
+		m_nSkillINDEX[  9 ] = 43;	// greetings
+		m_nSkillINDEX[ 10 ] = 42;	// greetings
+		m_nSkillINDEX[ 11 ] = 41;	// greetings
+		m_nSkillINDEX[ 12 ] = 181;	// greetings
+		m_nSkillINDEX[ 13 ] = 22;	// Target yourself
 	}
 } ;
 
@@ -702,13 +704,29 @@ public :
 	void  SetDef_CON(short nValue)	{	this->m_BasicAbility.m_nCON=nValue;			}
 	void  SetDef_CHARM(short nValue){	this->m_BasicAbility.m_nCHARM=nValue;		}
 	void  SetDef_SENSE(short nValue){	this->m_BasicAbility.m_nSENSE=nValue;		}
-
+	
 	int	  GetCur_STR ()				{	return	( GetDef_STR()   + m_iAddValue[ AT_STR		] + m_PassiveAbilityFromRate[ AT_STR  -AT_STR ] );	}	// 근력
 	int	  GetCur_DEX ()				{	return	( GetDef_DEX()   + m_iAddValue[ AT_DEX		] + m_PassiveAbilityFromRate[ AT_DEX  -AT_STR ] );	}	// 민첩
 	int	  GetCur_INT ()				{	return	( GetDef_INT()   + m_iAddValue[ AT_INT		] + m_PassiveAbilityFromRate[ AT_INT  -AT_STR ] );	}	// 지력
 	int	  GetCur_CON ()				{	return	( GetDef_CON()   + m_iAddValue[ AT_CON		] + m_PassiveAbilityFromRate[ AT_CON  -AT_STR ] );	}	// 집중
 	int	  GetCur_CHARM ()			{	return	( GetDef_CHARM() + m_iAddValue[ AT_CHARM	] + m_PassiveAbilityFromRate[ AT_CHARM-AT_STR ] );	}	// 매력
 	int	  GetCur_SENSE ()			{	return	( GetDef_SENSE() + m_iAddValue[ AT_SENSE	] + m_PassiveAbilityFromRate[ AT_SENSE-AT_STR ] );	}	// 감각
+
+	//Numenor: Return the true skill duration only for skills that apply to ally (so basically buffs :-) )
+	int	  GetCur_SKILL_DURATION(int iSkillNo){
+		int skill_duration_boost = 1;
+
+		switch( SKILL_CLASS_FILTER( iSkillNo ) ) {
+			case SKILL_TARGET_FILTER_SELF :
+			case SKILL_TARGET_FILTER_GROUP :
+			case SKILL_TARGET_FILTER_GUILD :
+			case SKILL_TARGET_FILTER_FRIEND_ALL :
+			case SKILL_TARGET_FILTER_DEAD_USER :
+				skill_duration_boost = (GetPassiveSkillValue( AT_PSV_SKILL_DURATION_BOOST ) > 0) ? GetPassiveSkillValue( AT_PSV_SKILL_DURATION_BOOST ) : 1;
+				break;
+		}
+		return	( SKILL_DURATION(iSkillNo)*skill_duration_boost );
+	}
 
 	int	  GetCur_SaveMP ()	// MP 절감 비율
 	{
@@ -827,8 +845,8 @@ public :
 
 	tagBattleAbility	m_Battle;						///< 전투 능력치 데이터 - 계산되어져 얻음
 
-	int					m_iAddValue	  [ AT_MAX ];		///< 장착 아이템에 의해 증가된 수치 : 계산되어짐.
-	short				m_nPassiveRate[ AT_MAX ];		///< 패시브 스킬에 의해 보정된 비율
+	int					m_iAddValue	  [ AT_MAX ];		/// <Value incremented by mounting item: calculated.
+	short				m_nPassiveRate[ AT_MAX ];		///< Percentage corrected by passive skill
 
 	BYTE				m_btRecoverHP;					///< == m_PassiveSkill[ PST_RECOVER_HP ] + this->m_iAddValue[ AT_RECOVER_HP ]
 	BYTE				m_btRecoverMP;					///< == m_PassiveSkill[ PST_RECOVER_MP ] + this->m_iAddValue[ AT_RECOVER_MP ]

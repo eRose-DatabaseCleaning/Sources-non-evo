@@ -26,6 +26,7 @@ $Header: /Client/Network/RecvPACKET.cpp 690   05-10-27 10:18a Choo0219 $
 #include "../Common/IO_STB.h"
 #include "../Common/IO_Quest.h"
 #include "../common/Calculation.h"
+#include "../common/CUserDATA.h"
 #include "../Util/CCheat.h"
 #include "../GameProc/CDayNNightProc.h"
 
@@ -2907,11 +2908,11 @@ void CRecvPACKET::Recv_gsv_EFFECT_OF_SKILL ()
 	CObjCHAR*			pObjCHAR		= NULL;
 	int					iObjIDX			= 0;
 
-	/// 스킬 시전자에게.. 등록..
+	/// Register to skill caster ..
 	short iSkillOwner = m_pRecvPacket->m_gsv_EFFECT_OF_SKILL.m_wSpellObjIDX;
 	CObjCHAR *pChar = g_pObjMGR->Get_ClientCharOBJ( iSkillOwner, true );
 
-	/// 현재 사용중인 스킬이 발사형이라면.. 바로 적용한다.
+	/// If your current skill is a firing type, apply it immediately.
 	int iDoingSkillIDX = 0;
 
 	if( pChar && pChar->m_nActiveSkillIDX )
@@ -2931,7 +2932,8 @@ void CRecvPACKET::Recv_gsv_EFFECT_OF_SKILL ()
 		memcpy( &damageOfSkill, &(m_pRecvPacket->m_gsv_EFFECT_OF_SKILL ), sizeof( m_pRecvPacket->m_gsv_EFFECT_OF_SKILL ) );
 		pChar->PushEffectedSkillToList( m_pRecvPacket->m_gsv_EFFECT_OF_SKILL.m_nSkillIDX, 										
 			damageOfSkill,
-			m_pRecvPacket->m_gsv_EFFECT_OF_SKILL.m_nINT );		
+			m_pRecvPacket->m_gsv_EFFECT_OF_SKILL.m_nINT,
+			m_pRecvPacket->m_gsv_EFFECT_OF_SKILL.m_iSpellerSKILL_DURATION );		
 	}
 	else
 	{
@@ -2984,7 +2986,7 @@ void CRecvPACKET::Recv_gsv_EFFECT_OF_SKILL ()
 					{
 						/// 일단 유져일경우만 속성객체 추가..
 						//if( pChar->IsA( OBJ_USER ) )
-						pEffectedChar->AddEnduranceEntity( iSkillIDX,	iStateIndex, SKILL_DURATION( iSkillIDX ), ENDURANCE_TYPE_SKILL ) ;
+						pEffectedChar->AddEnduranceEntity( iSkillIDX,	iStateIndex, m_pRecvPacket->m_gsv_EFFECT_OF_SKILL.m_iSpellerSKILL_DURATION, ENDURANCE_TYPE_SKILL ) ;
 
 						/// 상태 타입..
 						int iStateType = STATE_TYPE( iStateIndex );
@@ -3185,6 +3187,7 @@ void CRecvPACKET::Recv_gsv_DAMAGE_OF_SKILL ()
 		pChar->PushEffectedSkillToList( m_pRecvPacket->m_gsv_DAMAGE_OF_SKILL.m_nSkillIDX,
 			m_pRecvPacket->m_gsv_DAMAGE_OF_SKILL, 
 			m_pRecvPacket->m_gsv_DAMAGE_OF_SKILL.m_nINT,
+			m_pRecvPacket->m_gsv_DAMAGE_OF_SKILL.m_iSpellerSKILL_DURATION,
 			true );		
 	}else
 	{

@@ -105,6 +105,7 @@ enum enumSKILL_TAGER_FILTER
 #define	SKILL_WARP_ZONE_XPOS( S )			g_SkillList.m_SkillDATA.m_ppDATA[ S ][ 22 ]		// X position
 #define	SKILL_WARP_ZONE_YPOS( S )			g_SkillList.m_SkillDATA.m_ppDATA[ S ][ 23 ]		// Y position
 
+#define	MAX_SKILL_RELOAD_TYPE				16	// 0~15
 #define	SKILL_RELOAD_TYPE(S)				g_SkillList.m_SkillDATA.m_ppDATA[ S ][ 27 ]		// Skill margin
 
 #define	SKILL_SUMMON_PET(S)					g_SkillList.m_SkillDATA.m_ppDATA[ S ][ 28 ]		// Summon mob number

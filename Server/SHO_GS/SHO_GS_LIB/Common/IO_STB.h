@@ -4,6 +4,8 @@
 #ifndef __SERVER
 	#include "../GameCommon/StringManager.h"
 #endif
+#include "..\Util\classSTR.h"
+#include "..\Util\classLOG.h"
 //-------------------------------------------------------------------------------------------------
 
 /**
@@ -24,7 +26,7 @@ private:
 	bool	m_bString;
 
 	int		m_iValue;
-	CStrVAR*m_pString;
+	CStrVAR* m_pString;
 
 public :
 	STBVALUE ();

@@ -4,6 +4,7 @@
 #include "CObjCHAR.h"
 #include "GS_ThreadZONE.h"
 #include "ZoneLIST.h"
+#include "CUserDATA.h"
 //#include "CVector.h"
 //#include "CObjAVT.h"
 //#include "Calculation.h"
@@ -551,7 +552,7 @@ void CObjCHAR::Add_ADJ_STATUS( classPACKET *pCPacket )
 
 //-------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
-bool CObjCHAR::Send_gsv_EFFECT_OF_SKILL (int iSpellOBJ, short nSkillIDX, BYTE btResult, short nSpellerINT )
+bool CObjCHAR::Send_gsv_EFFECT_OF_SKILL (int iSpellOBJ, short nSkillIDX, BYTE btResult, short nSpellerINT, int iSpellerSKILL_DURATION)
 {
 	classPACKET *pCPacket = Packet_AllocNLock ();
 	if ( !pCPacket )
@@ -565,6 +566,7 @@ bool CObjCHAR::Send_gsv_EFFECT_OF_SKILL (int iSpellOBJ, short nSkillIDX, BYTE bt
 	pCPacket->m_gsv_EFFECT_OF_SKILL.m_nSkillIDX		= nSkillIDX;
 	pCPacket->m_gsv_EFFECT_OF_SKILL.m_btSuccessBITS	= btResult;
 	pCPacket->m_gsv_EFFECT_OF_SKILL.m_nINT			= nSpellerINT;
+	pCPacket->m_gsv_EFFECT_OF_SKILL.m_iSpellerSKILL_DURATION	= iSpellerSKILL_DURATION;	//Numenor: Store the true skill duration inside packets
 
 	this->GetZONE()->SendPacketToSectors( this, pCPacket );
 	Packet_ReleaseNUnlock( pCPacket );
@@ -1113,7 +1115,8 @@ BYTE CObjCHAR::Skill_ApplyIngSTATUS(short nSkillIDX, CObjCHAR *pSpeller)
 
 		btSuccessBITS |= ( 1<<nI );
 
-		if ( this->m_IngSTATUS.UpdateIngSTATUS( this, nIngSTB, SKILL_DURATION(nSkillIDX), nAdjValue, nSkillIDX, pSpeller->Get_INDEX() ) ) {
+
+		if ( this->m_IngSTATUS.UpdateIngSTATUS( this, nIngSTB, pSpeller->Cur_SKILL_DURATION(nSkillIDX), nAdjValue, nSkillIDX, pSpeller->Get_INDEX() ) ) {
 			// 명령을 STOP으로 바꿀꺼... 기절, 수면 걸리면 정지 명령 설정...
 			this->Del_ActiveSKILL();
 			CObjAI::SetCMD_STOP ();
@@ -1143,7 +1146,7 @@ void CObjCHAR::Skill_ChangeIngSTATUS (CObjCHAR *pTarget)
 			if ( this->Skill_IsPassFilter( pTarget, this->Get_ActiveSKILL() ) ) {
 				btResult = pTarget->Skill_ApplyIngSTATUS( this->Get_ActiveSKILL(), this );
 				if ( btResult )  {
-					pTarget->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), this->Get_ActiveSKILL(), btResult, this->Get_INT() );
+					pTarget->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), this->Get_ActiveSKILL(), btResult, this->Get_INT(), this->Cur_SKILL_DURATION(this->Get_ActiveSKILL()));
 					nResultCNT ++;
 				}
 			}
@@ -1154,7 +1157,7 @@ void CObjCHAR::Skill_ChangeIngSTATUS (CObjCHAR *pTarget)
 				if ( this->Skill_IsPassFilter( pFindCHAR, Get_ActiveSKILL() ) ) {
 					btResult = pFindCHAR->Skill_ApplyIngSTATUS( Get_ActiveSKILL(), this );
 					if ( btResult ) {
-						pFindCHAR->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), btResult, this->Get_INT() );
+						pFindCHAR->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), btResult, this->Get_INT(), this->Cur_SKILL_DURATION(this->Get_ActiveSKILL()) );
 						nResultCNT ++;
 					}
 				}
@@ -1248,7 +1251,7 @@ void CObjCHAR::Skill_START_10_11 (CObjCHAR *pTarget)
 			//btResult = pTarget->Skill_IncAbilityValue( Get_ActiveSKILL() );
 			btResult = pTarget->Skill_ApplyIngSTATUS( Get_ActiveSKILL(), this );
 			if ( btResult ) {
-				pTarget->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), btResult, this->Get_INT() );
+				pTarget->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), btResult, this->Get_INT(), this->Cur_SKILL_DURATION(this->Get_ActiveSKILL()) );
 				nResultCNT ++;
 			}
 		}
@@ -1260,7 +1263,7 @@ void CObjCHAR::Skill_START_10_11 (CObjCHAR *pTarget)
 				// btResult = pFindCHAR->Skill_IncAbilityValue( Get_ActiveSKILL() );
 				btResult = pFindCHAR->Skill_ApplyIngSTATUS( Get_ActiveSKILL(), this );
 				if ( btResult ) {
-					pFindCHAR->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), btResult, this->Get_INT() );
+					pFindCHAR->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), btResult, this->Get_INT(), this->Cur_SKILL_DURATION(this->Get_ActiveSKILL()) );
 					nResultCNT ++;
 				}
 			}
@@ -1402,7 +1405,7 @@ bool CObjCHAR::Skill_START (CObjCHAR *pTarget)
 		case SKILL_TYPE_20 :	// 부활
 		{
 			if ( this->Skill_IsPassFilter( pTarget, Get_ActiveSKILL() ) ) {
-				pTarget->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), 0x01, this->Get_INT() );
+				pTarget->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), 0x01, this->Get_INT(), this->Cur_SKILL_DURATION(this->Get_ActiveSKILL()) );
 				this->Send_gsv_RESULT_OF_SKILL( Get_ActiveSKILL() /*, 1*/ );
 				( (CObjAVT*)pTarget )->Resurrection( Get_ActiveSKILL() );
 			}

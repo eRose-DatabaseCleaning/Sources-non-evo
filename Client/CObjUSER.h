@@ -28,7 +28,7 @@ struct SummonMobInfo
 
 
 ///
-///	User class( for main user? )
+///	User class( for main user? ) //Numenor: indeed this class is only used by the current player (so the user, not a random char)
 ///
 
 class CObjUSER : public CObjAVT, public CUserDATA 
@@ -203,7 +203,7 @@ public:
 	/*override*/int					Quest_PartyMemberCNT();
 
 	/*override*/void				SetCur_TeamNO(short nTeamNO ){ CObjAVT::SetTeamInfo( nTeamNO ); }
-
+	int		Cur_SKILL_DURATION(int iSkillNo)	{	return this->GetCur_SKILL_DURATION(iSkillNo);	}
 	/// <
 	/// < end	
 	//////////////////////////////////////////////////////////////////////////////////////////

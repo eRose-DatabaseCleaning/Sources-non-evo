@@ -6,6 +6,7 @@
 #include "CHotICON.h"
 #include "Calculation.h"
 #include "IO_STB.H"
+#include "IO_Skill.h"
 
 #pragma warning (disable:4201)
 //-------------------------------------------------------------------------------------------------
@@ -448,6 +449,22 @@ public :
 	int	  GetCur_CON ()				{	return	( GetDef_CON()   + m_iAddValue[ AT_CON		] + m_PassiveAbilityFromRate[ AT_CON  -AT_STR ] );	}	// 집중
 	int	  GetCur_CHARM ()			{	return	( GetDef_CHARM() + m_iAddValue[ AT_CHARM	] + m_PassiveAbilityFromRate[ AT_CHARM-AT_STR ] );	}	// 매력
 	int	  GetCur_SENSE ()			{	return	( GetDef_SENSE() + m_iAddValue[ AT_SENSE	] + m_PassiveAbilityFromRate[ AT_SENSE-AT_STR ] );	}	// 감각
+
+	//Numenor: Return the true skill duration only for skills that apply to ally (so basically buffs :-) )
+	int	  GetCur_SKILL_DURATION(int iSkillNo){
+		int skill_duration_boost = 1;
+
+		switch( SKILL_CLASS_FILTER( iSkillNo ) ) {
+			case SKILL_TARGET_FILTER_SELF :
+			case SKILL_TARGET_FILTER_GROUP :
+			case SKILL_TARGET_FILTER_GUILD :
+			case SKILL_TARGET_FILTER_FRIEND_ALL :
+			case SKILL_TARGET_FILTER_DEAD_USER :
+				skill_duration_boost = (GetPassiveSkillValue( AT_PSV_SKILL_DURATION_BOOST ) > 0) ? GetPassiveSkillValue( AT_PSV_SKILL_DURATION_BOOST ) : 1;
+				break;
+		}
+		return	( SKILL_DURATION(iSkillNo)*skill_duration_boost );
+	}
 
 	int	  GetCur_SaveMP ()	// MP 절감 비율
 	{

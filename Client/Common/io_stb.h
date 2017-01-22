@@ -11,7 +11,7 @@ private:
 	bool	m_bString;
 
 	int		m_iValue;
-	CStrVAR*m_pString;
+	CStrVAR* m_pString;
 
 public :
 	STBVALUE ();

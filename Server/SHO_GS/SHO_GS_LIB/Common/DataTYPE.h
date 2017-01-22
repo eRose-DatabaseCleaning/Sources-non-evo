@@ -587,6 +587,8 @@ enum t_AbilityINDEX {
 	AT_PSV_SUMMON_MOB_CNT		= 62,	// 소환가능 몹수
 	AT_PSV_DROP_RATE			= 63,	// 드롭 확률
 
+	AT_PSV_SKILL_DURATION_BOOST		= 64,	//Numenor: A passive (PSV) skill to boost duration of skills 
+
 	AT_AFTER_PASSIVE_SKILL		= 71,						// 패시브 스킬 보정능력치 이후...
 	AT_RACE						= AT_AFTER_PASSIVE_SKILL,	// 종족 init_avatar.stb 라인번호 / 2
 

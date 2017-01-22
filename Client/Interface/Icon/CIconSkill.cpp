@@ -7,6 +7,7 @@
 #include "../interfacetype.h"
 #include "../it_mgr.h"
 #include "../../util/Localizing.h"
+#include "../../Common/CUserDATA.h"
 
 #include "SplitHangul.h"
 //----------------------------------------------------------------------------------------------------
@@ -743,7 +744,8 @@ void CIconSkill::AddSkillName( int iSkillNo ,CInfo& ToolTip, bool bAddLevel )
 
 void CIconSkill::AddSkillDuration( int iSkillNo, CInfo& ToolTip, DWORD color )
 {
-	char* pszBuf = CStr::Printf( "%s:%d%s", STR_CONTINUE_TIME,SKILL_DURATION( iSkillNo) ,STR_SECOND);
+	//Numenor: This is never called?
+	char* pszBuf = CStr::Printf( "%s:%d%s", STR_CONTINUE_TIME, SKILL_DURATION(iSkillNo) ,STR_SECOND);
 	ToolTip.AddString( pszBuf , color );
 }
 
@@ -1227,13 +1229,13 @@ void CIconSkill::AddSkillSuccessRateDuration( int iSkillNo, CInfo& ToolTip )
 	{
 		pszBuf = CStr::Printf( "%s:%d-%d%%  %s:%d%s",
 			STR_SUCCESS_RATE, (int)(SKILL_SUCCESS_RATIO( iSkillNo ) * 0.8),(int)(SKILL_SUCCESS_RATIO( iSkillNo )),
-			STR_CONTINUE_TIME,SKILL_DURATION( iSkillNo) ,STR_SECOND );
+			STR_CONTINUE_TIME, SKILL_DURATION( iSkillNo) ,STR_SECOND ); //Numenor: print duration of skill in the skill window
 	}
 	else///己傍伏捞 0老版快 100%肺 贸府
 	{
 		pszBuf = CStr::Printf( "%s:%d%%  %s:%d%s",
 			STR_SUCCESS_RATE, 100,
-			STR_CONTINUE_TIME,SKILL_DURATION( iSkillNo) ,STR_SECOND );
+			STR_CONTINUE_TIME, SKILL_DURATION( iSkillNo) ,STR_SECOND ); //Numenor: print duration of skill in the skill window
 	}
 
 

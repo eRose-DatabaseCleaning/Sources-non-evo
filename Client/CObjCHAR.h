@@ -360,7 +360,9 @@ public:
 	/*override*/virtual void	Do_DeadEvent	(CObjCHAR *pTarget){};	
 
 	/*override*/virtual void	SetMotionRepeatCount( int iRepeatCount ) { ::setRepeatCount( GetZMODEL(), iRepeatCount ); };
-					
+	
+	virtual int		 Cur_SKILL_DURATION(int iSkillNo)					{	return 0	;	}
+	//Numenor: Virtualization. Return true duration from CObjUSER if "this" pointer is in fact a CObjUSER, i.e. if the current player does something. If we look at someone else, this function is called... and return therefore 0. Indeed we cannot acces other CHAR info without asking the server. Which is done thanks to packet.
 
 
 protected:
@@ -447,6 +449,7 @@ private:
 		int					iSkillIDX;
 		bool				bDamageOfSkill;
 		int					iCasterINT;						/// 시전자의 INT 계산식에 필요
+		int					iCasterSKILL_DURATION;
 
 		gsv_DAMAGE_OF_SKILL	EffectOfSkill;					/// damage_of_skill 이 effect_of_skill 을 상속받았으므로 편이를 위해서
 	};
@@ -462,7 +465,7 @@ public:
 		m_iEffectedSkillIndex = iEffectedSkillIdx; 
 		m_bProcEffectedSkill = true;
 	}*/
-	void								PushEffectedSkillToList( int iSkillIDX, gsv_DAMAGE_OF_SKILL EffectedSkill, int iCasterINT, bool bDamageOfSkill = false );
+	void								PushEffectedSkillToList( int iSkillIDX, gsv_DAMAGE_OF_SKILL EffectedSkill, int iCasterINT, int iCasterSKILL_DURATION, bool bDamageOfSkill = false );
 	void								ProcTimeOutEffectedSkill();
 	bool								ProcEffectedSkill();	
 	void								ProcOneEffectedSkill( stEFFECT_OF_SKILL*	pEffectOfSkill );

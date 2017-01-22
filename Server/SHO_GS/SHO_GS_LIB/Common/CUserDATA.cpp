@@ -1825,11 +1825,11 @@ void CUserDATA::InitPassiveSkill ()
 					 0 == SKILL_CHANGE_ABILITY_RATE( nSkillIDX, nI ) )
 					continue;
 				
-				// 수치로 올림 : 패시브 스킬은 비율로는 못올림 !!!
+				// Increased by numerical value: passive skill is not able to rate!
 				if ( SKILL_INCREASE_ABILITY( nSkillIDX, nI ) >= AT_STR &&
 					 SKILL_INCREASE_ABILITY( nSkillIDX, nI ) <= AT_SENSE ) {
 					if ( SKILL_CHANGE_ABILITY_RATE( nSkillIDX, nI ) ) {
-						// 05.05.26 비율계산 추가...
+						// 05.05.26 Add ratio calculation ...
 						this->AddPassiveSkillRate ( SKILL_INCREASE_ABILITY( nSkillIDX, nI ), SKILL_CHANGE_ABILITY_RATE( nSkillIDX, nI ) );
 					} else {
 						nPassiveTYPE = SKILL_INCREASE_ABILITY( nSkillIDX, nI ) - AT_STR;

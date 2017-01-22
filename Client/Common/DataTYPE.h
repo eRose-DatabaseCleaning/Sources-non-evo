@@ -613,6 +613,8 @@ enum t_AbilityINDEX {
 	AT_PSV_SUMMON_MOB_CNT		= 62,	// 소환가능 몹수
 	AT_PSV_DROP_RATE			= 63,	// 드롭 확률
 
+	AT_PSV_SKILL_DURATION_BOOST		= 64,	//Numenor: A passive (PSV) skill to boost duration of skills 
+
 	AT_AFTER_PASSIVE_SKILL		= 71,						// 패시브 스킬 보정능력치 이후...
 	AT_RACE						= AT_AFTER_PASSIVE_SKILL,	// 종족 init_avatar.stb 라인번호 / 2
 
@@ -888,8 +890,8 @@ const DWORD c_dwIngFLAG[] = {
 #define	MAX_UNION_COUNT			10								/// 최대 조합 갯수
 
 
-#define	ITEM_OBJ_FREE_TIME		  (    30 * 1000 )						/// 아이템 소유권이 없는 시간...
-#define	ITEM_OBJ_LIVE_TIME		( (    60 * 1000 )+ITEM_OBJ_FREE_TIME )	/// 아이템 처름 생성시 사라지기 까지 시간.
+#define	ITEM_OBJ_FREE_TIME		  (   5* 30 * 1000 )						/// 아이템 소유권이 없는 시간...
+#define	ITEM_OBJ_LIVE_TIME		( (   5* 60 * 1000 )+ITEM_OBJ_FREE_TIME )	/// 아이템 처름 생성시 사라지기 까지 시간.
 #define	ITEM_OBJ_DROP_TIME		( (30*(60 * 1000))+ITEM_OBJ_FREE_TIME )	/// 인벤토리가 모자라 바닦에 떨어진 아이템
 
 #define	MIN_OBJECTS				1

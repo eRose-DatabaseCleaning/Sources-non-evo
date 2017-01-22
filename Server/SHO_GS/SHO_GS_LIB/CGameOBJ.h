@@ -28,7 +28,7 @@ private:
 protected:
 
 public :
-    int         m_iIndex;						// != 0 이면 존에 들어가 있다 !!!!
+    int         m_iIndex;						// If != 0, it is in the zone !!!!
     tPOINTF     m_PosCUR;						/// 참가해 있는 존의 위치
     POINTS      m_PosSECTOR;					/// 위치에 해당하는 섹터 좌표
 	CZoneSECTOR*m_pGroupSECTOR;					/// 참가해 있는 섹터의 포인터

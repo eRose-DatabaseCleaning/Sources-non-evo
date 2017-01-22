@@ -201,6 +201,7 @@ public :
 	short	Get_SummonCNT()			{	return this->m_nSummonCNT;			}
 	short	Max_SummonCNT()			{	return this->GetMax_SummonCNT();	}
 
+	int		Cur_SKILL_DURATION(int iSkillNo)	{	return this->GetCur_SKILL_DURATION(iSkillNo);	}
 	int		GetCur_SummonCNT()		{	return this->m_nSummonCNT;			}
 
 	short	GetOri_WalkSPEED()		{	return WALK_CmPerSec;				}
