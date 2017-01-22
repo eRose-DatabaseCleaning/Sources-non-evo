@@ -2937,12 +2937,12 @@ void CRecvPACKET::Recv_gsv_EFFECT_OF_SKILL ()
 	}
 	else
 	{
-		/// 소유주가 없을때는 바로 적용...
+		//Immediately apply when there is no owner ...
 		///CObjCHAR *pEffectedChar = g_pObjMGR->Get_ClientCharOBJ( m_pRecvPacket->m_gsv_EFFECT_OF_SKILL.m_wObjectIDX, true );
 		CObjCHAR *pEffectedChar = CSkillManager::GetSkillTarget( m_pRecvPacket->m_gsv_EFFECT_OF_SKILL.m_wObjectIDX, m_pRecvPacket->m_gsv_EFFECT_OF_SKILL.m_nSkillIDX );
 		if( pEffectedChar == NULL )
 		{
-			/// 그놈이 죽었거나.. 나의 관리에서 빠졌다..
+			/// He's dead or ... he's out of my control.
 			/// g_itMGR.OpenMsgBox( "스킬 적용대상 없음" );
 			return;
 		}
@@ -2956,20 +2956,20 @@ void CRecvPACKET::Recv_gsv_EFFECT_OF_SKILL ()
 			;
 		}else
 		{
-			///스킬이 지속형일 경우 최대 2개의 상태까지 바뀔수 있으므로
+			/// If the skill is persistent, it can change up to two states
 			for( int i = 0 ; i < 2 ; i++ ) 
 			{			
 				if ( ( 0x01 << i ) & m_pRecvPacket->m_gsv_EFFECT_OF_SKILL.m_btSuccessBITS ) 
 				{
 					int iStateIndex = 0;
 
-					/// 지속형이 아닌 단순 능력치 상승형..
+					//// Not a persistent type, but a simple ability ...
 					/*if( SKILL_TYPE( iSkillIDX ) != SKILL_ACTION_SELF_BOUND &&
 					SKILL_TYPE( iSkillIDX ) != SKILL_ACTION_TARGET_BOUND )*/
 					{
 						iStateIndex = SKILL_STATE_STB( iSkillIDX, i );
 
-						/// 유리상태 해지, 불리상태 해지 등의 상태 해제 스킬들
+						/// The state release skills such as free state, disarming state
 						if( iStateIndex && STATE_TYPE( iStateIndex ) > ING_CHECK_END )
 						{
 							pEffectedChar->ProcFlushStateSkill( iStateIndex );
@@ -2978,7 +2978,7 @@ void CRecvPACKET::Recv_gsv_EFFECT_OF_SKILL ()
 					}
 
 					if( iStateIndex != 0 )
-						/// 지속형 스킬이라면..
+						/// If it's a persistent skill ...
 						/*if( SKILL_TYPE( iSkillIDX ) == SKILL_ACTION_SELF_BOUND_DURATION ||
 						SKILL_TYPE( iSkillIDX ) == SKILL_ACTION_TARGET_BOUND_DURATION ||
 						SKILL_TYPE( iSkillIDX ) == SKILL_ACTION_SELF_STATE_DURATION ||
@@ -3178,9 +3178,9 @@ void CRecvPACKET::Recv_gsv_DAMAGE_OF_SKILL ()
 
 
 	if( ( pChar != NULL ) && 		
-		/// 현재 캐스팅 중이지 않은것은.. 이미 액션이 진행되버렸다.. 너무 늦게 도착한 패킷..
+		/// What you are not currently casting is already in action. Packets arriving too late ..
 		iDoingSkillIDX )//&&
-		/// 총알 발사형 스킬을 시전중 온 스킬 적용결과는 ( 다 지속이겠지? ) 바로 적용..
+		/// The result of applying the on-skill skill of a bullet-firing skill to the casting.
 		//( !( SKILL_TYPE( iDoingSkillIDX ) == SKILL_ACTION_FIRE_BULLET ) || 
 		//  (	SKILL_TYPE( iDoingSkillIDX ) == SKILL_ACTION_ENFORCE_BULLET ) ) )	
 	{

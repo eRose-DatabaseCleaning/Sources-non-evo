@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+ï»¿//---------------------------------------------------------------------------
 
 #include "LIB_gsMAIN.h"
 #include "CObjCHAR.h"
@@ -72,11 +72,11 @@ bool CObjCHAR::Create_PET (int iCharIDX, float fPosX, float fPosY, int iRange, B
 	pNewPET = this->GetZONE()->RegenCharacter( fPosX, fPosY, iRange, iCharIDX, 1, this->Get_TeamNO()/* TEAMNO_MOB */, bImmediate );
 	if ( pNewPET ) {
 		if ( btSetOwner ) {
-			// ¼ÒÈ¯ ÁÖÃ¼¸¦ ¿À³Ê·Î ¼³Á¤...
+			// Â¼Ã’ÃˆÂ¯ ÃÃ–ÃƒÂ¼Â¸Â¦ Â¿Ã€Â³ÃŠÂ·Ã Â¼Â³ÃÂ¤...
 			pNewPET->m_iCallerMobObjIDX = this->Get_INDEX();
 		}
 		if ( this->m_IngSTATUS.IsSET( FLAG_ING_DEC_LIFE_TIME ) ) {
-			// ¼ÒÈ¯µÈ ÄÉ¸¯ÀÌ ¼ÒÈ¯ÇÒ °æ¿ì...
+			// Â¼Ã’ÃˆÂ¯ÂµÃˆ Ã„Ã‰Â¸Â¯Ã€ÃŒ Â¼Ã’ÃˆÂ¯Ã‡Ã’ Â°Ã¦Â¿Ã¬...
 			pNewPET->m_IngSTATUS.UpdateIngSTATUS( pNewPET, 
 						IDX_ING_STB_DEC_LIFE_TIME, 
 						0 /* SKILL_DURATION(nSkillIDX) */, 
@@ -166,7 +166,7 @@ bool CObjCHAR::Send_gsv_SHOUT( char *szMsg )
 //-------------------------------------------------------------------------------------------------
 void CObjCHAR::Send_gsv_ANNOUNCE_CHAT( char *szMsg )
 {
-	// ÇöÀç ¸Ê °øÁö
+	// Ã‡Ã¶Ã€Ã§ Â¸ÃŠ Â°Ã¸ÃÃ¶
 	g_pZoneLIST->Send_gsv_ANNOUNCE_CHAT( this->GetZONE()->Get_ZoneNO(), szMsg, this->Get_NAME() );
 }
 
@@ -249,7 +249,7 @@ bool CObjCHAR::Send_gsv_ATTACK (int iTargetObject)
 	pCPacket->m_gsv_ATTACK.m_wAtkObjIDX	= this->Get_INDEX ();
 	pCPacket->m_gsv_ATTACK.m_wDefObjIDX	= iTargetObject;
 	pCPacket->m_gsv_ATTACK.m_wSrvDIST	= (WORD)::distance( m_PosCUR, m_PosGOTO );
-	pCPacket->m_gsv_ATTACK.m_PosTO		= this->m_PosGOTO;		// 2003. 12. 26 Ãß°¡...
+	pCPacket->m_gsv_ATTACK.m_PosTO		= this->m_PosGOTO;		// 2003. 12. 26 ÃƒÃŸÂ°Â¡...
 
     this->GetZONE()->SendPacketToSectors( this, pCPacket );
 
@@ -390,11 +390,11 @@ bool CObjCHAR::Send_gsv_CLEAR_STATUS (DWORD dwClearedFLAG)
 	pCPacket->m_gsv_CLEAR_STATUS.m_dwStatusFLAG = this->m_IngSTATUS.GetFLAGs();
 
 	if ( dwClearedFLAG & ~(FLAG_ING_HP|FLAG_ING_MP) ) {
-		// ±âÅ¸ Àû¿ëÀÌ¸é ÁÖº¯¿¡ Àü¼Û, ÆÄÆ¼Á¦¿Ü... ÁÖº¯ ÆÄÆ¼¿øÀ» ¾Ë¾Æ¼­, ¸Ö¸®ÀÖ´Â ÆÄÆ¼¿øÀº ¸ô¶ó..
+		// Â±Ã¢Ã…Â¸ Ã€Ã»Â¿Ã«Ã€ÃŒÂ¸Ã© ÃÃ–ÂºÂ¯Â¿Â¡ Ã€Ã¼Â¼Ã›, Ã†Ã„Ã†Â¼ÃÂ¦Â¿Ãœ... ÃÃ–ÂºÂ¯ Ã†Ã„Ã†Â¼Â¿Ã¸Ã€Â» Â¾Ã‹Â¾Ã†Â¼Â­, Â¸Ã–Â¸Â®Ã€Ã–Â´Ã‚ Ã†Ã„Ã†Â¼Â¿Ã¸Ã€Âº Â¸Ã´Â¶Ã³..
 		this->GetZONE()->SendPacketToSectors( this, pCPacket );
 		// this->SendPacketToPartyExceptME( pCPacket );
 	} else {
-		// ¹°¾à Àû¿ëÀÌ¸é ÆÄÆ¼¿ø ÇÑÅ×¸¸...
+		// Â¹Â°Â¾Ã  Ã€Ã»Â¿Ã«Ã€ÃŒÂ¸Ã© Ã†Ã„Ã†Â¼Â¿Ã¸ Ã‡Ã‘Ã…Ã—Â¸Â¸...
 		this->SendPacketToPARTY( pCPacket );
 	}
 
@@ -432,7 +432,7 @@ bool CObjCHAR::Send_gsv_SET_MOTION( WORD wValue, short nMotionNO )
 //-------------------------------------------------------------------------------------------------
 bool CObjCHAR::Send_gsv_DAMAGE2Sector( int iAttackObject, WORD wDamage, CObjITEM *pDropITEM)
 {
-	// iAttackObject°¡ ÀÚ½ÅÀ» Á×ÀÏ¶§...
+	// iAttackObjectÂ°Â¡ Ã€ÃšÂ½Ã…Ã€Â» ÃÃ—Ã€ÃÂ¶Â§...
     classPACKET *pCPacket = Packet_AllocNLock ();
 	if ( !pCPacket ) 
 		return false;
@@ -459,11 +459,11 @@ bool CObjCHAR::Send_gsv_DAMAGE2Sector( int iAttackObject, WORD wDamage, CObjITEM
 
     this->GetZONE()->SendPacketToSectors( this, pCPacket );
 
-	// ÀÚ½ÅÀ» ¼ÒÈ¯ÇÑ ÄÉ¸¯ÀÌ ÀÖ´Ù¸é...
+	// Ã€ÃšÂ½Ã…Ã€Â» Â¼Ã’ÃˆÂ¯Ã‡Ã‘ Ã„Ã‰Â¸Â¯Ã€ÃŒ Ã€Ã–Â´Ã™Â¸Ã©...
 	if ( this->GetCallerUsrIDX() ) {
 		CObjCHAR *pOwner = g_pObjMGR->Get_CharOBJ( this->GetCallerUsrIDX(), true );
 		if ( pOwner && pOwner->Get_CharHASH() == this->GetCallerHASH() ) {
-			if ( !this->IsNEIGHBOR( pOwner ) )		// ÆĞÅ¶ÀÌ Àü¼ÛµÇ´Â ¿µ¿ª ¹Û¿¡ ÀÖ³ª?
+			if ( !this->IsNEIGHBOR( pOwner ) )		// Ã†ÃÃ…Â¶Ã€ÃŒ Ã€Ã¼Â¼Ã›ÂµÃ‡Â´Ã‚ Â¿ÂµÂ¿Âª Â¹Ã›Â¿Â¡ Ã€Ã–Â³Âª?
 				pOwner->SendPacket( pCPacket );
 		}
 	}
@@ -486,8 +486,8 @@ bool CObjCHAR::Send_gsv_DAMAGE2Target( CObjCHAR *pAtkOBJ, WORD wDamage )
 	pCPacket->m_gsv_DAMAGE.m_wDefObjIDX	= this->Get_INDEX ();
 	pCPacket->m_gsv_DAMAGE.m_Damage.m_wDamage = wDamage;
 
-	// ¾Æ¹ÙÅ¸ ÀÚ½ÅÀÌ ¸ÂÀº °æ¿ì¿¡ ¼Ò¼ÓµÈ ÆÄÆ¼¿¡ Àü¼Û, ¶§¸®³ÑÀÌ ¾Æ¹ÙÅ¸ÀÌ¸é( PvsP ) ¶§¸®³Ñ ÇÑÅ×µµ Àü¼Û.
-	// ¸÷ÀÌ ¸ÂÀ» °æ¿ì ÀÚ½ÅÀ» Å¸°ÙÆÃÇÏ°í ÀÖ´Â À¯Àúµé¿¡°Ô Àü¼Û...
+	// Â¾Ã†Â¹Ã™Ã…Â¸ Ã€ÃšÂ½Ã…Ã€ÃŒ Â¸Ã‚Ã€Âº Â°Ã¦Â¿Ã¬Â¿Â¡ Â¼Ã’Â¼Ã“ÂµÃˆ Ã†Ã„Ã†Â¼Â¿Â¡ Ã€Ã¼Â¼Ã›, Â¶Â§Â¸Â®Â³Ã‘Ã€ÃŒ Â¾Ã†Â¹Ã™Ã…Â¸Ã€ÃŒÂ¸Ã©( PvsP ) Â¶Â§Â¸Â®Â³Ã‘ Ã‡Ã‘Ã…Ã—ÂµÂµ Ã€Ã¼Â¼Ã›.
+	// Â¸Ã·Ã€ÃŒ Â¸Ã‚Ã€Â» Â°Ã¦Â¿Ã¬ Ã€ÃšÂ½Ã…Ã€Â» Ã…Â¸Â°Ã™Ã†ÃƒÃ‡ÃÂ°Ã­ Ã€Ã–Â´Ã‚ Ã€Â¯Ã€ÃºÂµÃ©Â¿Â¡Â°Ã” Ã€Ã¼Â¼Ã›...
 	this->SendPacketToTARGET( pAtkOBJ, pCPacket );
 
     Packet_ReleaseNUnlock( pCPacket );
@@ -603,11 +603,11 @@ bool CObjCHAR::Send_gsv_DAMAGE_OF_SKILL (int iSpellOBJ, short nSkillIDX, WORD wD
 
 	this->GetZONE()->SendPacketToSectors( this, pCPacket );
 
-	// ÀÚ½ÅÀ» ¼ÒÈ¯ÇÑ ÄÉ¸¯ÀÌ ÀÖ´Ù¸é...
+	// Ã€ÃšÂ½Ã…Ã€Â» Â¼Ã’ÃˆÂ¯Ã‡Ã‘ Ã„Ã‰Â¸Â¯Ã€ÃŒ Ã€Ã–Â´Ã™Â¸Ã©...
 	if ( this->GetCallerUsrIDX() ) {
 		CObjCHAR *pOwner = g_pObjMGR->Get_CharOBJ( this->GetCallerUsrIDX(), true );
 		if ( pOwner && pOwner->IsUSER() && pOwner->Get_CharHASH() == this->GetCallerHASH() ) {
-			if ( !this->IsNEIGHBOR( pOwner ) )		// ÆĞÅ¶ÀÌ Àü¼ÛµÇ´Â ¿µ¿ª ¹Û¿¡ ÀÖ³ª?
+			if ( !this->IsNEIGHBOR( pOwner ) )		// Ã†ÃÃ…Â¶Ã€ÃŒ Ã€Ã¼Â¼Ã›ÂµÃ‡Â´Ã‚ Â¿ÂµÂ¿Âª Â¹Ã›Â¿Â¡ Ã€Ã–Â³Âª?
 				pOwner->SendPacket( pCPacket );
 		}
 	}
@@ -644,18 +644,18 @@ bool CObjCHAR::SetCMD_STOP ()
 bool CObjCHAR::SetCMD_MOVE (tPOINTF &PosCUR, tPOINTF &PosTO, int iTargetObjIDX)
 {
 	if ( CObjAI::SetCMD_MOVE (PosCUR, PosTO, iTargetObjIDX) ) {
-		// À§Àå¼úµµ ¾ÈÇ®·Á~
+		// Ã€Â§Ã€Ã¥Â¼ÃºÂµÂµ Â¾ÃˆÃ‡Â®Â·Ã~
 		return this->Send_gsv_MOUSECMD( iTargetObjIDX );
 	}
 	return false;
 }
 bool CObjCHAR::SetCMD_MOVE2D (float fPosX, float fPosY, BYTE btRunMODE)
 {
-	// ÀÎ°øÁö´É¿¡¼­ È£ÃâµÇ´Â ÀÌµ¿ÇÔ¼ö !!!
+	// Ã€ÃÂ°Ã¸ÃÃ¶Â´Ã‰Â¿Â¡Â¼Â­ ÃˆÂ£ÃƒÃ¢ÂµÃ‡Â´Ã‚ Ã€ÃŒÂµÂ¿Ã‡Ã”Â¼Ã¶ !!!
 	if ( !this->GetZONE()->IsMovablePOS( (int)fPosX, (int)fPosY ) )
 		return false;
 
-	// Å¸¿îÆ® »óÅÂ¸é Ç®¾î¶ó...
+	// Ã…Â¸Â¿Ã®Ã†Â® Â»Ã³Ã…Ã‚Â¸Ã© Ã‡Â®Â¾Ã®Â¶Ã³...
 	if ( this->m_IngSTATUS.IsSET( FLAG_ING_TAUNT ) ) {
 		this->m_IngSTATUS.ExpireSTATUS( ING_TAUNT );
 		//this->m_IngSTATUS.ClearSTATUS( ING_TAUNT );
@@ -677,8 +677,8 @@ bool CObjCHAR::SetCMD_ATTACK (int iTargetObject)
 */
 	if ( CObjAI::SetCMD_ATTACK( iTargetObject ) ) {
 		if ( CMD_ATTACK == this->Get_COMMAND() ) {
-			// À§Àå¼ú ÇØÁ¦...
-			if ( this->m_IngSTATUS.IsSET( FLAG_ING_DISGUISE ) ) {	// À§ÀåÁßÀÌ¸é ÇØÁ¦...
+			// Ã€Â§Ã€Ã¥Â¼Ãº Ã‡Ã˜ÃÂ¦...
+			if ( this->m_IngSTATUS.IsSET( FLAG_ING_DISGUISE ) ) {	// Ã€Â§Ã€Ã¥ÃÃŸÃ€ÃŒÂ¸Ã© Ã‡Ã˜ÃÂ¦...
 				this->m_IngSTATUS.ClearStatusFLAG( FLAG_ING_DISGUISE );
 			}
 			this->Send_gsv_ATTACK( iTargetObject );
@@ -696,8 +696,8 @@ bool CObjCHAR::SetCMD_Skill2SELF (short nSkillIDX)
 {
 	if ( SKILL_TYPE_01 != SKILL_TYPE( nSkillIDX ) ) {
 		if ( CObjAI::SetCMD_Skill2SELF( nSkillIDX ) ) {
-			// À§Àå¼ú/Åõ¸í ÇØÁ¦...
-			if ( this->m_IngSTATUS.IsSET( FLAG_ING_DISGUISE ) ) {	// À§ÀåÁßÀÌ¸é ÇØÁ¦...
+			// Ã€Â§Ã€Ã¥Â¼Ãº/Ã…ÃµÂ¸Ã­ Ã‡Ã˜ÃÂ¦...
+			if ( this->m_IngSTATUS.IsSET( FLAG_ING_DISGUISE ) ) {	// Ã€Â§Ã€Ã¥ÃÃŸÃ€ÃŒÂ¸Ã© Ã‡Ã˜ÃÂ¦...
 				this->m_IngSTATUS.ClearStatusFLAG( FLAG_ING_DISGUISE );
 			}
 			return this->Send_gsv_SELF_SKILL( nSkillIDX );
@@ -708,8 +708,8 @@ bool CObjCHAR::SetCMD_Skill2SELF (short nSkillIDX)
 bool CObjCHAR::SetCMD_Skill2OBJ (int iTargetObjIDX, short nSkillIDX)
 {
 	if ( CObjAI::SetCMD_Skill2OBJ( iTargetObjIDX, nSkillIDX ) ) {
-		// À§Àå¼ú ÇØÁ¦...
-		if ( this->m_IngSTATUS.IsSET( FLAG_ING_DISGUISE ) ) {	// À§ÀåÁßÀÌ¸é ÇØÁ¦...
+		// Ã€Â§Ã€Ã¥Â¼Ãº Ã‡Ã˜ÃÂ¦...
+		if ( this->m_IngSTATUS.IsSET( FLAG_ING_DISGUISE ) ) {	// Ã€Â§Ã€Ã¥ÃÃŸÃ€ÃŒÂ¸Ã© Ã‡Ã˜ÃÂ¦...
 			this->m_IngSTATUS.ClearStatusFLAG( FLAG_ING_DISGUISE );
 		}
 		return this->Send_gsv_TARGET_SKILL( nSkillIDX );
@@ -719,8 +719,8 @@ bool CObjCHAR::SetCMD_Skill2OBJ (int iTargetObjIDX, short nSkillIDX)
 bool CObjCHAR::SetCMD_Skill2POS (tPOINTF &PosGOTO, short nSkillIDX)
 {
 	if ( CObjAI::SetCMD_Skill2POS( PosGOTO, nSkillIDX ) ) {
-		// À§Àå¼ú ÇØÁ¦...
-		if ( this->m_IngSTATUS.IsSET( FLAG_ING_DISGUISE ) ) {	// À§ÀåÁßÀÌ¸é ÇØÁ¦...
+		// Ã€Â§Ã€Ã¥Â¼Ãº Ã‡Ã˜ÃÂ¦...
+		if ( this->m_IngSTATUS.IsSET( FLAG_ING_DISGUISE ) ) {	// Ã€Â§Ã€Ã¥ÃÃŸÃ€ÃŒÂ¸Ã© Ã‡Ã˜ÃÂ¦...
 			this->m_IngSTATUS.ClearStatusFLAG( FLAG_ING_DISGUISE );
 		}
 		return this->Send_gsv_POSITION_SKILL( nSkillIDX );
@@ -756,7 +756,7 @@ bool CObjCHAR::Dead (CObjCHAR *pKiller)
     if ( Get_HP() <= DEAD_HP )
         return false;
 
-	// ±âÀı »óÅÂ·Î ¸¸µé¾î ¸í·É ºÒº¹ ½ÃÅ²´Ù.
+	// Â±Ã¢Ã€Ã½ Â»Ã³Ã…Ã‚Â·Ã Â¸Â¸ÂµÃ©Â¾Ã® Â¸Ã­Â·Ã‰ ÂºÃ’ÂºÂ¹ Â½ÃƒÃ…Â²Â´Ã™.
 	this->m_IngSTATUS.SetFLAG( FLAG_ING_FAINTING );
 
 	this->Set_HP( DEAD_HP );
@@ -772,28 +772,28 @@ bool CObjCHAR::Dead (CObjCHAR *pKiller)
 BYTE CObjCHAR::Apply_DAMAGE (CObjCHAR *pTarget, uniDAMAGE &sDamage, CObjITEM **ppOutITEM, bool bDropItem)
 {
 	if ( pTarget->m_IngSTATUS.IsSET( FLAG_ING_REVIVE ) ) {
-		// Å¸°ÙÀÌ Á×¾ú´Ù°¡ ±İ¹æ ºÎÈ°ÇÑ »óÅÂ¸é... µ©Áö ¾Èµé¾î ¿À°Ô...
+		// Ã…Â¸Â°Ã™Ã€ÃŒ ÃÃ—Â¾ÃºÂ´Ã™Â°Â¡ Â±ÃÂ¹Ã¦ ÂºÃÃˆÂ°Ã‡Ã‘ Â»Ã³Ã…Ã‚Â¸Ã©... ÂµÂ©ÃÃ¶ Â¾ÃˆÂµÃ©Â¾Ã® Â¿Ã€Â°Ã”...
 		return SEND_DAMAGE_TO_NULL;
 	}
 
 	int  iDamage = sDamage.m_wVALUE;
 
-	//// À§Àå¼ú/Åõ¸í ÇØÁ¦...
-	//if ( this->m_IngSTATUS.IsSET( FLAG_ING_DISGUISE | FLAG_ING_TRANSPARENT) ) {	// À§ÀåÁßÀÌ¸é ÇØÁ¦...
+	//// Ã€Â§Ã€Ã¥Â¼Ãº/Ã…ÃµÂ¸Ã­ Ã‡Ã˜ÃÂ¦...
+	//if ( this->m_IngSTATUS.IsSET( FLAG_ING_DISGUISE | FLAG_ING_TRANSPARENT) ) {	// Ã€Â§Ã€Ã¥ÃÃŸÃ€ÃŒÂ¸Ã© Ã‡Ã˜ÃÂ¦...
 	//	this->m_IngSTATUS.ClearStatusFLAG( FLAG_ING_DISGUISE | FLAG_ING_TRANSPARENT );
 	//}
 
 	// Normal Attack !
 	if ( iDamage ) {
 		if ( this->GetCallerUsrIDX() ) {
-			//if ( NULL == this->Get_OWNER() )	ÁÖÀÎÀÌ Á×¾úÀ»¶§ ¼ÒÈ¯¸÷ÀÌ ÀÚ»ì½Ã ½ºÅµµÇ¾î »ı·«..
+			//if ( NULL == this->Get_OWNER() )	ÃÃ–Ã€ÃÃ€ÃŒ ÃÃ—Â¾ÃºÃ€Â»Â¶Â§ Â¼Ã’ÃˆÂ¯Â¸Ã·Ã€ÃŒ Ã€ÃšÂ»Ã¬Â½Ãƒ Â½ÂºÃ…ÂµÂµÃ‡Â¾Ã® Â»Ã½Â·Â«..
 			//	return SEND_DAMAGE_TO_NULL;
 			if ( DIV02( iDamage ) > 0 )	// iDamge > 2 
-				pTarget->Save_Damage( this->GetCallerUsrIDX(), DIV02( iDamage ) );		// ¼ÒÈ¯µÈ ³ÑÀº °æÄ¡¸¦ 1/2·Î...
+				pTarget->Save_Damage( this->GetCallerUsrIDX(), DIV02( iDamage ) );		// Â¼Ã’ÃˆÂ¯ÂµÃˆ Â³Ã‘Ã€Âº Â°Ã¦Ã„Â¡Â¸Â¦ 1/2Â·Ã...
 		} else
 			pTarget->Save_Damage( this->Get_INDEX(), iDamage );
 
-		// ¹«Àû »óÅÂÀÎ°¡ ???
+		// Â¹Â«Ã€Ã» Â»Ã³Ã…Ã‚Ã€ÃÂ°Â¡ ???
 		if ( pTarget->m_IngSTATUS.IsSubSET( FLAG_CHEAT_INVINCIBLE ) ) {
 			if ( pTarget->Get_HP() <= iDamage ) {
 				pTarget->Set_HP( iDamage+100 );
@@ -803,24 +803,24 @@ BYTE CObjCHAR::Apply_DAMAGE (CObjCHAR *pTarget, uniDAMAGE &sDamage, CObjITEM **p
 		this->Stamp_AttackTIME ();
 
 		if ( pTarget->Sub_HP( iDamage ) <= 0 ) {
-			// °ø°İÀÚ°¡ »ç¶÷¶Ç´Â »ç¶÷ÀÌ ¼ÒÈ¯ÇÑ ¸÷ !!!  °æÇèÄ¡ & ·¹º§¾÷
+			// Â°Ã¸Â°ÃÃ€ÃšÂ°Â¡ Â»Ã§Â¶Ã·Â¶Ã‡Â´Ã‚ Â»Ã§Â¶Ã·Ã€ÃŒ Â¼Ã’ÃˆÂ¯Ã‡Ã‘ Â¸Ã· !!!  Â°Ã¦Ã‡Ã¨Ã„Â¡ & Â·Â¹ÂºÂ§Â¾Ã·
 			if ( this->IsUSER() || this->GetCallerUsrIDX() ) {
-				if ( pTarget->IsUSER() || pTarget->GetCallerUsrIDX() ) {		// USER ¶Ç´Â ¼ÒÈ¯µÈ¸÷
+				if ( pTarget->IsUSER() || pTarget->GetCallerUsrIDX() ) {		// USER Â¶Ã‡Â´Ã‚ Â¼Ã’ÃˆÂ¯ÂµÃˆÂ¸Ã·
 					// TODO:: PK !!!!
 				} else
 				if ( pTarget->IsNPC () ) {		// MOB or NPC
 					classUSER *pMobOWNER = pTarget->Give_EXP ();
 
-					pTarget->Do_DeadAI( pMobOWNER, iDamage );	// pMobOWNER == NULLÀÏ¶§µµ ¼öÇàµÇµµ·Ï...
+					pTarget->Do_DeadAI( pMobOWNER, iDamage );	// pMobOWNER == NULLÃ€ÃÂ¶Â§ÂµÂµ Â¼Ã¶Ã‡Ã ÂµÃ‡ÂµÂµÂ·Ã...
 
 					if ( pMobOWNER ) {
 						if ( NPC_DEAD_EVENT( pTarget->Get_CharNO() ) )  {
-							// TargetÁ×À»¶§ ÀÌº¥Æ® ÀÖÀ¸¸é Å¬¶óÀÌ¾ğÆ®¿¡ Ã¼Å©ÇØ ºÁ¶ó Àü¼Û...
+							// TargetÃÃ—Ã€Â»Â¶Â§ Ã€ÃŒÂºÂ¥Ã†Â® Ã€Ã–Ã€Â¸Â¸Ã© Ã…Â¬Â¶Ã³Ã€ÃŒÂ¾Ã°Ã†Â®Â¿Â¡ ÃƒÂ¼Ã…Â©Ã‡Ã˜ ÂºÃÂ¶Ã³ Ã€Ã¼Â¼Ã›...
 							pMobOWNER->Send_gsv_CHECK_NPC_EVENT( pTarget->Get_CharNO() );
 						}
 
 						if ( bDropItem ) {
-							// ¾ÆÀÌÅÛ µå·Ó, Áö¿ª ¸¶¹ı¿¡ ÀÇ¿¡¼­´Â ¾ÆÀÌÅÛ»ı¼º ¾ÈÇÔ..¿Ö ? ÆĞÅ¶ °ü¸®°¡ ±ÍÂú¾Æ¼­...
+							// Â¾Ã†Ã€ÃŒÃ…Ã› ÂµÃ¥Â·Ã“, ÃÃ¶Â¿Âª Â¸Â¶Â¹Ã½Â¿Â¡ Ã€Ã‡Â¿Â¡Â¼Â­Â´Ã‚ Â¾Ã†Ã€ÃŒÃ…Ã›Â»Ã½Â¼Âº Â¾ÃˆÃ‡Ã”..Â¿Ã– ? Ã†ÃÃ…Â¶ Â°Ã¼Â¸Â®Â°Â¡ Â±ÃÃ‚ÃºÂ¾Ã†Â¼Â­...
 							tagITEM sITEM;
 #ifdef FRAROSE
 							if ( CCal::Get_DropITEM ( pMobOWNER->Get_LEVEL()-pTarget->Get_LEVEL(), (CObjMOB*)pTarget, sITEM, this->GetZONE()->Get_ZoneNO(), pMobOWNER->GetCur_DropRATE() * pMobOWNER->m_GrowAbility.GetDropBoost( pMobOWNER->GetCurAbsSEC() ), pMobOWNER->Get_CHARM() ) )
@@ -835,14 +835,14 @@ BYTE CObjCHAR::Apply_DAMAGE (CObjCHAR *pTarget, uniDAMAGE &sDamage, CObjITEM **p
 									PosSET.x = pTarget->m_PosCUR.x + RANDOM( 201 ) - 100;
 									PosSET.y = pTarget->m_PosCUR.y + RANDOM( 201 ) - 100;
 
-									// this´Â »ç¿ëÀÚ³ª »ç¿ëÀÚ°¡ ¼ÒÈ¯ÇÑ ¼ÒÈ¯¼ö´Ù.
+									// thisÂ´Ã‚ Â»Ã§Â¿Ã«Ã€ÃšÂ³Âª Â»Ã§Â¿Ã«Ã€ÃšÂ°Â¡ Â¼Ã’ÃˆÂ¯Ã‡Ã‘ Â¼Ã’ÃˆÂ¯Â¼Ã¶Â´Ã™.
 									CObjCHAR *pSummonOWNER = (CObjCHAR*)this->Get_CALLER();
 									CParty *pCParty = ( pSummonOWNER ) ? pSummonOWNER->GetPARTY() : NULL;
 
-									// pMobOWNER->Set_ItemSN( (*ppOutITEM)->m_ITEM );	// ¸÷ Á×À»¶§ => ½ÀµæÇÒ¶§·Î º¯°æ...
+									// pMobOWNER->Set_ItemSN( (*ppOutITEM)->m_ITEM );	// Â¸Ã· ÃÃ—Ã€Â»Â¶Â§ => Â½Ã€ÂµÃ¦Ã‡Ã’Â¶Â§Â·Ã ÂºÂ¯Â°Ã¦...
 
-									(*ppOutITEM)->InitItemOBJ( NULL, PosSET, pTarget->m_PosSECTOR, sITEM, pMobOWNER, false, pCParty );	// Á×À»¶§ ¶³±À
-									this->GetZONE()->Add_DIRECT( *ppOutITEM );		// µå·Ó ¾ÆÀÌÅÛ
+									(*ppOutITEM)->InitItemOBJ( NULL, PosSET, pTarget->m_PosSECTOR, sITEM, pMobOWNER, false, pCParty );	// ÃÃ—Ã€Â»Â¶Â§ Â¶Â³Â±Ã€
+									this->GetZONE()->Add_DIRECT( *ppOutITEM );		// ÂµÃ¥Â·Ã“ Â¾Ã†Ã€ÃŒÃ…Ã›
 								}
 							}
 						}
@@ -859,7 +859,7 @@ BYTE CObjCHAR::Apply_DAMAGE (CObjCHAR *pTarget, uniDAMAGE &sDamage, CObjITEM **p
 
 			return SEND_DAMAGE_TO_SECTOR;
 		} else {
-			// ¼ö¸é »óÅÂ¿¡¼­ »ó´ë¹æÀÇ °ø°İÀ» ¹ŞÀ¸¸é Ç®¸®°ÔµÈ´Ù.
+			// Â¼Ã¶Â¸Ã© Â»Ã³Ã…Ã‚Â¿Â¡Â¼Â­ Â»Ã³Â´Ã«Â¹Ã¦Ã€Ã‡ Â°Ã¸Â°ÃÃ€Â» Â¹ÃÃ€Â¸Â¸Ã© Ã‡Â®Â¸Â®Â°Ã”ÂµÃˆÂ´Ã™.
 			if ( pTarget->m_IngSTATUS.IsSET( FLAG_ING_SLEEP ) ) {
 				pTarget->m_IngSTATUS.ClearStatusFLAG( FLAG_ING_SLEEP );
 				pTarget->Send_gsv_CLEAR_STATUS( FLAG_ING_SLEEP );
@@ -868,7 +868,7 @@ BYTE CObjCHAR::Apply_DAMAGE (CObjCHAR *pTarget, uniDAMAGE &sDamage, CObjITEM **p
 			pTarget->Do_DamagedAI ( this, iDamage );
 
 			if ( sDamage.m_wACTION & DMG_ACT_HITTED ) {
-				// ¸Â´Â µ¿ÀÛÇØ¾ß...
+				// Â¸Ã‚Â´Ã‚ ÂµÂ¿Ã€Ã›Ã‡Ã˜Â¾ÃŸ...
 				if ( !(pTarget->Get_STATE() & CS_BIT_INT2) ) {
 					pTarget->Set_MOTION( pTarget->GetANI_Hit() );
 					pTarget->Set_STATE( CS_HIT );
@@ -878,12 +878,12 @@ BYTE CObjCHAR::Apply_DAMAGE (CObjCHAR *pTarget, uniDAMAGE &sDamage, CObjITEM **p
 			return SEND_DAMAGE_TO_TARGET;
 		}
 	} else {
-		// ´ë»óÀÌ »ç¿ëÀÚ ÀÏ°æ¿ì Miss½Ã¿¡µµ ¹æ¾î±¸ °¨¼Ò Ã³¸®..
+		// Â´Ã«Â»Ã³Ã€ÃŒ Â»Ã§Â¿Ã«Ã€Ãš Ã€ÃÂ°Ã¦Â¿Ã¬ MissÂ½ÃƒÂ¿Â¡ÂµÂµ Â¹Ã¦Â¾Ã®Â±Â¸ Â°Â¨Â¼Ã’ ÃƒÂ³Â¸Â®..
 		if ( pTarget->IsUSER() ) {
 			pTarget->Save_Damage( this->Get_INDEX(), iDamage );
 		}
 
-		// ¼ö¸é »óÅÂ¿¡¼­ »ó´ë¹æÀÇ °ø°İÀ» ¹ŞÀ¸¸é Ç®¸®°ÔµÈ´Ù.
+		// Â¼Ã¶Â¸Ã© Â»Ã³Ã…Ã‚Â¿Â¡Â¼Â­ Â»Ã³Â´Ã«Â¹Ã¦Ã€Ã‡ Â°Ã¸Â°ÃÃ€Â» Â¹ÃÃ€Â¸Â¸Ã© Ã‡Â®Â¸Â®Â°Ã”ÂµÃˆÂ´Ã™.
 		if ( pTarget->m_IngSTATUS.IsSET( FLAG_ING_SLEEP ) ) {
 			pTarget->m_IngSTATUS.ClearStatusFLAG( FLAG_ING_SLEEP );
 			pTarget->Send_gsv_CLEAR_STATUS( FLAG_ING_SLEEP );
@@ -910,14 +910,14 @@ void CObjCHAR::Give_DAMAGE (CObjCHAR *pTarget, uniDAMAGE sDamage, bool bDropItem
 			return;
 
 		case SEND_DAMAGE_TO_TARGET :
-			// µ¥¹ÌÁö Àü¼Û :: ¾Æ¹ÙÅ¸¸¸ ÇØ´ç ...
+			// ÂµÂ¥Â¹ÃŒÃÃ¶ Ã€Ã¼Â¼Ã› :: Â¾Ã†Â¹Ã™Ã…Â¸Â¸Â¸ Ã‡Ã˜Â´Ã§ ...
 			pTarget->Send_gsv_DAMAGE2Target( this, sDamage.m_wDamage ); 
 
 			if ( pTarget->m_IngSTATUS.IsSET( FLAG_ING_SHIELD_DAMAGE ) ) {
-				// ¹æÆĞ µ¥¹ÌÁö ¼³Á¤µÆ´Ù !!!
+				// Â¹Ã¦Ã†Ã ÂµÂ¥Â¹ÃŒÃÃ¶ Â¼Â³ÃÂ¤ÂµÃ†Â´Ã™ !!!
 				if ( !this->m_IngSTATUS.IsSET( FLAG_ING_SHIELD_DAMAGE ) ) {
-					// ¿Ş¼Õ¿¡ ¹æÆĞ ¾ÆÀÌÅÛ Á¾·ù 261¹ø ÀåÂøÇÏ°í ÀÖ¾î¾ß :: ½ºÅ³ ½ÃÀÛ Á¶°Ç¿¡ µé¾î ÀÖ°ÚÁö...
-					if ( pTarget->IsInRANGE (this, 4000) ) {	// °Å¸®°¡ 4¹ÌÅÍ ÀÌ³» ÀÌ¸é...
+					// Â¿ÃÂ¼Ã•Â¿Â¡ Â¹Ã¦Ã†Ã Â¾Ã†Ã€ÃŒÃ…Ã› ÃÂ¾Â·Ã¹ 261Â¹Ã¸ Ã€Ã¥Ã‚Ã¸Ã‡ÃÂ°Ã­ Ã€Ã–Â¾Ã®Â¾ÃŸ :: Â½ÂºÃ…Â³ Â½ÃƒÃ€Ã› ÃÂ¶Â°Ã‡Â¿Â¡ ÂµÃ©Â¾Ã® Ã€Ã–Â°ÃšÃÃ¶...
+					if ( pTarget->IsInRANGE (this, 4000) ) {	// Â°Ã…Â¸Â®Â°Â¡ 4Â¹ÃŒÃ…Ã Ã€ÃŒÂ³Â» Ã€ÃŒÂ¸Ã©...
 						short nShieldSKILL = pTarget->m_IngSTATUS.GetSkillIDX( ING_SHIELD_DAMAGE );
 						sDamage.m_wDamage = (WORD) ( sDamage.m_wVALUE * SKILL_POWER( nShieldSKILL ) / 100.f );
 
@@ -940,7 +940,7 @@ bool CObjCHAR::Skill_IsPassFilter( CObjCHAR *pTarget, short nSkillIDX )
 
 	bool bResult=false;
 	switch( SKILL_CLASS_FILTER( nSkillIDX ) ) {
-		case SKILL_TARGET_FILTER_GROUP		:///< ±×·ì(ÆÄÆ¼)¿ø //Numenor: I'm changing this to include summons in this group.
+		case SKILL_TARGET_FILTER_GROUP		:///< Â±Ã—Â·Ã¬(Ã†Ã„Ã†Â¼)Â¿Ã¸ //Numenor: I'm changing this to include summons in this group.
 			if (pTarget->IsUSER()){
 				if ( this->GetPARTY() ) {
 					bResult = ( pTarget->GetPARTY() == this->GetPARTY() );
@@ -959,40 +959,40 @@ bool CObjCHAR::Skill_IsPassFilter( CObjCHAR *pTarget, short nSkillIDX )
 					}
 				}
 			}
-				// else ¾Æ·¡¿¡¼­ ÆÄÆ¼°¡ ¾øÀ¸¸é ÀÚ½ÅÀÎÁö ÆÇ´Ù...
+				// else Â¾Ã†Â·Â¡Â¿Â¡Â¼Â­ Ã†Ã„Ã†Â¼Â°Â¡ Â¾Ã¸Ã€Â¸Â¸Ã© Ã€ÃšÂ½Ã…Ã€ÃÃÃ¶ Ã†Ã‡Â´Ã™...
 
-		case SKILL_TARGET_FILTER_SELF		:///< ÀÚ±â ÀÚ½Å
+		case SKILL_TARGET_FILTER_SELF		:///< Ã€ÃšÂ±Ã¢ Ã€ÃšÂ½Ã…
 			bResult = ( pTarget == this );
 			break;
 
-		case SKILL_TARGET_FILTER_GUILD		:///< ±æµå¿ø
+		case SKILL_TARGET_FILTER_GUILD		:///< Â±Ã¦ÂµÃ¥Â¿Ã¸
 			bResult = ( this->GetGUILD() && pTarget->GetGUILD() == this->GetGUILD() );
 			break;
 
-		case SKILL_TARGET_FILTER_FRIEND_ALL :///< ¾Æ±º (¾Æ¹ÙÅ¸, ¼ÒÈ¯¸÷)
+		case SKILL_TARGET_FILTER_FRIEND_ALL :///< Â¾Ã†Â±Âº (Â¾Ã†Â¹Ã™Ã…Â¸, Â¼Ã’ÃˆÂ¯Â¸Ã·)
 			bResult = ( this->Is_ALLIED( pTarget ) );
 			break;
 
-		case SKILL_TARGET_FILTER_MOB		:///< ¸ğµç ¸ó½ºÅÍ (¼ÒÈ¯¸÷,Àû±º¸÷)
+		case SKILL_TARGET_FILTER_MOB		:///< Â¸Ã°ÂµÃ§ Â¸Ã³Â½ÂºÃ…Ã (Â¼Ã’ÃˆÂ¯Â¸Ã·,Ã€Ã»Â±ÂºÂ¸Ã·)
 			bResult = pTarget->IsA( OBJ_MOB );
 			break;
 
-		case SKILL_TARGET_FILTER_ENEMY_ALL	:///< Àû PC + ¸ó½ºÅÍ 
+		case SKILL_TARGET_FILTER_ENEMY_ALL	:///< Ã€Ã» PC + Â¸Ã³Â½ÂºÃ…Ã 
 			bResult = ( !this->Is_ALLIED( pTarget ) );
 			break;
 
-		case SKILL_TARGET_FILTER_ENEMY_PC	:///< Àû PC( Àû »óÅÂ Æ÷ÇÔ )
+		case SKILL_TARGET_FILTER_ENEMY_PC	:///< Ã€Ã» PC( Ã€Ã» Â»Ã³Ã…Ã‚ Ã†Ã·Ã‡Ã” )
 			bResult = ( pTarget->IsUSER() && !this->Is_ALLIED( pTarget ) );
 			break;
 
-		case SKILL_TARGET_FILTER_ALL_PC		:///< ¸ğµç PC
+		case SKILL_TARGET_FILTER_ALL_PC		:///< Â¸Ã°ÂµÃ§ PC
 			bResult = ( pTarget->IsUSER() );
 			break;
 
-		case SKILL_TARGET_FILTER_DEAD_USER	:// Á×Àº ÇÃ·¹ÀÌ¾î
+		case SKILL_TARGET_FILTER_DEAD_USER	:// ÃÃ—Ã€Âº Ã‡ÃƒÂ·Â¹Ã€ÃŒÂ¾Ã®
 			return ( pTarget->Get_HP() == DEAD_HP && pTarget->IsUSER() && this->Is_ALLIED( pTarget ) );
 
-		case SKILL_TARGET_FILTER_ENEMY_MOB	:// Àû ¸ó½ºÅÍ.
+		case SKILL_TARGET_FILTER_ENEMY_MOB	:// Ã€Ã» Â¸Ã³Â½ÂºÃ…Ã.
 			bResult = ( !this->Is_ALLIED( pTarget ) && pTarget->IsA( OBJ_MOB ) );
 			break;
 
@@ -1032,19 +1032,19 @@ BYTE CObjCHAR::Skill_IncAbilityValue( short nSkillIDX )
 */
 
 //-------------------------------------------------------------------------------------------------
-// ´É·ÂÄ¡ÀÇ Áõ/°¨À» ÀÏÁ¤½Ã°£ Áö¼Ó(¼¿ÇÁ)
-// ´É·ÂÄ¡ÀÇ Áõ/°¨À» ÀÏÁ¤½Ã°£ Áö¼Ó(Å¸°Ù)
-// »óÅÂ Áö¼ÓÇü(¼¿ÇÁ)	Áßµ¶, º¡¾î¸®, ±âÀı, Åõ¸í, ¹æÆĞµ¥¹ÌÁö, Ãß°¡ µ¥¹ÌÁö
-// »óÅÂ Áö¼ÓÇü(Å¸°Ù)	Áßµ¶, º¡¾î¸®, ±âÀı, Åõ¸í, ¹æÆĞµ¥¹ÌÁö, Ãß°¡ µ¥¹ÌÁö
+// Â´Ã‰Â·Ã‚Ã„Â¡Ã€Ã‡ ÃÃµ/Â°Â¨Ã€Â» Ã€ÃÃÂ¤Â½ÃƒÂ°Â£ ÃÃ¶Â¼Ã“(Â¼Â¿Ã‡Ã)
+// Â´Ã‰Â·Ã‚Ã„Â¡Ã€Ã‡ ÃÃµ/Â°Â¨Ã€Â» Ã€ÃÃÂ¤Â½ÃƒÂ°Â£ ÃÃ¶Â¼Ã“(Ã…Â¸Â°Ã™)
+// Â»Ã³Ã…Ã‚ ÃÃ¶Â¼Ã“Ã‡Ã¼(Â¼Â¿Ã‡Ã)	ÃÃŸÂµÂ¶, ÂºÂ¡Â¾Ã®Â¸Â®, Â±Ã¢Ã€Ã½, Ã…ÃµÂ¸Ã­, Â¹Ã¦Ã†ÃÂµÂ¥Â¹ÃŒÃÃ¶, ÃƒÃŸÂ°Â¡ ÂµÂ¥Â¹ÃŒÃÃ¶
+// Â»Ã³Ã…Ã‚ ÃÃ¶Â¼Ã“Ã‡Ã¼(Ã…Â¸Â°Ã™)	ÃÃŸÂµÂ¶, ÂºÂ¡Â¾Ã®Â¸Â®, Â±Ã¢Ã€Ã½, Ã…ÃµÂ¸Ã­, Â¹Ã¦Ã†ÃÂµÂ¥Â¹ÃŒÃÃ¶, ÃƒÃŸÂ°Â¡ ÂµÂ¥Â¹ÃŒÃÃ¶
 BYTE CObjCHAR::Skill_ApplyIngSTATUS(short nSkillIDX, CObjCHAR *pSpeller)
 {
 	if ( this->Get_HP() <= 0 )
 		return 0;
 
 	if ( SKILL_HARM( nSkillIDX ) ) {
-		// Àû´ëÀ¯¹ß...
+		// Ã€Ã»Â´Ã«Ã€Â¯Â¹ÃŸ...
 		if ( this->m_IngSTATUS.IsSET( FLAG_ING_REVIVE ) ) {
-			// Å¸°ÙÀÌ Á×¾ú´Ù°¡ ±İ¹æ ºÎÈ°ÇÑ »óÅÂ¸é... µ©Áö ¾Èµé¾î ¿À°Ô...
+			// Ã…Â¸Â°Ã™Ã€ÃŒ ÃÃ—Â¾ÃºÂ´Ã™Â°Â¡ Â±ÃÂ¹Ã¦ ÂºÃÃˆÂ°Ã‡Ã‘ Â»Ã³Ã…Ã‚Â¸Ã©... ÂµÂ©ÃÃ¶ Â¾ÃˆÂµÃ©Â¾Ã® Â¿Ã€Â°Ã”...
 			return 0;
 		}
 
@@ -1056,7 +1056,7 @@ BYTE CObjCHAR::Skill_ApplyIngSTATUS(short nSkillIDX, CObjCHAR *pSpeller)
 
 	short nI, nIngSTB, nAdjValue;
 
-	BYTE btSuccessBITS=0;	// ¼º°ø¿©ºÎ
+	BYTE btSuccessBITS=0;	// Â¼ÂºÂ°Ã¸Â¿Â©ÂºÃ
 	for (nI=0; nI<2; nI++) {
 		nIngSTB = SKILL_STATE_STB( nSkillIDX, nI );
 		if ( 0 == nIngSTB )	{
@@ -1084,16 +1084,16 @@ BYTE CObjCHAR::Skill_ApplyIngSTATUS(short nSkillIDX, CObjCHAR *pSpeller)
 		}
 
 		if ( SKILL_SUCCESS_RATIO( nSkillIDX ) ) {
-			// ¼º°øµµ 0 ÀÏ°æ¿ì´Â °è»ê¾øÀÌ ¹«Á¶°Ç ¼º°ø...
+			// Â¼ÂºÂ°Ã¸ÂµÂµ 0 Ã€ÃÂ°Ã¦Â¿Ã¬Â´Ã‚ Â°Ã¨Â»ÃªÂ¾Ã¸Ã€ÃŒ Â¹Â«ÃÂ¶Â°Ã‡ Â¼ÂºÂ°Ã¸...
 			if ( STATE_PRIFITS_LOSSES( nIngSTB ) ) {
-				// ºÒ¸®
-				// »ó´ë ·¹º§ * 0.4 + (»ó´ë Ç×¸¶·Â-10) * 0.5 - ÀÚ½Å·¹º§ * 0.4 - (ÀÚ½Å Ç×¸¶·Â-10) * 0.5
+				// ÂºÃ’Â¸Â®
+				// Â»Ã³Â´Ã« Â·Â¹ÂºÂ§ * 0.4 + (Â»Ã³Â´Ã« Ã‡Ã—Â¸Â¶Â·Ã‚-10) * 0.5 - Ã€ÃšÂ½Ã…Â·Â¹ÂºÂ§ * 0.4 - (Ã€ÃšÂ½Ã… Ã‡Ã—Â¸Â¶Â·Ã‚-10) * 0.5
 //#ifndef	__INC_WORLD
 //				if ( SKILL_SUCCESS_RATIO( nSkillIDX ) < ( this->Get_LEVEL() * 0.4f + ( this->Get_RES()-10 ) * 0.5f - pSpeller->Get_LEVEL() * 0.4f - ( pSpeller->Get_RES()-10 ) *0.5f + (1+RANDOM(100)) ) )
 //					continue;
 //#else
 #ifdef	__APPLY_2ND_JOB
-				// ÈÄ¿¡ ¸é¿ª·Â ¼öÄ¡ ³Ö¾î¼­ °è»ê½Ä ¼öÁ¤ÇÒ°÷...
+				// ÃˆÃ„Â¿Â¡ Â¸Ã©Â¿ÂªÂ·Ã‚ Â¼Ã¶Ã„Â¡ Â³Ã–Â¾Ã®Â¼Â­ Â°Ã¨Â»ÃªÂ½Ã„ Â¼Ã¶ÃÂ¤Ã‡Ã’Â°Ã·...
 				if ( SKILL_SUCCESS_RATIO( nSkillIDX ) * ( pSpeller->Get_LEVEL() * 2 + pSpeller->Get_INT()+20 ) / ( this->Get_RES()*0.6f + 5 + this->Get_AVOID() ) <= (1+RANDOM(100)) ) 
 					continue;
 #else
@@ -1102,27 +1102,26 @@ BYTE CObjCHAR::Skill_ApplyIngSTATUS(short nSkillIDX, CObjCHAR *pSpeller)
 #endif
 //#endif
 			} else {
-				// À¯¸®
-				// ¼º°ø·ã(12¹øÄ®·³) > [»ó´ë ·¹º§ - ÀÚ½Å·¹º§ + ·£´ı¼öÄ¡(1~100) ]  ÀÏ°æ¿ì »óÅÂÀû¿ë ¼º°ø
+				// Ã€Â¯Â¸Â®
+				// Â¼ÂºÂ°Ã¸Â·Ã£(12Â¹Ã¸Ã„Â®Â·Â³) > [Â»Ã³Â´Ã« Â·Â¹ÂºÂ§ - Ã€ÃšÂ½Ã…Â·Â¹ÂºÂ§ + Â·Â£Â´Ã½Â¼Ã¶Ã„Â¡(1~100) ]  Ã€ÃÂ°Ã¦Â¿Ã¬ Â»Ã³Ã…Ã‚Ã€Ã»Â¿Ã« Â¼ÂºÂ°Ã¸
 				if ( SKILL_SUCCESS_RATIO( nSkillIDX ) < this->Get_LEVEL() - pSpeller->Get_LEVEL() + (1+RANDOM(100)) )
 					continue;
 			}
 		}
 
 		nAdjValue = CCal::Get_SkillAdjustVALUE( this, nSkillIDX, nI, pSpeller->Get_INT() );
-		// Àû¿ë °¡´É ÇÑ°¡ ???
+		// Ã€Ã»Â¿Ã« Â°Â¡Â´Ã‰ Ã‡Ã‘Â°Â¡ ???
 		if ( !this->m_IngSTATUS.IsEnableApplay( nIngSTB, nAdjValue ) )	continue;
 
 		btSuccessBITS |= ( 1<<nI );
 
-
 		if ( this->m_IngSTATUS.UpdateIngSTATUS( this, nIngSTB, pSpeller->Cur_SKILL_DURATION(nSkillIDX), nAdjValue, nSkillIDX, pSpeller->Get_INDEX() ) ) {
-			// ¸í·ÉÀ» STOPÀ¸·Î ¹Ù²Ü²¨... ±âÀı, ¼ö¸é °É¸®¸é Á¤Áö ¸í·É ¼³Á¤...
+			// Â¸Ã­Â·Ã‰Ã€Â» STOPÃ€Â¸Â·Ã Â¹Ã™Â²ÃœÂ²Â¨... Â±Ã¢Ã€Ã½, Â¼Ã¶Â¸Ã© Â°Ã‰Â¸Â®Â¸Ã© ÃÂ¤ÃÃ¶ Â¸Ã­Â·Ã‰ Â¼Â³ÃÂ¤...
 			this->Del_ActiveSKILL();
 			CObjAI::SetCMD_STOP ();
 		}
 
-		// Å¸¿îÆ® ½ºÅ³ÀÌ¸é...°ø°İ ´ë»ó ¹Ù²Ş...
+		// Ã…Â¸Â¿Ã®Ã†Â® Â½ÂºÃ…Â³Ã€ÃŒÂ¸Ã©...Â°Ã¸Â°Ã Â´Ã«Â»Ã³ Â¹Ã™Â²Ã...
 		if ( ING_TAUNT == STATE_TYPE(nIngSTB) ) {
 			this->SetCMD_RUNnATTACK( pSpeller->Get_INDEX() );
 		}
@@ -1137,10 +1136,10 @@ void CObjCHAR::Skill_ChangeIngSTATUS (CObjCHAR *pTarget)
 	short nResultCNT=0;
 	if ( pTarget->Get_RideMODE() < MOVE_MODE_DRIVE 
 #ifdef __KCHS_BATTLECART__
-		|| IsTAIWAN() // Å¸ÀÌ¿ÏÀÌ¸é.. ÆÖ¸ğµå¿¡¼­ ¾µ¼ö ÀÖ´Ù.
+		|| IsTAIWAN() // In Taiwan, you can use it in Pat mode.
 #endif
 		) {	
-		// µ¥¹ÌÁö Àû¿ëµÈÈÄ »óÅÂ º¯°æÀÌ¿Í¼­ Á×ÀºÈÄ ¼Ó¼ºÀû¿ë ¾ÈµÇµµ·Ï~~~
+		// Do not apply the property after the damage is applied and the state change comes to death ~~~
 		BYTE btResult;
 		if ( 0 == SKILL_SCOPE( this->Get_ActiveSKILL() ) ) {
 			if ( this->Skill_IsPassFilter( pTarget, this->Get_ActiveSKILL() ) ) {
@@ -1171,18 +1170,18 @@ void CObjCHAR::Skill_ChangeIngSTATUS (CObjCHAR *pTarget)
 }
 
 //-------------------------------------------------------------------------------------------------
-// 7, 17¹ø À¯Çü ½ºÅ³...
+// 7, 17Â¹Ã¸ Ã€Â¯Ã‡Ã¼ Â½ÂºÃ…Â³...
 bool CObjCHAR::Skill_DamageToAROUND ( tPOINTF &PosCENTER )
 {
-	// ¹üÀ§¾ÈÀÇ Àû¿ëÇÒ Å¸ÄÏÀ» ¸ğµÎ ±¸ÇÑ´Ù...
-	// °¢°¢ Å¸°Ù¿¡ µ¥¹ÌÁö Àû¿ë...
+	// Â¹Ã¼Ã€Â§Â¾ÃˆÃ€Ã‡ Ã€Ã»Â¿Ã«Ã‡Ã’ Ã…Â¸Ã„ÃÃ€Â» Â¸Ã°ÂµÃ Â±Â¸Ã‡Ã‘Â´Ã™...
+	// Â°Â¢Â°Â¢ Ã…Â¸Â°Ã™Â¿Â¡ ÂµÂ¥Â¹ÃŒÃÃ¶ Ã€Ã»Â¿Ã«...
 	BYTE btResult;
 	uniDAMAGE sDamage;
 	CObjCHAR *pFindCHAR;
 	short nResultCNT=0;
 
 	CObjITEM *pOutITEM;
-	// PosGOTOÁÂÇ¥¸¦ Áß½ÉÀ¸·Î Å½»ö...
+	// PosGOTOÃÃ‚Ã‡Â¥Â¸Â¦ ÃÃŸÂ½Ã‰Ã€Â¸Â·Ã Ã…Â½Â»Ã¶...
 	pFindCHAR = (CObjCHAR*)this->AI_FindFirstOBJ( PosCENTER, SKILL_SCOPE( Get_ActiveSKILL() ) );
 	while( pFindCHAR ) {
 		if ( this->Skill_IsPassFilter( pFindCHAR, Get_ActiveSKILL() ) ) {
@@ -1196,7 +1195,7 @@ bool CObjCHAR::Skill_DamageToAROUND ( tPOINTF &PosCENTER )
 			} else btResult = 0;
 
 			if ( sDamage.m_wDamage || btResult ) {
-				sDamage.m_wDamage |= DMG_BIT_IMMEDIATE;		// ½ºÅ³ µ©Áã´Â Áï°¢ ¹İÀÀ...
+				sDamage.m_wDamage |= DMG_BIT_IMMEDIATE;		// Â½ÂºÃ…Â³ ÂµÂ©ÃÃ£Â´Ã‚ ÃÃ¯Â°Â¢ Â¹ÃÃ€Ã€...
 				pFindCHAR->Send_gsv_DAMAGE_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), sDamage.m_wDamage, btResult, this->Get_INT(), pOutITEM );
 				nResultCNT ++;
 			}
@@ -1207,7 +1206,7 @@ bool CObjCHAR::Skill_DamageToAROUND ( tPOINTF &PosCENTER )
 
 	this->Send_gsv_RESULT_OF_SKILL( Get_ActiveSKILL() /*, nResultCNT */ );
 
-	// °ø°İÀÚ ¹«±â ¼ö¸í °¨¼Ò...
+	// Â°Ã¸Â°ÃÃ€Ãš Â¹Â«Â±Ã¢ Â¼Ã¶Â¸Ã­ Â°Â¨Â¼Ã’...
 	if ( 3 != SKILL_DAMAGE_TYPE( Get_ActiveSKILL() ) ) {
 		this->Dec_WeaponLife ();
 	}
@@ -1220,10 +1219,10 @@ void CObjCHAR::Skill_START_03_04_05 (CObjCHAR *pTarget)
 {
 	assert( m_pCurMOTION->m_wTatalAttackFrame );
 
-	// 03~06 :: Àû ÄÉ¸¯ÅÍ °ø°İ ½ºÅ³...
-	// @bug:: ½ºÅ³À» »ç¿ëÇÏ±â Àü¿¡ ÇÊÅÍ¸µÀ» ÇÏÁö¸¸... 
-	// ½ºÅ³ »ç¿ëÁß ´Ù¸¥ ½ºÅ³ ¸í·ÉÀÌ ¿Ã°æ¿ì Áß°£¿¡ ½ºÅ³ÀÌ ¹Ù²î¾î
-	// ÇÊÅÍ¸µÀ» Àû¿ëÇÏÁö ¾ÊÀ¸¸é »¶³­´Ù.
+	// 03~06 :: Ã€Ã» Ã„Ã‰Â¸Â¯Ã…Ã Â°Ã¸Â°Ã Â½ÂºÃ…Â³...
+	// @bug:: Â½ÂºÃ…Â³Ã€Â» Â»Ã§Â¿Ã«Ã‡ÃÂ±Ã¢ Ã€Ã¼Â¿Â¡ Ã‡ÃŠÃ…ÃÂ¸ÂµÃ€Â» Ã‡ÃÃÃ¶Â¸Â¸... 
+	// Â½ÂºÃ…Â³ Â»Ã§Â¿Ã«ÃÃŸ Â´Ã™Â¸Â¥ Â½ÂºÃ…Â³ Â¸Ã­Â·Ã‰Ã€ÃŒ Â¿ÃƒÂ°Ã¦Â¿Ã¬ ÃÃŸÂ°Â£Â¿Â¡ Â½ÂºÃ…Â³Ã€ÃŒ Â¹Ã™Â²Ã®Â¾Ã®
+	// Ã‡ÃŠÃ…ÃÂ¸ÂµÃ€Â» Ã€Ã»Â¿Ã«Ã‡ÃÃÃ¶ Â¾ÃŠÃ€Â¸Â¸Ã© Â»Â¶Â³Â­Â´Ã™.
 	if ( this->Skill_IsPassFilter( pTarget, Get_ActiveSKILL() ) ) 
 	{
 		uniDAMAGE sDamage;
@@ -1236,7 +1235,7 @@ void CObjCHAR::Skill_START_03_04_05 (CObjCHAR *pTarget)
 		this->Skill_ChangeIngSTATUS( pTarget );
 	}
 
-	// °ø°İÀÚ ¹«±â ¼ö¸í °¨¼Ò...
+	// Â°Ã¸Â°ÃÃ€Ãš Â¹Â«Â±Ã¢ Â¼Ã¶Â¸Ã­ Â°Â¨Â¼Ã’...
 	if ( 3 != SKILL_DAMAGE_TYPE( Get_ActiveSKILL() ) ) {
 		this->Dec_WeaponLife ();
 	}
@@ -1277,10 +1276,10 @@ void CObjCHAR::Skill_START_10_11 (CObjCHAR *pTarget)
 //-------------------------------------------------------------------------------------------------
 void CObjCHAR::Skill_START_19 (CObjCHAR *pTarget)
 {
-	// 03~06 :: Àû ÄÉ¸¯ÅÍ °ø°İ ½ºÅ³...
-	// @bug:: ½ºÅ³À» »ç¿ëÇÏ±â Àü¿¡ ÇÊÅÍ¸µÀ» ÇÏÁö¸¸... 
-	// ½ºÅ³ »ç¿ëÁß ´Ù¸¥ ½ºÅ³ ¸í·ÉÀÌ ¿Ã°æ¿ì Áß°£¿¡ ½ºÅ³ÀÌ ¹Ù²î¾î
-	// ÇÊÅÍ¸µÀ» Àû¿ëÇÏÁö ¾ÊÀ¸¸é »¶³­´Ù.
+	// 03~06 :: Ã€Ã» Ã„Ã‰Â¸Â¯Ã…Ã Â°Ã¸Â°Ã Â½ÂºÃ…Â³...
+	// @bug:: Â½ÂºÃ…Â³Ã€Â» Â»Ã§Â¿Ã«Ã‡ÃÂ±Ã¢ Ã€Ã¼Â¿Â¡ Ã‡ÃŠÃ…ÃÂ¸ÂµÃ€Â» Ã‡ÃÃÃ¶Â¸Â¸... 
+	// Â½ÂºÃ…Â³ Â»Ã§Â¿Ã«ÃÃŸ Â´Ã™Â¸Â¥ Â½ÂºÃ…Â³ Â¸Ã­Â·Ã‰Ã€ÃŒ Â¿ÃƒÂ°Ã¦Â¿Ã¬ ÃÃŸÂ°Â£Â¿Â¡ Â½ÂºÃ…Â³Ã€ÃŒ Â¹Ã™Â²Ã®Â¾Ã®
+	// Ã‡ÃŠÃ…ÃÂ¸ÂµÃ€Â» Ã€Ã»Â¿Ã«Ã‡ÃÃÃ¶ Â¾ÃŠÃ€Â¸Â¸Ã© Â»Â¶Â³Â­Â´Ã™.
 	if ( this->Skill_IsPassFilter( pTarget, Get_ActiveSKILL() ) ) 
 	{
 		uniDAMAGE sDamage;
@@ -1299,31 +1298,31 @@ void CObjCHAR::Skill_START_19 (CObjCHAR *pTarget)
 //		this->Skill_ChangeIngSTATUS( pTarget );
 	}
 
-	// °ø°İÀÚ ¹«±â ¼ö¸í °¨¼Ò...
+	// Â°Ã¸Â°ÃÃ€Ãš Â¹Â«Â±Ã¢ Â¼Ã¶Â¸Ã­ Â°Â¨Â¼Ã’...
 	if ( 3 != SKILL_DAMAGE_TYPE( Get_ActiveSKILL() ) ) {
 		this->Dec_WeaponLife ();
 	}
 }
 bool CObjCHAR::Skill_START (CObjCHAR *pTarget)
 {
-	// ¼­¹ö¿¡¼­´Â ½ºÅ³ÀÌ ¿Ï·áµÈÈÄ °á°ú¸¸ Ã³¸® ÇÏ¸é µÈ´Ù....
+	// On the server, you only need to process the results after the skill is completed ....
 	switch( SKILL_TYPE( Get_ActiveSKILL() ) ) {
 		/*
-		case SKILL_TYPE_01 :	// ±âº» µ¿ÀÛ ½ºÅ³
-		case SKILL_TYPE_02 :	// Ã¢ »ı¼º ½ºÅ³
-		case SKILL_TYPE_15 :	// ÆĞ½Ãºê
+		case SKILL_TYPE_01 :	// Basic action skill
+		case SKILL_TYPE_02 :	// Window creation skill
+		case SKILL_TYPE_15 :	// Passive
 		case SKILL_TYPE_16 :	// emotion
 		case SKILL_TYPE_18 :	// warp
 			break;
 		*/
 
-		case SKILL_TYPE_03 :	// °ø°İ µ¿ÀÛ º¯°æÇü
-		case SKILL_TYPE_04 :	// ¹«±â »óÅÂ º¯°æÇü
-		case SKILL_TYPE_05 :	// ÃÑ¾Ë º¯°æÇë °ø°İÇü
+		case SKILL_TYPE_03 :	// Attack behavior change type
+		case SKILL_TYPE_04 :	// Weapon state change type
+		case SKILL_TYPE_05 :	// Bullet changes Hacked
 			this->Skill_START_03_04_05( pTarget );
 			return true;
 
-		case SKILL_TYPE_06 :	// ¹ß»ç ¸¶¹ıÇü
+		case SKILL_TYPE_06 :	// Launch magic
 		{
 			if ( this->Skill_IsPassFilter( pTarget, Get_ActiveSKILL() ) ) 
 			{
@@ -1334,31 +1333,31 @@ bool CObjCHAR::Skill_START (CObjCHAR *pTarget)
 				this->Skill_ChangeIngSTATUS( pTarget );
 			}
 
-			// °ø°İÀÚ ¹«±â ¼ö¸í °¨¼Ò...
+			// Reducing attacker weapon life ...
 			if ( 3 != SKILL_DAMAGE_TYPE( Get_ActiveSKILL() ) ) {
 				this->Dec_WeaponLife ();
 			}
 			return true;
 		}
 
-		case SKILL_TYPE_07 :	// Áö¿ª ¸¶¹ı °ø°İÇü
+		case SKILL_TYPE_07 :	// Area Magical Attack
 			return this->Skill_DamageToAROUND( this->m_PosGOTO );
 		case SKILL_TYPE_17 :	// self & damage ...
 			return this->Skill_DamageToAROUND( this->m_PosCUR );
 
-		case SKILL_TYPE_10 :	// ´É·ÂÄ¡ º¯°æÇü(¼¿ÇÁ)	:	ÇÑ¹æ¿¡ ¿Ã¸²
+		case SKILL_TYPE_10 :	// Ability change type (self): Put in one shot
 			if ( pTarget ) {
 				this->CloseNETWORK ();
 				return false;
 			}
 			this->Skill_START_10_11( this );
 			return true;
-		case SKILL_TYPE_11 :	// ´É·ÂÄ¡ º¯°æÇü(Å¸°Ù)	:	ÇÑ¹æ¿¡ ¿Ã¸²
+		case SKILL_TYPE_11 :	// Ability Change Type (Target): Put in one shot
 			this->Skill_START_10_11( pTarget );
 			return true;
 
-		case SKILL_TYPE_08 :	// ´É·ÂÄ¡ÀÇ Áõ/°¨À» ÀÏÁ¤½Ã°£ Áö¼Ó(¼¿ÇÁ)
-		case SKILL_TYPE_12 :	// »óÅÂ Áö¼ÓÇü(¼¿ÇÁ)	Áßµ¶, º¡¾î¸®, ±âÀı, Åõ¸í, ¹æÆĞµ¥¹ÌÁö, Ãß°¡ µ¥¹ÌÁö
+		case SKILL_TYPE_08 :	// Increase / decrease of ability value for a certain time (self)
+		case SKILL_TYPE_12 :	// Stateful (self) poisoning, dumb, stunned, transparent, shield damage, additional damage
 			/*
 			if ( pTarget ) {
 				this->CloseNETWORK ();
@@ -1368,19 +1367,19 @@ bool CObjCHAR::Skill_START (CObjCHAR *pTarget)
 			this->Skill_ChangeIngSTATUS( this );
 			return true;
 			
-		case SKILL_TYPE_09 :	// ´É·ÂÄ¡ÀÇ Áõ/°¨À» ÀÏÁ¤½Ã°£ Áö¼Ó(Å¸°Ù)
-		case SKILL_TYPE_13 :	// »óÅÂ Áö¼ÓÇü(Å¸°Ù)	Áßµ¶, º¡¾î¸®, ±âÀı, Åõ¸í, ¹æÆĞµ¥¹ÌÁö, Ãß°¡ µ¥¹ÌÁö
+		case SKILL_TYPE_09 :	// Increase / decrease of ability value for a certain time (target)
+		case SKILL_TYPE_13 :	// State-persistent (target) addiction, dumb, stunned, transparent, shield damage, additional damage
 			this->Skill_ChangeIngSTATUS( pTarget );
 			return true;
 
-		case SKILL_TYPE_14 :	// ÀÚ½ÅÀÇ ÆÀ ¹øÈ£·Î NPC¸¦ ¼ÒÈ¯...
+		case SKILL_TYPE_14 :	// Summon NPC with your team number ...
 		{
 			CObjSUMMON *pNewPET;
 			pNewPET = new CObjSUMMON;
 			
 			if ( pNewPET && this->GetZONE()->RegenCharacter( pNewPET, this->m_PosCUR.x, this->m_PosCUR.y, 150, SKILL_SUMMON_PET( Get_ActiveSKILL() ), this->Get_TeamNO() ) ) {
 				// pNewPET->m_btSummonCMD = this->Get_SummonCMD();
-				pNewPET->SetCallerOBJ( this->Get_INDEX(), this->Get_CharHASH(), this->Get_LEVEL(), this->Get_ActiveSKILL() , this); // 2005-06-30(kchs) ´ë¸¸ ¼ÒÈ¯¼ö ´É·ÂÄ¡ ¼öÁ¤ °ü·Ã...
+				pNewPET->SetCallerOBJ( this->Get_INDEX(), this->Get_CharHASH(), this->Get_LEVEL(), this->Get_ActiveSKILL() , this); // 2005-06-30(kchs) Â´Ã«Â¸Â¸ Â¼Ã’ÃˆÂ¯Â¼Ã¶ Â´Ã‰Â·Ã‚Ã„Â¡ Â¼Ã¶ÃÂ¤ Â°Ã¼Â·Ãƒ...
 
 				pNewPET->m_IngSTATUS.UpdateIngSTATUS( pNewPET, 
 							IDX_ING_STB_DEC_LIFE_TIME, 
@@ -1391,18 +1390,18 @@ bool CObjCHAR::Skill_START (CObjCHAR *pTarget)
 				this->Add_SummonCNT( nNeedValue );
 				this->Send_gsv_RESULT_OF_SKILL( Get_ActiveSKILL() /*, 1*/ );
 
-				// ¼ÒÈ¯µÈ ÄÉ¸¯ AI
+				// Summoned Caric AI
 				pNewPET->Do_CreatedAI ();
 			} else
 				SAFE_DELETE( pNewPET );
 			return true;
 		}
 
-		case SKILL_TYPE_19 :	// (Å¸°Ù¿¡ µ¥¹ÌÁö°ø°İÀ» ÇÏ¸é¼­ HP,MP »¯¾î¿À±â °³³ä)
+		case SKILL_TYPE_19 :	// (HP, MP takeover concept while attacking target)
 			this->Skill_START_19( pTarget );
 			return true;
 
-		case SKILL_TYPE_20 :	// ºÎÈ°
+		case SKILL_TYPE_20 :	// resurrection
 		{
 			if ( this->Skill_IsPassFilter( pTarget, Get_ActiveSKILL() ) ) {
 				pTarget->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), 0x01, this->Get_INT(), this->Cur_SKILL_DURATION(this->Get_ActiveSKILL()) );
@@ -1429,7 +1428,7 @@ bool CObjCHAR::Attack_START (CObjCHAR *pTarget)
 		return false;
 	}
 
-	// ¼Ò¸ğÅº Ã¼Å©...
+	// Â¼Ã’Â¸Ã°Ã…Âº ÃƒÂ¼Ã…Â©...
 	if ( !this->Dec_ShotITEM( (BYTE)( m_pCurMOTION->m_wTatalAttackFrame ) ) )
 		return true;
 
@@ -1437,7 +1436,7 @@ bool CObjCHAR::Attack_START (CObjCHAR *pTarget)
 	sDamage.m_wDamage = CCal::Get_DAMAGE( this, pTarget, m_pCurMOTION->m_wTatalAttackFrame );
 	this->Give_DAMAGE (pTarget, sDamage);
 
-	// °ø°İÀÚ ¹«±â ¼ö¸í °¨¼Ò...
+	// Â°Ã¸Â°ÃÃ€Ãš Â¹Â«Â±Ã¢ Â¼Ã¶Â¸Ã­ Â°Â¨Â¼Ã’...
 	this->Dec_WeaponLife ();
 
 	return true;
@@ -1445,7 +1444,7 @@ bool CObjCHAR::Attack_START (CObjCHAR *pTarget)
 
 void CObjCHAR::ActionEVENT (int iActionIDX)
 {
-	// ¼­¹ö´Â ÀÏ·ç ¸ø¿Í !!!
+	// Â¼Â­Â¹Ã¶Â´Ã‚ Ã€ÃÂ·Ã§ Â¸Ã¸Â¿Ã !!!
 	assert( 0 && "Invalid function called" );
 }
 
@@ -1454,7 +1453,7 @@ bool CObjCHAR::Casting_START (CObjCHAR *pTarget)
 	m_bCastingSTART = true;
 
 	if ( CMD_SKILL2OBJ == this->Get_COMMAND() ) {
-		// ½ºÅ³ Å¸°ÙÀÌ ÀÌµ¿ÁßÀÏ°æ¿ì Å¬¶óÀÌ¾ğÆ®°¡ ÄÉ½ºÆÃ ½ÃÀÛ À§Ä¡¸¦ ¾ËÁö ¸øÇÏ¹Ç·Î...
+		// Â½ÂºÃ…Â³ Ã…Â¸Â°Ã™Ã€ÃŒ Ã€ÃŒÂµÂ¿ÃÃŸÃ€ÃÂ°Ã¦Â¿Ã¬ Ã…Â¬Â¶Ã³Ã€ÃŒÂ¾Ã°Ã†Â®Â°Â¡ Ã„Ã‰Â½ÂºÃ†Ãƒ Â½ÃƒÃ€Ã› Ã€Â§Ã„Â¡Â¸Â¦ Â¾Ã‹ÃÃ¶ Â¸Ã¸Ã‡ÃÂ¹Ã‡Â·Ã...
 		classPACKET *pCPacket = Packet_AllocNLock ();
 		if ( !pCPacket ) 
 			return false;
@@ -1483,8 +1482,8 @@ int CObjCHAR::RealProc (DWORD dwPassTIME)
 {
 	if ( ( CS_BIT_MOV | CS_BIT_MOV2 ) & this->Get_STATE() ) {
 		m_PosCUR += ( m_MoveVEC * dwPassTIME );
-		if ( !this->GetZONE()->UpdateSECTOR( this ) ) {	// ¼½ÅÍ º¯È¯ÀÌ ÀÖÀ»°æ¿ì È£ÃâÇÏ´Â ÇÔ¼ö.
-			// ÁÂÇ¥°¡ ÀÌ»óÇÑ³ÑÀÌ´Ù Â©·¯ !!!
+		if ( !this->GetZONE()->UpdateSECTOR( this ) ) {	// Â¼Â½Ã…Ã ÂºÂ¯ÃˆÂ¯Ã€ÃŒ Ã€Ã–Ã€Â»Â°Ã¦Â¿Ã¬ ÃˆÂ£ÃƒÃ¢Ã‡ÃÂ´Ã‚ Ã‡Ã”Â¼Ã¶.
+			// ÃÃ‚Ã‡Â¥Â°Â¡ Ã€ÃŒÂ»Ã³Ã‡Ã‘Â³Ã‘Ã€ÃŒÂ´Ã™ Ã‚Â©Â·Â¯ !!!
 			return 0;
 		}
 
@@ -1492,13 +1491,13 @@ int CObjCHAR::RealProc (DWORD dwPassTIME)
 	}
 
 	//if ( this->Get_MoveMODE() < MOVE_MODE_DRIVE && this->Get_HP() > 0 ) {
-	//	// Å¾½Â ¸ğµå°¡ ¾Æ´Ï°í ¾É±â ¸ğµå¸é...
+	//	// Ã…Â¾Â½Ã‚ Â¸Ã°ÂµÃ¥Â°Â¡ Â¾Ã†Â´ÃÂ°Ã­ Â¾Ã‰Â±Ã¢ Â¸Ã°ÂµÃ¥Â¸Ã©...
 	//	this->RecoverHPnMP (dwPassTIME);
 	//}
 
 	bool bFrameING;
 	bFrameING = this->ProcMotionFrame ();
-	if ( bFrameING && ( Get_STATE()&CS_BIT_INT ) )	{	// ÀÌµ¿ÀÛÁß¿¡´Â ¾Ï°ÅµÎ ÇÒ¼ö ¾ø´Ù.
+	if ( bFrameING && ( Get_STATE()&CS_BIT_INT ) )	{	// Ã€ÃŒÂµÂ¿Ã€Ã›ÃÃŸÂ¿Â¡Â´Ã‚ Â¾ÃÂ°Ã…ÂµÃ Ã‡Ã’Â¼Ã¶ Â¾Ã¸Â´Ã™.
 		return 1;
 	}
 
@@ -1540,23 +1539,23 @@ int CObjCHAR::RealProc (DWORD dwPassTIME)
 
 void CObjCHAR::Proc_IngSTATUS (DWORD dwPassTime)
 {
-	// ¹«Àû »©°í Áö¼Ó»óÅÂ°¡ ¼³Á¤µÆ´Ù.
+	// Â¹Â«Ã€Ã» Â»Â©Â°Ã­ ÃÃ¶Â¼Ã“Â»Ã³Ã…Ã‚Â°Â¡ Â¼Â³ÃÂ¤ÂµÃ†Â´Ã™.
 	DWORD dwClearedFLAGS = this->m_IngSTATUS.Proc( this, dwPassTime );
 	if ( dwClearedFLAGS ) {
 		if ( dwClearedFLAGS & ( ING_INC_MOV_SPD | ING_DEC_MOV_SPD ) ) {
-			// ÀÌ¼Ó¿¡ º¯È­°¡ »ı°å°í ÇöÀç ¸ğ¼ÇÀÌ ÀÌµ¿ ¸ğ¼ÇÀÌ¸é...ÀÌ¼Ó ¼öÁ¤
+			// Ã€ÃŒÂ¼Ã“Â¿Â¡ ÂºÂ¯ÃˆÂ­Â°Â¡ Â»Ã½Â°Ã¥Â°Ã­ Ã‡Ã¶Ã€Ã§ Â¸Ã°Â¼Ã‡Ã€ÃŒ Ã€ÃŒÂµÂ¿ Â¸Ã°Â¼Ã‡Ã€ÃŒÂ¸Ã©...Ã€ÃŒÂ¼Ã“ Â¼Ã¶ÃÂ¤
 			if ( m_pCurMOTION == this->Get_MOTION( this->GetANI_Move() ) ) {
 				m_fCurMoveSpeed = this->Get_MoveSPEED();
 			}
 		}
 		if ( dwClearedFLAGS & ( ING_INC_ATK_SPD | ING_DEC_ATK_SPD ) ) {
-			// °ø¼Ó¿¡ º¯È­°¡ »ı°å°í ÇöÀç ¸ğ¼ÇÀÌ °ø°İ ¸ğ¼ÇÀÌ¸é...°ø¼Ó ¼öÁ¤
+			// Â°Ã¸Â¼Ã“Â¿Â¡ ÂºÂ¯ÃˆÂ­Â°Â¡ Â»Ã½Â°Ã¥Â°Ã­ Ã‡Ã¶Ã€Ã§ Â¸Ã°Â¼Ã‡Ã€ÃŒ Â°Ã¸Â°Ã Â¸Ã°Â¼Ã‡Ã€ÃŒÂ¸Ã©...Â°Ã¸Â¼Ã“ Â¼Ã¶ÃÂ¤
 			if ( m_pCurMOTION == this->Get_MOTION(this->GetANI_Attack() ) ) {
 				m_fCurAniSPEED = ( this->Get_nAttackSPEED() / 100.f );	
 			}
 		}
 
-		// »óÅÂ°¡ ¹Ù²î¾ú´Ù....
+		// Â»Ã³Ã…Ã‚Â°Â¡ Â¹Ã™Â²Ã®Â¾ÃºÂ´Ã™....
 		this->Send_gsv_CLEAR_STATUS( dwClearedFLAGS );
 	}
 }
@@ -1571,42 +1570,42 @@ int CObjCHAR::Proc (void)
 	DWORD dwNeedTIME, dwPassTIME = (this->GetZONE())->GetPassTIME ();
 	WORD  wRamainFRAME;
 
-	// Áö¼Ó»óÅÂ Ã³¸®...
+	// ÃÃ¶Â¼Ã“Â»Ã³Ã…Ã‚ ÃƒÂ³Â¸Â®...
 	if ( this->Get_HP() > 0 && this->m_IngSTATUS.GetFLAGs() ) {
 		this->Proc_IngSTATUS( dwPassTIME );
-		//// ¹«Àû »©°í Áö¼Ó»óÅÂ°¡ ¼³Á¤µÆ´Ù.
+		//// Â¹Â«Ã€Ã» Â»Â©Â°Ã­ ÃÃ¶Â¼Ã“Â»Ã³Ã…Ã‚Â°Â¡ Â¼Â³ÃÂ¤ÂµÃ†Â´Ã™.
 		//dwNeedTIME = this->m_IngSTATUS.Proc( this, dwPassTIME );
 		//if ( dwNeedTIME ) {
 		//	if ( dwNeedTIME & ( ING_INC_MOV_SPD | ING_DEC_MOV_SPD ) ) {
-		//		// ÀÌ¼Ó¿¡ º¯È­°¡ »ı°å°í ÇöÀç ¸ğ¼ÇÀÌ ÀÌµ¿ ¸ğ¼ÇÀÌ¸é...ÀÌ¼Ó ¼öÁ¤
+		//		// Ã€ÃŒÂ¼Ã“Â¿Â¡ ÂºÂ¯ÃˆÂ­Â°Â¡ Â»Ã½Â°Ã¥Â°Ã­ Ã‡Ã¶Ã€Ã§ Â¸Ã°Â¼Ã‡Ã€ÃŒ Ã€ÃŒÂµÂ¿ Â¸Ã°Â¼Ã‡Ã€ÃŒÂ¸Ã©...Ã€ÃŒÂ¼Ã“ Â¼Ã¶ÃÂ¤
 		//		if ( m_pCurMOTION == this->Get_MOTION( this->GetANI_Move() ) ) {
 		//			m_fCurMoveSpeed = this->Get_MoveSPEED();
 		//		}
 		//	}
 		//	if ( dwNeedTIME & ( ING_INC_ATK_SPD | ING_DEC_ATK_SPD ) ) {
-		//		// °ø¼Ó¿¡ º¯È­°¡ »ı°å°í ÇöÀç ¸ğ¼ÇÀÌ °ø°İ ¸ğ¼ÇÀÌ¸é...°ø¼Ó ¼öÁ¤
+		//		// Â°Ã¸Â¼Ã“Â¿Â¡ ÂºÂ¯ÃˆÂ­Â°Â¡ Â»Ã½Â°Ã¥Â°Ã­ Ã‡Ã¶Ã€Ã§ Â¸Ã°Â¼Ã‡Ã€ÃŒ Â°Ã¸Â°Ã Â¸Ã°Â¼Ã‡Ã€ÃŒÂ¸Ã©...Â°Ã¸Â¼Ã“ Â¼Ã¶ÃÂ¤
 		//		if ( m_pCurMOTION == this->Get_MOTION(this->GetANI_Attack() ) ) {
 		//			m_fCurAniSPEED = ( this->Get_nAttackSPEED() / 100.f );	
 		//		}
 		//	}
 
-		//	// »óÅÂ°¡ ¹Ù²î¾ú´Ù....
+		//	// Â»Ã³Ã…Ã‚Â°Â¡ Â¹Ã™Â²Ã®Â¾ÃºÂ´Ã™....
 		//	this->Send_gsv_CLEAR_STATUS( dwNeedTIME );
 		//}
 	}
 
-	// ÇöÀç µ¿ÀÛÀÇ ³²Àº ÇÁ·¹ÀÓÀ» °è»ê...
+	// Ã‡Ã¶Ã€Ã§ ÂµÂ¿Ã€Ã›Ã€Ã‡ Â³Â²Ã€Âº Ã‡ÃÂ·Â¹Ã€Ã“Ã€Â» Â°Ã¨Â»Ãª...
 	wRamainFRAME = m_pCurMOTION->Get_ReaminFRAME( m_iCurMotionFRAME );
 
 	//assert( m_pCurMOTION->Get_TotalFRAME() == ( m_iCurMotionFRAME + wRamainFRAME ) );
 	//assert( m_fCurAniSPEED != 0.f );
 
-	// ³²Àº ÇÁ·¹ÀÓµ¿¾È ¼Ò¿äµÉ ½Ã°£°è»ê...
+	// Â³Â²Ã€Âº Ã‡ÃÂ·Â¹Ã€Ã“ÂµÂ¿Â¾Ãˆ Â¼Ã’Â¿Ã¤ÂµÃ‰ Â½ÃƒÂ°Â£Â°Ã¨Â»Ãª...
 	dwNeedTIME = m_pCurMOTION->Get_NeedTIME ( wRamainFRAME, m_fCurAniSPEED );
 
-	// 2003.09.19 >= ¸¦ >·Î ÇØ¼­ ÇÁ·¹ÀÓÀÌ ³Ñ¾î°¡´Â ¿À·ù°¡ ÀÖ¾úÀ½...
+	// 2003.09.19 >= Â¸Â¦ >Â·Ã Ã‡Ã˜Â¼Â­ Ã‡ÃÂ·Â¹Ã€Ã“Ã€ÃŒ Â³Ã‘Â¾Ã®Â°Â¡Â´Ã‚ Â¿Ã€Â·Ã¹Â°Â¡ Ã€Ã–Â¾ÃºÃ€Â½...
 	while( dwPassTIME >= dwNeedTIME ) {
-		// ¸ğ¼ÇÀÌ ¿Ï·áµÈ´Ù..
+		// Â¸Ã°Â¼Ã‡Ã€ÃŒ Â¿ÃÂ·Ã¡ÂµÃˆÂ´Ã™..
 		m_iCurMotionFRAME += wRamainFRAME;
 		if ( !this->RealProc( dwNeedTIME ) )
 			return 0;
@@ -1619,8 +1618,8 @@ int CObjCHAR::Proc (void)
 		dwNeedTIME   = m_pCurMOTION->Get_NeedTIME( wRamainFRAME, m_fCurAniSPEED );
 	}
 
-	// ÇöÀçµ¿ÀÛÀ» dwPassTIME¸¸Å­ ÁøÇà...
-	// ÃÊ´ç 30 frame ÀÏ°æ¿ì ÀüÃ¼ ÇÁ·¹ÀÓÀÌ 30º¸´Ù ÀÛÀ¸¸é???
+	// Ã‡Ã¶Ã€Ã§ÂµÂ¿Ã€Ã›Ã€Â» dwPassTIMEÂ¸Â¸Ã…Â­ ÃÃ¸Ã‡Ã ...
+	// ÃƒÃŠÂ´Ã§ 30 frame Ã€ÃÂ°Ã¦Â¿Ã¬ Ã€Ã¼ÃƒÂ¼ Ã‡ÃÂ·Â¹Ã€Ã“Ã€ÃŒ 30ÂºÂ¸Â´Ã™ Ã€Ã›Ã€Â¸Â¸Ã©???
 	float fPassFrame = m_pCurMOTION->Get_PassFRAME( dwPassTIME, m_fCurAniSPEED );
 	m_fAccMotionFRAME += fPassFrame;
 	wRamainFRAME = (WORD)m_fAccMotionFRAME;

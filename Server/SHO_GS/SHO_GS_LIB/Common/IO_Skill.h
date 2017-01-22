@@ -13,33 +13,33 @@
 //-------------------------------------------------------------------------------------------------
 
 enum {
-	SKILL_TYPE_01 = 1,		/// 기본 동작 스킬
-	SKILL_TYPE_02 ,			/// 창 생성 스킬
-	SKILL_TYPE_03 ,			/// 공격 동작 변경형
-	SKILL_TYPE_04 ,			/// 무기 상태 변경형
-	SKILL_TYPE_05 ,			/// 총알 변경헝 공격형
-	SKILL_TYPE_06 ,			/// 발사 마법형
-	SKILL_TYPE_07 ,			/// 지역 마법 공격형
-	SKILL_TYPE_08 ,			/// 능력치의 증/감을 일정시간 지속(셀프)
-	SKILL_TYPE_09 ,			/// 능력치의 증/감을 일정시간 지속(타겟)
-	SKILL_TYPE_10 ,			/// 능력치 변경형(셀프)	:	한방에 올림
-	SKILL_TYPE_11 ,			/// 능력치 변경형(타겟)	:	한방에 올림
-	SKILL_TYPE_12 ,			/// 상태 지속형(셀프)	중독, 벙어리, 기절, 투명, 방패데미지, 추가 데미지
-	SKILL_TYPE_13 ,			/// 상태 지속형(타겟)	중독, 벙어리, 기절, 투명, 방패데미지, 추가 데미지	
-	SKILL_TYPE_14 ,			/// 자신의 팀 번호로 NPC를 소환...
-	SKILL_TYPE_15 ,			/// 패시브 스킬
-	SKILL_TYPE_PASSIVE = SKILL_TYPE_15,
-	SKILL_TYPE_16 ,							/// Emotion
-	SKILL_TYPE_17 ,							/// Self & damage
-	SKILL_TYPE_18 ,							/// 추가 2004.4.8 : warp skill
-	SKILL_TYPE_19,							/* 추가 2004.6.16 :
-											능력치 변경(10번유형) & 데미지공격(3번유형)
-													기존의 3번스킬 유형으로 타겟에게 데미지를 주고, 자신에게는
-													지정된 능력치(21번,24번 칼럼)의 수치(22,25번칼럼)가 증가된다.
-													스킬성공계산식을 적용하여 성공시에만 능력치 변경을 적용시킨다.
-													(타겟에 데미지공격을 하면서 HP,MP 뺏어오기 개념)
+	SKILL_TYPE_01 = 1,						//1.The default behavior
+	SKILL_TYPE_02 ,							//2.Manufacturing skill
+	SKILL_TYPE_03 ,							//3.Damage in action
+	SKILL_TYPE_04 ,							//4.Weapon power-up
+	SKILL_TYPE_05 ,							//5.Weapon power-up
+	SKILL_TYPE_06 ,							//6.Magic launch
+	SKILL_TYPE_07 ,							//7.Local magic damage
+	SKILL_TYPE_08 ,							//8.State persistence (self)
+	SKILL_TYPE_09 ,							//9.State persistence (target)
+	SKILL_TYPE_10 ,							//10.Restoration magic (self)
+	SKILL_TYPE_11 ,							//11.Restoration magic (target)
+	SKILL_TYPE_12 ,							//12.State persistence (change) (self)
+	SKILL_TYPE_13 ,							//13.State persistence (change) (target)
+	SKILL_TYPE_14 ,							//14.Summoning magic
+	SKILL_TYPE_15 ,							// Passive skill
+	SKILL_TYPE_PASSIVE = SKILL_TYPE_15,		
+	SKILL_TYPE_16 ,							// Emotion
+	SKILL_TYPE_17 ,							// Self & damage
+	SKILL_TYPE_18 ,							/// Add 2004.4.8 : warp skill
+	SKILL_TYPE_19,							/* Add 2004.6.16 :
+											Change the strength value (10 times) and damage attacks (3 times)
+													Existing types of damaging a target skill three times, giving a
+													The specified strength value (21 times, 24 times columnist) levels (22, 25 times columnist) is increased.
+													By applying the formula of success upon success skill and ability to apply the changes.
+													(HP, MP, while the damage at the target attack took the concept to come)
 											*/
-	SKILL_TYPE_20,
+	SKILL_TYPE_20,							//20.The resurrection
 } ;
 
 
