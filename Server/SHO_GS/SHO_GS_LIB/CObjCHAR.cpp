@@ -552,7 +552,7 @@ void CObjCHAR::Add_ADJ_STATUS( classPACKET *pCPacket )
 
 //-------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
-bool CObjCHAR::Send_gsv_EFFECT_OF_SKILL (int iSpellOBJ, short nSkillIDX, BYTE btResult, short nSpellerINT, int iSpellerSKILL_DURATION)
+bool CObjCHAR::Send_gsv_EFFECT_OF_SKILL (int iSpellOBJ, short nSkillIDX, BYTE btResult, short nSpellerINT, short iSpellerSKILL_DURATION)
 {
 	classPACKET *pCPacket = Packet_AllocNLock ();
 	if ( !pCPacket )
@@ -566,7 +566,9 @@ bool CObjCHAR::Send_gsv_EFFECT_OF_SKILL (int iSpellOBJ, short nSkillIDX, BYTE bt
 	pCPacket->m_gsv_EFFECT_OF_SKILL.m_nSkillIDX		= nSkillIDX;
 	pCPacket->m_gsv_EFFECT_OF_SKILL.m_btSuccessBITS	= btResult;
 	pCPacket->m_gsv_EFFECT_OF_SKILL.m_nINT			= nSpellerINT;
-	pCPacket->m_gsv_EFFECT_OF_SKILL.m_iSpellerSKILL_DURATION	= iSpellerSKILL_DURATION;	//Numenor: Store the true skill duration inside packets
+	
+	if(iSpellerSKILL_DURATION) pCPacket->m_gsv_EFFECT_OF_SKILL.m_iSpellerSKILL_DURATION	= iSpellerSKILL_DURATION;	//Numenor: Store USER true skill duration inside packets
+	else pCPacket->m_gsv_EFFECT_OF_SKILL.m_iSpellerSKILL_DURATION = SKILL_DURATION(nSkillIDX);	//this means that if the skill as a duration of 0, probably because of a virtualization, then take the original value (normally everything works fine, but it's always good to add a security :) )
 
 	this->GetZONE()->SendPacketToSectors( this, pCPacket );
 	Packet_ReleaseNUnlock( pCPacket );
@@ -1115,7 +1117,12 @@ BYTE CObjCHAR::Skill_ApplyIngSTATUS(short nSkillIDX, CObjCHAR *pSpeller)
 
 		btSuccessBITS |= ( 1<<nI );
 
-		if ( this->m_IngSTATUS.UpdateIngSTATUS( this, nIngSTB, pSpeller->Cur_SKILL_DURATION(nSkillIDX), nAdjValue, nSkillIDX, pSpeller->Get_INDEX() ) ) {
+		short true_skill_duration =0;
+		if( pSpeller->IsUSER() ) true_skill_duration = pSpeller->Cur_SKILL_DURATION(nSkillIDX);	//if user
+		else true_skill_duration = SKILL_DURATION(nSkillIDX);	//if char or monster
+
+		if ( this->m_IngSTATUS.UpdateIngSTATUS( this, nIngSTB, true_skill_duration, nAdjValue, nSkillIDX, pSpeller->Get_INDEX() ) ) {
+
 			// ¸í·ÉÀ» STOPÀ¸·Î ¹Ù²Ü²¨... ±âÀý, ¼ö¸é °É¸®¸é Á¤Áö ¸í·É ¼³Á¤...
 			this->Del_ActiveSKILL();
 			CObjAI::SetCMD_STOP ();
@@ -1145,7 +1152,10 @@ void CObjCHAR::Skill_ChangeIngSTATUS (CObjCHAR *pTarget)
 			if ( this->Skill_IsPassFilter( pTarget, this->Get_ActiveSKILL() ) ) {
 				btResult = pTarget->Skill_ApplyIngSTATUS( this->Get_ActiveSKILL(), this );
 				if ( btResult )  {
-					pTarget->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), this->Get_ActiveSKILL(), btResult, this->Get_INT(), this->Cur_SKILL_DURATION(this->Get_ActiveSKILL()));
+					int true_skill_duration = 0;
+					if(this->IsUSER()) true_skill_duration = this->Cur_SKILL_DURATION(this->Get_ActiveSKILL());
+					else true_skill_duration = SKILL_DURATION(this->Get_ActiveSKILL()); //Numenor: case of monster skills...
+					pTarget->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), this->Get_ActiveSKILL(), btResult, this->Get_INT(), true_skill_duration);
 					nResultCNT ++;
 				}
 			}
@@ -1156,7 +1166,10 @@ void CObjCHAR::Skill_ChangeIngSTATUS (CObjCHAR *pTarget)
 				if ( this->Skill_IsPassFilter( pFindCHAR, Get_ActiveSKILL() ) ) {
 					btResult = pFindCHAR->Skill_ApplyIngSTATUS( Get_ActiveSKILL(), this );
 					if ( btResult ) {
-						pFindCHAR->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), btResult, this->Get_INT(), this->Cur_SKILL_DURATION(this->Get_ActiveSKILL()) );
+						int true_skill_duration = 0;
+						if(this->IsUSER()) true_skill_duration = this->Cur_SKILL_DURATION(this->Get_ActiveSKILL());
+						else true_skill_duration = SKILL_DURATION(this->Get_ActiveSKILL()); //Numenor: case of monster skills...
+						pFindCHAR->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), btResult, this->Get_INT(), true_skill_duration );
 						nResultCNT ++;
 					}
 				}
@@ -1250,7 +1263,10 @@ void CObjCHAR::Skill_START_10_11 (CObjCHAR *pTarget)
 			//btResult = pTarget->Skill_IncAbilityValue( Get_ActiveSKILL() );
 			btResult = pTarget->Skill_ApplyIngSTATUS( Get_ActiveSKILL(), this );
 			if ( btResult ) {
-				pTarget->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), btResult, this->Get_INT(), this->Cur_SKILL_DURATION(this->Get_ActiveSKILL()) );
+				int true_skill_duration = 0;
+				if(this->IsUSER()) true_skill_duration = this->Cur_SKILL_DURATION(this->Get_ActiveSKILL());
+				else true_skill_duration = SKILL_DURATION(this->Get_ActiveSKILL()); //Numenor: case of monster skills...
+				pTarget->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), btResult, this->Get_INT(), true_skill_duration );
 				nResultCNT ++;
 			}
 		}
@@ -1262,7 +1278,10 @@ void CObjCHAR::Skill_START_10_11 (CObjCHAR *pTarget)
 				// btResult = pFindCHAR->Skill_IncAbilityValue( Get_ActiveSKILL() );
 				btResult = pFindCHAR->Skill_ApplyIngSTATUS( Get_ActiveSKILL(), this );
 				if ( btResult ) {
-					pFindCHAR->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), btResult, this->Get_INT(), this->Cur_SKILL_DURATION(this->Get_ActiveSKILL()) );
+					int true_skill_duration = 0;
+					if(this->IsUSER()) true_skill_duration = this->Cur_SKILL_DURATION(this->Get_ActiveSKILL());
+					else true_skill_duration = SKILL_DURATION(this->Get_ActiveSKILL()); //Numenor: case of monster skills...
+					pFindCHAR->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), btResult, this->Get_INT(), true_skill_duration );
 					nResultCNT ++;
 				}
 			}
@@ -1404,7 +1423,10 @@ bool CObjCHAR::Skill_START (CObjCHAR *pTarget)
 		case SKILL_TYPE_20 :	// resurrection
 		{
 			if ( this->Skill_IsPassFilter( pTarget, Get_ActiveSKILL() ) ) {
-				pTarget->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), 0x01, this->Get_INT(), this->Cur_SKILL_DURATION(this->Get_ActiveSKILL()) );
+				int true_skill_duration = 0;
+				if(this->IsUSER()) true_skill_duration = this->Cur_SKILL_DURATION(this->Get_ActiveSKILL());
+				else true_skill_duration = SKILL_DURATION(this->Get_ActiveSKILL()); //Numenor: case of monster skills...
+				pTarget->Send_gsv_EFFECT_OF_SKILL( this->Get_INDEX(), Get_ActiveSKILL(), 0x01, this->Get_INT(), true_skill_duration );
 				this->Send_gsv_RESULT_OF_SKILL( Get_ActiveSKILL() /*, 1*/ );
 				( (CObjAVT*)pTarget )->Resurrection( Get_ActiveSKILL() );
 			}

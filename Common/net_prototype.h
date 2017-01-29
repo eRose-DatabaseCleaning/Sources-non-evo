@@ -1748,25 +1748,29 @@ struct gsv_EFFECT_OF_SKILL : public t_PACKETHEADER {
 	WORD			m_wSpellObjIDX;
 
 // 홍근
-//#ifdef _GBC
+#ifdef _GBC
 	unsigned short	m_nSkillIDX;
 	unsigned short	m_nINT;
 	BYTE			m_btSuccessBITS;
-	unsigned int	m_iSpellerSKILL_DURATION; //Numenor: the server now sends one more info in this packet: the true duration of the skill
-/*#else
-	union {
+#else
+	union { //The union allow to put everything in the union on the same memory address. All the m_tmpX below are memory addresses that we keep for other variables.
+			// A struct is like a class with everything public. Here it's an anonymous structure so can only called with the struct that contain it.
+			//The goal of the union is to keep the structure and the most important is to earn space thanks to the bit fields below.
+			//An unsigned short is on 2 bytes, so 16bits. If we do : 12, then we say we only use the 12 first bits and the rest is used by the next variable in the struct!
+			//For more details, look for "bit fields" on google.
+			//NB: the union is better but not mandatory. We could have done like above, in the _GBC part
 		struct {
-			unsigned short	m_nSkillIDX		: 12;
-			unsigned short	m_btSuccessBITS : 2;	// 성공여부
-			BYTE			m_tmp1;
+			unsigned short		m_nSkillIDX        : 12;
+			unsigned short		m_btSuccessBITS : 2;    //12+2 = 14 here
 		} ;
 		struct {
-			BYTE			m_tmp2;
-			unsigned short	m_tmp3			: 6;
-			unsigned short	m_nINT			: 10;	// 시전자의 지력
+			BYTE				m_tmp3; //8bits
+			unsigned short		m_tmp4            : 6; //so 14 here (indeed, 14 is already taken by first structure)
+			unsigned short		m_nINT            : 10; //in total: 14+10 = 24 bytes
+			unsigned short		m_iSpellerSKILL_DURATION;
 		} ;
 	} ;
-#endif*/
+#endif
 
 } ;
 

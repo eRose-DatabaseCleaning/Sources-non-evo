@@ -2986,7 +2986,13 @@ void CRecvPACKET::Recv_gsv_EFFECT_OF_SKILL ()
 					{
 						/// 일단 유져일경우만 속성객체 추가..
 						//if( pChar->IsA( OBJ_USER ) )
-						pEffectedChar->AddEnduranceEntity( iSkillIDX,	iStateIndex, m_pRecvPacket->m_gsv_EFFECT_OF_SKILL.m_iSpellerSKILL_DURATION, ENDURANCE_TYPE_SKILL ) ;
+						
+						int true_skill_duration =0;
+						if (pChar != NULL){
+							if(pChar->IsUSER()) true_skill_duration = m_pRecvPacket->m_gsv_EFFECT_OF_SKILL.m_iSpellerSKILL_DURATION;
+						} //Numenor: Check if the caster is a user or a monster
+						else true_skill_duration = SKILL_DURATION(iSkillIDX);
+						pEffectedChar->AddEnduranceEntity( iSkillIDX,	iStateIndex, true_skill_duration, ENDURANCE_TYPE_SKILL ) ;
 
 						/// 상태 타입..
 						int iStateType = STATE_TYPE( iStateIndex );

@@ -56,7 +56,7 @@ public :
 	bool	IsCHAR ()							{	return ( Get_TYPE()>=OBJ_NPC );							}
     bool    IsUSER ()							{   return ( Get_TYPE()>=OBJ_AVATAR );						}
 
-	bool	IsNEIGHBOR( CGameOBJ *pObj )		// 섹터 패킷이 전송 가능한 영역에 있나?
+	bool	IsNEIGHBOR( CGameOBJ *pObj )		// Is the sector packet in the transmittable area?
 	{
 		if ( this->GetZONE() == pObj->GetZONE() ) {
 			if ( abs( this->m_PosSECTOR.x - pObj->m_PosSECTOR.x ) <= 1 &&

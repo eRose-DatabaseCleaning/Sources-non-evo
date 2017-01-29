@@ -1764,7 +1764,9 @@ void CObjCHAR::PushEffectedSkillToList( int iSkillIDX, gsv_DAMAGE_OF_SKILL Effec
 	steffectOfSkill.iSkillIDX		= iSkillIDX;
 	steffectOfSkill.bDamageOfSkill	= bDamageOfSkill;
 	steffectOfSkill.iCasterINT		= iCasterINT;
-	steffectOfSkill.iCasterSKILL_DURATION			= iCasterSKILL_DURATION;
+	//Numenor: If possible give the caster skill duration
+	if(iCasterSKILL_DURATION) steffectOfSkill.iCasterSKILL_DURATION			= iCasterSKILL_DURATION;
+	else steffectOfSkill.iCasterSKILL_DURATION = SKILL_DURATION(iSkillIDX);
 
 	steffectOfSkill.EffectOfSkill = EffectedSkill;
 	m_EffectedSkillList.push_back( steffectOfSkill ); 
@@ -1843,7 +1845,7 @@ void CObjCHAR::ProcEffectOfSkillInDamageOfSkill( int iSkillIDX, int iObjIDX, COb
 			break;
 
 		default:
-			ApplyEffectOfSkill( iSkillIDX, iObjIDX, pChar, pEffectOfSkill );
+			ApplyEffectOfSkill( iSkillIDX, iObjIDX, pChar, pEffectOfSkill, this );
 			break;
 	}	
 }
@@ -1854,7 +1856,7 @@ void CObjCHAR::ProcEffectOfSkillInDamageOfSkill( int iSkillIDX, int iObjIDX, COb
 /// @brief 실제로 캐릭터에 스킬 적용..
 //----------------------------------------------------------------------------------------------------
 
-void CObjCHAR::ApplyEffectOfSkill( int iSkillIDX, int iObjIDX, CObjCHAR* pEffectedChar, stEFFECT_OF_SKILL*	pEffectOfSkill )
+void CObjCHAR::ApplyEffectOfSkill( int iSkillIDX, int iObjIDX, CObjCHAR* pEffectedChar, stEFFECT_OF_SKILL*	pEffectOfSkill, CObjCHAR* pCaster )
 {
 	if( pEffectOfSkill->EffectOfSkill.m_btSuccessBITS == 0 )/// 적용 효과후 바로 삭제..즉 스킬 적용 실패다
 	{
@@ -1897,7 +1899,11 @@ void CObjCHAR::ApplyEffectOfSkill( int iSkillIDX, int iObjIDX, CObjCHAR* pEffect
 				{
 					/// 일단 유져일경우만 속성객체 추가..
 					//if( pChar->IsA( OBJ_USER ) )
-					pEffectedChar->AddEnduranceEntity( iSkillIDX,	iStateIndex, pEffectOfSkill->iCasterSKILL_DURATION, ENDURANCE_TYPE_SKILL ) ;
+					int true_skill_duration = 0;
+					//Numenor: Check if the caster is a player. If it's a monster, just take the usual skill duration
+					if (pCaster->IsUSER()) true_skill_duration = pEffectOfSkill->iCasterSKILL_DURATION;
+					else true_skill_duration = SKILL_DURATION(iSkillIDX);
+					pEffectedChar->AddEnduranceEntity( iSkillIDX,	iStateIndex, true_skill_duration , ENDURANCE_TYPE_SKILL ) ;
 
 					/// 상태 타입..
 					int iStateType = STATE_TYPE( iStateIndex );
@@ -2065,7 +2071,8 @@ void CObjCHAR::ProcOneEffectedSkill( stEFFECT_OF_SKILL*	pEffectOfSkill )
 
 	}else /// 지속성이거나.. 상태를 바꾸는 스킬..
 	{		
-		ApplyEffectOfSkill( iSkillIDX, iObjIDX, pChar, pEffectOfSkill );
+		//Numenor: pChar = target of the skill; this = caster
+		ApplyEffectOfSkill( iSkillIDX, iObjIDX, pChar, pEffectOfSkill, this );
 	}
 }
 

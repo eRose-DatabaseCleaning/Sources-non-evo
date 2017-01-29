@@ -69,40 +69,40 @@ bool CIngSTATUS::IsEnableApplay( short nIngStbIDX, short nAdjValue )
 //-------------------------------------------------------------------------------------------------
 DWORD CIngSTATUS::UpdateIngSTATUS( CObjCHAR *pCharOBJ, short nIngStbIDX, short nTick, short nAdjVALUE, short nSkillIDX, int iTargetObjIDX )
 {
-	// 반드시 적용 가능여부 판단한후 호출되어야 한다 !!!
+	// Must be invoked after determining whether it is applicable or not !!!
 	short nTypeIDX = STATE_TYPE(nIngStbIDX);
 
 	//if ( nTypeIDX <= ING_INC_MP ) {
-	//	// 스킬로는 물약으로 변경되는 상태를 변경할수 없도록...
+	//	// As a skill, you can not change the state of being changed into a potion.
 	//	return 0;
 	//}
 
 	if ( nTypeIDX > ING_CHECK_END ) {
 		switch( nTypeIDX ) {
-			case ING_CLEAR_INVISIBLE :	// 투명상태 해지..
+			case ING_CLEAR_INVISIBLE :	// Clear state ..
 			{
 				if ( this->IsSET( c_dwIngFLAG[ ING_DISGUISE ] ) ) {
-					m_nTICKs[ ING_DISGUISE ] = 0;		// 바로 삭제 하지 말고 다음 처리해 주위에 전송될수 있도록..
+					m_nTICKs[ ING_DISGUISE ] = 0;		// Do not delete it immediately, so that it can be sent to the next process.
 				}
 				if ( this->IsSET( c_dwIngFLAG[ ING_TRANSPARENT ] ) ) {
-					m_nTICKs[ ING_TRANSPARENT ] = 0;	// 바로 삭제 하지 말고 다음 처리해 주위에 전송될수 있도록..
+					m_nTICKs[ ING_TRANSPARENT ] = 0;	// Do not delete it immediately, so that it can be sent to the next process.
 				}
 				return 0;
 			}
-			case ING_CLEAR_GOOD :	// 유리 
+			case ING_CLEAR_GOOD :	// advantage
 			{
 				for (short nI=ING_POISONED; nI<=ING_CHECK_END; nI++) {
 					if ( this->IsSET( c_dwIngFLAG[ nI ] ) && STATE_PRIFITS_LOSSES( m_nIngSTBIdx[nI] ) == 0 ) {
-						m_nTICKs[ nI ] = 0;			// 바로 삭제 하지 말고 다음 처리해 주위에 전송될수 있도록..
+						m_nTICKs[ nI ] = 0;			// Do not delete it immediately, so that it can be sent to the next process.
 					}
 				}
 				return 0;
 			}
-			case ING_CLEAR_BAD  :	// 불리
+			case ING_CLEAR_BAD  :	// disadvantage
 			{
 				for (short nI=ING_POISONED; nI<=ING_CHECK_END; nI++) {
 					if ( this->IsSET( c_dwIngFLAG[ nI ] ) && STATE_PRIFITS_LOSSES( m_nIngSTBIdx[nI] ) == 1 ) {
-						m_nTICKs[ nI ] = 0;			// 바로 삭제 하지 말고 다음 처리해 주위에 전송될수 있도록..
+						m_nTICKs[ nI ] = 0;			// Do not delete it immediately, so that it can be sent to the next process.
 					}
 				}
 				if ( this->IsSET( FLAG_ING_TAUNT ) ) {
@@ -112,8 +112,8 @@ DWORD CIngSTATUS::UpdateIngSTATUS( CObjCHAR *pCharOBJ, short nIngStbIDX, short n
 			}
 			case ING_CLEAR_ALL  :
 			{
-				// 전체 해지시 물약도 해지되기 때문에...
-				// this->ClearALL( FLAG_ING_CLEAR );		// 상점 상태는 유지.
+				// Because the potion is also canceled at the time of the entire termination ...
+				// this->ClearALL( FLAG_ING_CLEAR );		// Keep the store state.
 				for (short nI=ING_POISONED; nI<=ING_CHECK_END; nI++) {
 					if ( this->IsSET( c_dwIngFLAG[ nI ] ) && STATE_PRIFITS_LOSSES( m_nIngSTBIdx[nI] ) < 2 ) {
 						this->ClearSTATUS( (eING_TYPE)nI );
@@ -127,7 +127,7 @@ DWORD CIngSTATUS::UpdateIngSTATUS( CObjCHAR *pCharOBJ, short nIngStbIDX, short n
 				return 0;
 		}
 
-		// 타운트등...
+		// Taunt etc ...
 	}
 	
 	this->SetFLAG( c_dwIngFLAG[ nTypeIDX ] );
@@ -211,7 +211,7 @@ DWORD CIngSTATUS::Proc (CObjCHAR *pCharOBJ, DWORD dwPassTIME)
 			nAdj = this->Proc_IngPOTION( pPOTION, dwPassTIME );
 
 			//LogString( 0xfff, "HP: %d,  %d/%d,   %d  PassTIME:%d \n", nAdj, pPOTION->m_nAccVALUE, pPOTION->m_nTotVALUE, pCharOBJ->Get_HP(), dwPassTIME );
-					
+
 			if ( pCharOBJ->Add_HP( nAdj ) >= pCharOBJ->Get_MaxHP() ||
 				 pPOTION->m_nAccVALUE >= pPOTION->m_nTotVALUE ) {
 				// 처리 완료 or 만땅.

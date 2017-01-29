@@ -38,7 +38,8 @@ public  :
 	#define	LogString		CLOG::OutputString
 	// #define	LogString		g_LOG.CS_ODS	//CLOG::OutputString
 #else
-    #define	LogString
+//    #define	LogString	g_LOG.CS_ODS //Numenor: This allows to write on the server some log and re-enable quite a lot of logs, could be useful for debugging the server side...
+	  #define	LogString
 #endif
 
 #define	Log_String		LogString

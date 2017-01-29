@@ -471,7 +471,7 @@ public:
 	void								ProcOneEffectedSkill( stEFFECT_OF_SKILL*	pEffectOfSkill );
 
 	void								ProcEffectOfSkillInDamageOfSkill( int iSkillIDX, int iObjIDX, CObjCHAR* pChar, stEFFECT_OF_SKILL*	pEffectOfSkill );
-	void								ApplyEffectOfSkill( int iSkillIDX, int iObjIDX, CObjCHAR* pChar, stEFFECT_OF_SKILL*	pEffectOfSkill );
+	void								ApplyEffectOfSkill( int iSkillIDX, int iObjIDX, CObjCHAR* pChar, stEFFECT_OF_SKILL*	pEffectOfSkill, CObjCHAR* pCaster );
 	/////////////////////////////////////////////////////////////////////////////////
 
 

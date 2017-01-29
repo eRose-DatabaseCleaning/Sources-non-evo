@@ -72,7 +72,7 @@ protected:
 
 	void Send_gsv_RESULT_OF_SKILL (short nSkillIDX);
 
-	bool Send_gsv_EFFECT_OF_SKILL (int iSpellOBJ, short nSkillIDX, BYTE btResult, short nSpellerINT, int iSpellerSKILL_DURATION);
+	bool Send_gsv_EFFECT_OF_SKILL (int iSpellOBJ, short nSkillIDX, BYTE btResult, short nSpellerINT, short iSpellerSKILL_DURATION);
 	bool Send_gsv_DAMAGE_OF_SKILL (int iSpellOBJ, short nSkillIDX, WORD wDamage, BYTE btResult, short nSpellerINT, CObjITEM *pDropITEM=NULL);
 	bool Send_gsv_SET_MOTION( WORD wValue, short nMotionNO );
 	bool Send_gsv_CLEAR_STATUS (DWORD dwChangedFLAG);
@@ -197,7 +197,7 @@ public :
 	virtual short	Max_SummonCNT()										{	return 0;		}
 
 	virtual int		Cur_SKILL_DURATION(int iSkillNo)					{	return 0;		}
-
+	
 	virtual void	Add_ToTargetLIST( CObjAVT *pAVTChar )				{	/* nop */		}
 	virtual void	Sub_FromTargetLIST( CObjAVT *pAVTChar )				{	/* nop */		}
 
