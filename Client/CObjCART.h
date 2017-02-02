@@ -171,6 +171,7 @@ public:
 	/*override*/int				Get_MP ()							{	return 32767;			}
 	/*override*/int				Get_R_WEAPON ()						{	return 0;				}
 	/*override*/int				Get_L_WEAPON ()						{	return 0;				}
+	/*override*/int				Get_KNAPSACK ()						{	return 0;				}
 	
 
 	/// 최대 생명력

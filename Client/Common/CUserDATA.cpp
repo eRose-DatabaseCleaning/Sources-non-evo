@@ -1665,10 +1665,11 @@ bool CUserDATA::Skill_ActionCondition( short nSkillIDX )
 	}
 
 	// 2.
-	short nNeedWPN, nRWPN, nLWPN;
+	short nNeedWPN, nRWPN, nLWPN, nKnapsack;
 	
 	nRWPN = WEAPON_TYPE( this->GetCur_R_WEAPON() ); 
 	nLWPN = SUBWPN_TYPE( this->GetCur_L_WEAPON() );
+	nKnapsack = BACKITEM_TYPE( this->GetCur_KNAPSACK() );
 
 	for (nI=0; nI<SKILL_NEED_WEAPON_CNT; nI++) 
 	{
@@ -1683,7 +1684,7 @@ bool CUserDATA::Skill_ActionCondition( short nSkillIDX )
 				break;
 		}
 
-		if ( nRWPN == nNeedWPN || nLWPN == nNeedWPN ) {
+		if ( nRWPN == nNeedWPN || nLWPN == nNeedWPN || nKnapsack == nNeedWPN ) {
 			return true;
 		}
 	}

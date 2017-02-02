@@ -40,13 +40,16 @@ bool CBasicCommand::Execute()
 
 	int iBasicCommandType = SKILL_DISTANCE( pSkill->GetSkillIndex() );
 
-
+	//Numenor: check if command can be executed
+	if(!g_pAVATAR->Skill_ActionCondition( pSkill->GetSkillIndex() )) return false;
+	bool actionDone = false;
 		
 	/// 기본명령( 앉기, 서기, 감정표현등 )일 경우 사정거리를 어떤 명령인지로 판단하는데 사용
 	switch( iBasicCommandType )
 	{		
 	case COMMON_COMMAND_SELFTARGET:
 		g_UserInputSystem.SetTargetSelf();
+		actionDone = true;
 		break;
 	case COMMON_COMMAND_SIT:
 		{
@@ -61,12 +64,14 @@ bool CBasicCommand::Execute()
 			}
 
 			g_pNet->Send_cli_TOGGLE( TOGGLE_TYPE_SIT );
-			///앉기/서기 토글시 서버에게 나의 HP정보를 요청한다.
+			///I ask my server for my HP information when I toggle.
 			g_pNet->Send_cli_HP_REQ( g_pAVATAR->Get_INDEX() );
+			actionDone = true;
 		}
 		break;
-	case COMMON_COMMAND_PICK_ITEM:
+	case COMMON_COMMAND_PICK_ITEM: //Numenor: this is when you use the "gather" skill. Not when you click on the object, just on the skill
 		{
+			g_itMGR.AppendChatMsg("On est dans le pick item", IT_MGR::CHAT_TYPE_SYSTEM);
 			/// 펫탑승모드에선.. 금지
 			//if( g_pAVATAR->GetPetMode() > 0 )
 			//	break;
@@ -132,7 +137,8 @@ bool CBasicCommand::Execute()
 				if( pFoundItem )
 				{						
 					g_pNet->Send_cli_MOUSECMD( pFoundItem->Get_INDEX(), pFoundItem->Get_CurPOS() );	
-					g_UserInputSystem.ClearMouseState();							
+					g_UserInputSystem.ClearMouseState();						
+					actionDone = true;
 				}
 			}
 		}
@@ -146,22 +152,26 @@ bool CBasicCommand::Execute()
 				break;
 
 
-			if( ( g_pAVATAR->Get_STATE() != CS_SIT ) )
+			if( ( g_pAVATAR->Get_STATE() != CS_SIT ) ){
 				g_pNet->Send_cli_SET_MOTION( SKILL_ANI_ACTION_TYPE( pSkill->GetSkillIndex() ) );			
 			///else
 			///	AddMsgToChatWND( STR_ACTION_COMMAND_STOP_STATE_FAILED, g_dwRED, CChatDLG::CHAT_TYPE_SYSTEM );
+				actionDone = true;
+			}
 		}
 		break;
-	case COMMON_COMMAND_AIR_JUMP:
+	case COMMON_COMMAND_AIR_JUMP: 
 		{
 			/// 펫탑승모드에선.. 금지
 			if( g_pAVATAR->GetPetMode() > 0 )
 				break;
 
-			if( ( g_pAVATAR->Get_STATE() != CS_SIT ) )
-				g_pNet->Send_cli_SET_MOTION( SKILL_ANI_ACTION_TYPE( pSkill->GetSkillIndex() ) );
+			if( ( g_pAVATAR->Get_STATE() != CS_SIT ) ){
+				g_pNet->Send_cli_SET_MOTION( SKILL_ANI_ACTION_TYPE( pSkill->GetSkillIndex() ), 0, 0, pSkill->GetSkillIndex() );
 			///else
 			///	AddMsgToChatWND( STR_ACTION_COMMAND_STOP_STATE_FAILED, g_dwRED, CChatDLG::CHAT_TYPE_SYSTEM );
+				actionDone = true;
+			}
 		}
 		break;
 	/// 오토 타겟..
@@ -217,6 +227,7 @@ bool CBasicCommand::Execute()
 								g_pNet->Send_cli_ATTACK( iTargetObj );
 							}								
 						}
+						actionDone = true;
 					}
 				}
 			}
@@ -292,6 +303,7 @@ bool CBasicCommand::Execute()
 			}			
 
 			g_pNet->Send_cli_TOGGLE( TOGGLE_TYPE_DRIVE );
+			actionDone = true;
 		}
 		break;
 
@@ -369,7 +381,8 @@ bool CBasicCommand::Execute()
 #ifdef _DEBUG
 				CStr::DebugString("Send_cli_CART_RIDE\n");
 #endif				
-			}			
+			}	
+			actionDone = true;
 		}
 		break;
 
@@ -392,8 +405,10 @@ bool CBasicCommand::Execute()
 							///파티 풀
 							if( CParty::GetInstance().IsPartyFull() )
 								g_itMGR.AppendChatMsg(STR_PARTY_IS_FULL, IT_MGR::CHAT_TYPE_SYSTEM );
-							else
+							else{
 								g_pNet->Send_cli_PARTY_REQ(PARTY_REQ_JOIN,  g_pObjMGR->Get_ServerObjectIndex(iTargetObjClientIndex ));
+								actionDone = true;
+							}
 						}
 						else///Error
 						{
@@ -403,6 +418,7 @@ bool CBasicCommand::Execute()
 					else
 					{
 						g_pNet->Send_cli_PARTY_REQ(PARTY_REQ_MAKE,  g_pObjMGR->Get_ServerObjectIndex(iTargetObjClientIndex));
+						actionDone = true;
 					}
 				}
 				else
@@ -427,6 +443,7 @@ bool CBasicCommand::Execute()
 						string Temp = pObjAVT->Get_NAME();
 						Temp.append(STR_REQ_TRADE);
 						g_itMGR.AppendChatMsg( Temp.c_str(), IT_MGR::CHAT_TYPE_SYSTEM);
+						actionDone = true;
 					}
 				}
 			}
@@ -450,9 +467,84 @@ bool CBasicCommand::Execute()
 			/// 주위 10미터 안에 NPC가 있다면 상점 개설 금지
 			g_itMGR.OpenDialog( DLG_TYPE_PRIVATESTORE );
 			g_itMGR.OpenDialog( DLG_TYPE_ITEM, false );
+			actionDone = true;
+		}
+		break;
+	case COMMON_COMMAND_PICK_ITEM_FROM_DISTANCE: //Numenor: this is when you use the "gather" skill. Not when you click on the object, just on the skill
+		{
+			/// 펫탑승모드에선.. 금지
+			//if( g_pAVATAR->GetPetMode() > 0 )
+			//	break;
+
+			//-------------------------------------------------------------------------------
+			/// 앉기 상태에선 금지..
+			//-------------------------------------------------------------------------------				
+			if( g_pAVATAR->Get_STATE() == CS_SIT )
+				break;
+
+
+			D3DVECTOR vecCenter = g_pAVATAR->Get_CurPOS();
+			int iNodeCnt = ::collectBySphere( (float *)( &vecCenter ), 1000 );
+
+			CGameOBJ*	pObj			= NULL;
+			HNODE		hNode			= 0;
+			HNODE		hUserData		= 0;
+			D3DVECTOR	vecTarget;
+			int			iItemDistance	= 100000;
+			bool		bFindItem		= false;
+			CObjITEM*	pFoundItem		= NULL;
+			CObjITEM*	pTempItem		= NULL;
+
+			for( int i = 0; i < iNodeCnt; i++ )
+			{
+				hNode = ::getCollectNode( i );
+				hUserData = ::getUserData( hNode );
+
+				if( hUserData )
+				{
+					pObj = reinterpret_cast< CGameOBJ* >( hUserData );
+	    
+					/// Item 인지 검사..
+					if( pObj->IsA( OBJ_ITEM ) )
+					{		
+						pTempItem = (CObjITEM*)pObj;
+						DWORD dwPassTIME = g_GameDATA.GetGameTime() - pTempItem->m_dwCreatedTIME;
+						if ( pTempItem->m_wOwnerServerObjIDX &&  (int)(pTempItem->m_wRemainTIME -  dwPassTIME) >  62 * 1000 ) 
+						{
+							// 획득 권한이 있는지 조사...
+							if ( pTempItem->m_wOwnerServerObjIDX != g_pObjMGR->Get_ServerObjectIndex(  g_pAVATAR->m_nIndex ) ) 
+							{
+								//g_itMGR.AppendChatMsg( STR_NOTIFY_02, g_dwBLUE );
+								continue;
+							}
+						}
+
+						vecTarget = pObj->Get_CurPOS();
+						int iDistance = CD3DUtil::distance ((int)vecCenter.x, (int)vecCenter.y, (int)vecTarget.x, (int)vecTarget.y);
+						if( iDistance < iItemDistance )
+						{
+							iItemDistance = iDistance;
+
+							bFindItem = true;
+							pFoundItem = (CObjITEM*)pObj;
+						}							
+					}
+				}
+			}
+
+			if( bFindItem )
+			{
+				if( pFoundItem )
+				{						
+					g_pNet->Send_cli_GET_FIELDITEM_REQ(g_pAVATAR ,g_pObjMGR->Get_ServerObjectIndex( pFoundItem->Get_INDEX() ), pSkill->GetSkillIndex());
+					g_UserInputSystem.ClearMouseState();	
+					actionDone = true;
+				}
+			}
 		}
 		break;
 	}	
+	if(actionDone) g_pAVATAR->Skill_UseAbilityValue(pSkill->GetSkillIndex()); //Numenor: use MP/HP/stamina etc... on the client side
 
 	return true;
 }

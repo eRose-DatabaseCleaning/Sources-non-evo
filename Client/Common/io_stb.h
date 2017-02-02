@@ -185,6 +185,7 @@ public :
 
 //	@Use ITEM_xxxx
 #define	BACKITEM_MOVE_SPEED(I)			g_TblBACKITEM.m_ppDATA[ I ][ 33 ]
+#define	BACKITEM_TYPE(I)				g_TblBACKITEM.m_ppDATA[ I ][ 4 ]
 
 
 //-------------------------------------------------------------------------------------------------

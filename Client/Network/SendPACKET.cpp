@@ -326,7 +326,7 @@ void CSendPACKET::Send_cli_SET_VAR_REQ (BYTE btVarTYPE, int iValue)
 }
 
 //-------------------------------------------------------------------------------------------------
-void CSendPACKET::Send_cli_SET_MOTION ( short nMotionNO, BYTE btStopCMD, WORD wETC )
+void CSendPACKET::Send_cli_SET_MOTION ( short nMotionNO, BYTE btStopCMD, WORD wETC, int iSkillIDX )
 {
 #ifdef	__VIRTUAL_SERVER
 	m_pSendPacket->m_HEADER.m_wType = GSV_SET_MOTION;
@@ -339,6 +339,7 @@ void CSendPACKET::Send_cli_SET_MOTION ( short nMotionNO, BYTE btStopCMD, WORD wE
 	m_pSendPacket->m_cli_SET_MOTION.m_nMotionNO = nMotionNO;
 	m_pSendPacket->m_cli_SET_MOTION.m_wIsSTOP = btStopCMD;
 	m_pSendPacket->m_cli_SET_MOTION.m_wETC = wETC;
+	m_pSendPacket->m_cli_SET_MOTION.m_iSkillIDX = iSkillIDX;
 #endif
 
 	g_CommandFilter.SetPrevCommand( NULL );
@@ -893,12 +894,11 @@ void CSendPACKET::Send_cli_DROP_ITEM ( short nInventoryIndex, int iQuantity )
 }
 
 //-------------------------------------------------------------------------------------------------
-bool CSendPACKET::Send_cli_GET_FIELDITEM_REQ( CGameOBJ *pUSER, int iServerObject )
+bool CSendPACKET::Send_cli_GET_FIELDITEM_REQ( CGameOBJ *pUSER, int iServerObject, int iSkillIDX )
 {
 	if( !pUSER )
 		return false;
 
-	
 	if(pUSER->Get_TYPE() == OBJ_CART||pUSER->Get_TYPE() ==OBJ_CGEAR) //카트이거나 캐슬기어일경우
 	{
 		if(((CObjCART*)pUSER)->GetParent() != g_pAVATAR) // 드라이버가 내가 아니면..
@@ -936,6 +936,7 @@ bool CSendPACKET::Send_cli_GET_FIELDITEM_REQ( CGameOBJ *pUSER, int iServerObject
 
 		memcpy( &m_pSendPacket->m_gsv_GET_FIELDITEM_REPLY.m_ITEM ,&(pITEM->m_ITEM), sizeof( tagITEM ) );
 #else
+
 		DWORD dwPassTIME = g_GameDATA.GetGameTime() - pITEM->m_dwCreatedTIME;
 		if ( pITEM->m_wOwnerServerObjIDX &&  (int)(pITEM->m_wRemainTIME -  dwPassTIME) >  62 * 1000 ) {
 			// 획득 권한이 있는지 조사...
@@ -949,7 +950,9 @@ bool CSendPACKET::Send_cli_GET_FIELDITEM_REQ( CGameOBJ *pUSER, int iServerObject
 		m_pSendPacket->m_HEADER.m_wType = CLI_GET_FIELDITEM_REQ;
 		m_pSendPacket->m_HEADER.m_nSize = sizeof( cli_GET_FIELDITEM_REQ );
 
+
 		m_pSendPacket->m_cli_GET_FIELDITEM_REQ.m_wServerItemIDX  = iServerObject;
+		m_pSendPacket->m_cli_GET_FIELDITEM_REQ.m_btSkillIDX  = iSkillIDX;
 #endif
 
 		g_CommandFilter.SetPrevCommand( NULL );

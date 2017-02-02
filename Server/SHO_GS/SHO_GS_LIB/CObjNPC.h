@@ -58,6 +58,7 @@ public :
 
 	int		Get_R_WEAPON ()		{	return NPC_R_WEAPON( m_nCharIdx );		}
 	int		Def_AttackRange()	{	return NPC_ATK_RANGE( m_nCharIdx );		}
+	int		Get_KNAPSACK ()		{	return	0;								}//Numenor: could be fun to implement this one day
 
 public :	
 	// virtual function inherit from CObjCHAR -----------------------------------------------------

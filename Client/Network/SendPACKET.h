@@ -42,7 +42,7 @@ public   :
 
 	void Send_cli_SET_VAR_REQ (BYTE btVarTYPE, int iValue);
 
-	void Send_cli_SET_MOTION ( short nMotionNO, BYTE btStopCMD = 0, WORD wETC = 0 );
+	void Send_cli_SET_MOTION ( short nMotionNO, BYTE btStopCMD = 0, WORD wETC = 0, int iSkillIDX = 0);
 	void Send_cli_TOGGLE (short nToggleTYPE);
 
 	void Send_cli_CHAT (char *szMsg);
@@ -66,7 +66,7 @@ public   :
 	void Send_cli_CHANGE_SKIN (BYTE btBodyIDX, short nItemNO);
 
 	void Send_cli_EQUIP_ITEM (short nEquipInvIDX, short nWeaponInvIDX);
-	bool Send_cli_GET_FIELDITEM_REQ( CGameOBJ *pUSER, int iServerObject );
+	bool Send_cli_GET_FIELDITEM_REQ( CGameOBJ *pUSER, int iServerObject, int iSkillIDX = 12);
 
 	// 필드에 아이템을 떨군다...
 	void Send_cli_DROP_ITEM ( short nInventoryIndex, int iQuantity );

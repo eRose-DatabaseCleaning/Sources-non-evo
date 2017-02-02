@@ -980,6 +980,7 @@ public :
 
 	/*override*/int				Get_MP ()							{	return 32767;			}
 	/*override*/int				Get_R_WEAPON ()						{	return NPC_R_WEAPON( m_nCharIdx );			}
+	/*override*///int				Get_KNAPSACK ()						{	return	0;								}//Numenor: could be fun to implement this one day
 	/*override*/int				Get_L_WEAPON ()						{	return 0;				}
 	/*override*/ virtual void	RecoverHPnMP( short nRecoverMODE )	{};	
 
@@ -1328,7 +1329,8 @@ public :
 //	/*override*/int				Get_L_WEAPON ()			{	return this->m_nLWeaponIDX;				}
 	/*override*/int				Get_R_WEAPON ()			{	return this->m_sRWeaponIDX.m_nItemNo;	}
 	/*override*/int				Get_L_WEAPON ()			{	return this->m_sLWeaponIDX.m_nItemNo;	}
-
+	/*override*/int				Get_KNAPSACK ()			{	return this->m_sKnapsackIDX.m_nItemNo;	}
+	
 	/*override*/int				Get_MaxHP()				{ return m_iMaxHP + m_EndurancePack.GetStateValue( ING_INC_MAX_HP ); }	
 	/*override*/int				Get_MaxMP()				{ return m_iMaxMP + m_EndurancePack.GetStateValue( ING_INC_MAX_MP ); }
 

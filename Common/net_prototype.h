@@ -1035,6 +1035,7 @@ struct gsv_SET_VAR_REPLY : public cli_SET_VAR_REQ {
 #define	BIT_MOTION_STOP_CMD			0x080000
 struct cli_SET_MOTION : public t_PACKETHEADER {
 	short		m_nMotionNO;
+	int			m_iSkillIDX;
 	union {
 		WORD	m_wValue;
 		struct {
@@ -1317,6 +1318,7 @@ struct gsv_SUB_FIELDITEM : public t_PACKETHEADER {
 
 struct cli_GET_FIELDITEM_REQ : public t_PACKETHEADER {
 	WORD	m_wServerItemIDX;
+	BYTE	m_btSkillIDX;
 } ;
 
 struct gsv_GET_FIELDITEM_REPLY : public t_PACKETHEADER {

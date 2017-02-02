@@ -51,7 +51,7 @@
 
 /// 공통액션들
 enum
-{
+{	//Numenor: this has to be the number on column 6 ("range") in the STB
 	COMMON_COMMAND_SIT			= 1,
 	COMMON_COMMAND_PICK_ITEM	= 2,
 	COMMON_COMMAND_JUMP			= 3,
@@ -65,6 +65,7 @@ enum
 	COMMON_COMMAND_PRIVATESTORE = 11,
 	COMMON_COMMAND_SELFTARGET   = 12,
 	COMMON_COMMAND_BOARD_CART	= 13,	// 카트 탑승 스킬.
+	COMMON_COMMAND_PICK_ITEM_FROM_DISTANCE	= 14,
 };
 
 
@@ -154,6 +155,7 @@ protected :
 
 	virtual int			Def_AttackRange()=0{ *(int*)0 = 10; };
 	virtual int			Get_R_WEAPON ()=0{ *(int*)0 = 10; };
+	//virtual int			Get_KNAPSACK ()=0{	*(int*)0 = 10; };
 	virtual bool		Attack_START (CObjCHAR *pTarget)=0{ *(int*)0 = 10; };
 	virtual bool		Skill_START (CObjCHAR *pTarget)=0{ *(int*)0 = 10; };
 	virtual bool		Casting_START( CObjCHAR* pTarget )=0{ *(int*)0 = 10; };

@@ -195,6 +195,7 @@ public:
 
 	/*override*/int					GetCur_R_WEAPON ()					{	return this->Get_R_WEAPON();				}
 	/*override*/int					GetCur_L_WEAPON ()					{	return this->Get_L_WEAPON();				}	
+	/*override*/int					GetCur_KNAPSACK	()					{	return this->Get_KNAPSACK();				}
 		
 	/*override*/bool				Quest_IsPartyLEADER();
 	/*override*/int					Quest_GetPartyLEVEL();

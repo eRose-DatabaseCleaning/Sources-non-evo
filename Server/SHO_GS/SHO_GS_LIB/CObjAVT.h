@@ -39,6 +39,7 @@ public :
 
 	int		GetCur_R_WEAPON ()									{	return this->Get_R_WEAPON();			}
 	int		GetCur_L_WEAPON ()									{	return this->Get_L_WEAPON();			}
+	int		GetCur_KNAPSACK	()									{	return this->Get_KNAPSACK();			}
 	int		GetCur_PET_BODY ()									{	return this->Get_PET_BODY ();			}
 
 	DWORD	GetCur_IngStatusFLAG()								{	return this->GetIngDurationStateFLAG();	}
@@ -143,6 +144,7 @@ public :
 	int		Get_R_WEAPON ()			{	return this->m_sRWeaponIDX.m_nItemNo;				}
 	int		Get_L_WEAPON ()			{	return this->m_sLWeaponIDX.m_nItemNo;				}
 	int		Get_PET_BODY ()			{	return this->m_sFrameIDX.m_nItemNo;					}
+	int		Get_KNAPSACK ()			{	return this->m_sKnapsackIDX.m_nItemNo;				}
 
 	int		Def_AttackRange()		{	return 70;						}
 

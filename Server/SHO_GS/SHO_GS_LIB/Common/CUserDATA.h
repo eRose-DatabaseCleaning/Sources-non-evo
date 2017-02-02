@@ -984,6 +984,7 @@ public :
 	//  -------------------------------------------------------------------------------------------
 	/// 스킬 조건 관련 함수...
 	virtual int		GetCur_R_WEAPON () = 0;
+	virtual int		GetCur_KNAPSACK	() = 0;
 	virtual int		GetCur_L_WEAPON () = 0;
 	virtual int		GetCur_PET_BODY () = 0;
 	virtual DWORD	GetCur_IngStatusFLAG() = 0;

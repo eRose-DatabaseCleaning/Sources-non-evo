@@ -310,11 +310,11 @@ bool CObjAVT::SetCMD_TOGGLE (BYTE btTYPE, bool bForce)
 
 				case CMD_SIT :
 					CObjAI::SetCMD_STAND ();
-					this->Send_gsv_SET_HPnMP( 0x03 );	// hp, mp 둘다.
+					this->Send_gsv_SET_HPnMP( 0x03 );	// both hp and mp : NB: 3 in binary is 11 and is compatible with 1 (01) and 2 (10) so 3 is doing both hp and mp!
 					break;
 
 				default :
-					// 앉을수 없는 경우...
+					// If you can not sit ...
 					return true;
 			}
 			break;
