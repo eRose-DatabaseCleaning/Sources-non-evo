@@ -71,7 +71,6 @@ bool CBasicCommand::Execute()
 		break;
 	case COMMON_COMMAND_PICK_ITEM: //Numenor: this is when you use the "gather" skill. Not when you click on the object, just on the skill
 		{
-			g_itMGR.AppendChatMsg("On est dans le pick item", IT_MGR::CHAT_TYPE_SYSTEM);
 			/// ÆêÅ¾½Â¸ğµå¿¡¼±.. ±İÁö
 			//if( g_pAVATAR->GetPetMode() > 0 )
 			//	break;
