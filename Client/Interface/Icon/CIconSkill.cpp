@@ -148,12 +148,21 @@ void	CIconSkill::GetToolTip( CInfo& ToolTip,  DWORD dwDialogType, DWORD dwType )
 		case SKILL_BASE_ACTION:///1
 			{
 				AddSkillName( iSkillNo, ToolTip, false );
+				AddSkillTypeTarget( iSkillNo, ToolTip );
+				AddSkillUseProperty( iSkillNo, ToolTip ); //Numenor: add cost of basic skill				
 				
-				if( (dwType & INFO_STATUS_SIMPLE) || (dwType & INFO_STATUS_DETAIL) )
-					AddSkillTypeTarget( iSkillNo, ToolTip );
-				
+				AddSkillRequireJob( iSkillNo, ToolTip );	//Numenor: and all the usual info
+				AddSkillRequireAbility( iSkillNo, ToolTip );
+				AddSkillRequireSkill( iSkillNo, ToolTip );
+				AddSkillRequireSkillPoint2Learn( iSkillNo ,ToolTip );
+				AddSkillRequireEquip( iSkillNo, ToolTip );
+
+				//if( (dwType & INFO_STATUS_SIMPLE) || (dwType & INFO_STATUS_DETAIL) ){
+				//}
 				if( dwType & INFO_STATUS_DETAIL )
 					AddSkillDesc( iSkillNo, ToolTip );
+
+
 
 				break;
 			}
