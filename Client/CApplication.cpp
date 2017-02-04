@@ -664,7 +664,7 @@ bool CApplication::CreateWND(char *szClassName, char *szWindowName, short nWidth
 //	g_pCMouse->SetUserCursor( CURSOR_DEFAULT );	
 		//g_itMGR.InitInterfacePos();
 
-	//Numenor: Warn the world that your selution has changed
+	//Numenor: Warn the world that your resolution has changed
 	if ( !m_bFullScreenMode ) {
 		t_OptionVideo option;
 		g_ClientStorage.GetVideoOption( option );
