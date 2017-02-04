@@ -30,7 +30,8 @@ int CApplication::m_nScrY;
 //---------------------------------------------------------------------------------------------------------
 /// WS_OVERLAPPEDWINDOW - WS_MAXIMIZEBOX
 //---------------------------------------------------------------------------------------------------------
-#define DEFAULT_WINDOWED_STYLE ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX )
+//#define DEFAULT_WINDOWED_STYLE ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX )
+#define DEFAULT_WINDOWED_STYLE ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU  | WS_MINIMIZEBOX ) //Numenor: WS_THICKFRAME allows windows to be resized, I removed it.
 
 #define DEFAULT_FULLSCREEN_STYLE (/* WS_SYSMENU |*/ WS_VISIBLE | WS_POPUP /*| WS_MAXIMIZE */)
 
@@ -448,11 +449,11 @@ bool CApplication::ParseArgument (char *pStr)
 }
 
 //-----------------------------------------------------------------------------------------------------------------
-/// 1. resetScreen()이 MoveWindow보다 먼저 호출되어야 client Window의 Size변경이 제대로 된다.
-/// resetScreen이 MoveWindow보다 나중에 될경우 MoveWindow에서 Size변경이  Window가 변경될수 있는 최대사이즈가
-/// 내가 원하는 값보다 작게 되어 Size 변경에 실패한다( navy : 2005/3/11 )
-/// 2. 현재 윈도우즈의 해상도보다 일정크기 이상으로 윈도우를 생성하거나 사이즈 변경이 되지 않는다.
-///		- 현재 윈도우즈 해상도를 구해서 변경하고자하는 크기를 비교하자
+/// 1. ResetScreen () must be called before MoveWindow to ensure that the size of the client Window changes properly.
+/// If resetScreen is later than MoveWindow, then the Size change in MoveWindow is the maximum size that the Window can change
+/// I can not change the size because it is smaller than the value I want (navy: 2005/3/11)
+/// 2. Windows can not be created or resized beyond a certain size than the current Windows resolution.
+/// - Get the current Windows resolution and compare the sizes you want to change
 //-----------------------------------------------------------------------------------------------------------------
 void CApplication::ResizeWindowByClientSize(int& iClientWidth, int& iClientHeight, int iDepth , bool update_engine, int iClientX, int iClientY)
 {
