@@ -17,6 +17,7 @@
 #include "Sound/MusicMgr.h"
 #include "Sound/DirectMusicPlayer.h"
 #include "util/classMD5.h"
+#include "CClientStorage.h"
 
 #include "TIme2.h"
 CApplication* CApplication::m_pInstance = NULL;
@@ -167,6 +168,8 @@ CApplication::CApplication ()
 
 	m_nScrWidth = 0;
 	m_nScrHeight = 0;
+	m_nScrWidth_original = 0;
+	m_nScrHeight_original = 0;
 
 	m_nScrX = 0;
 	m_nScrY = 0;
@@ -288,6 +291,21 @@ bool CApplication::ParseArgument (char *pStr)
 			m_nScrWidth = 1280;
 			m_nScrHeight = 720;
 		}
+
+		if ( !strcmp( pToken, "_width" ) ) {
+			pToken = CStr::GetTokenNext (pDelimiters);
+			if ( pToken ) {
+				m_nScrWidth = atoi(pToken);
+			}
+		}
+
+		if ( !strcmp( pToken, "_height" ) ) {
+			pToken = CStr::GetTokenNext (pDelimiters);
+			if ( pToken ) {
+				m_nScrHeight = atoi(pToken);
+			}
+		}
+
 		//Numenor: Add an option to give the initial position of the game window
 		if ( !strcmpi( pToken, "_posX" ) ) {
 			pToken = CStr::GetTokenNext (pDelimiters);
@@ -422,6 +440,7 @@ bool CApplication::ParseArgument (char *pStr)
 		pToken = CStr::GetTokenNext (pDelimiters);
 	}
 
+
 	if( !bPassLuncher )
 		return false;
 
@@ -437,8 +456,11 @@ bool CApplication::ParseArgument (char *pStr)
 //-----------------------------------------------------------------------------------------------------------------
 void CApplication::ResizeWindowByClientSize(int& iClientWidth, int& iClientHeight, int iDepth , bool update_engine, int iClientX, int iClientY)
 {
+
 	if (m_bFullScreenMode) 
 	{
+		iClientWidth = GetSystemMetrics (SM_CXSCREEN);
+		iClientHeight = GetSystemMetrics (SM_CYSCREEN);
 		if( update_engine )
 		{
 			setScreen ( iClientWidth, iClientHeight, iDepth, g_pCApp->IsFullScreenMode() ); // getFullScreen() );
@@ -449,6 +471,12 @@ void CApplication::ResizeWindowByClientSize(int& iClientWidth, int& iClientHeigh
 		MoveWindow( m_hWND, 0,0, GetSystemMetrics (SM_CXSCREEN), GetSystemMetrics (SM_CYSCREEN), FALSE );
 		SetWIDTH( iClientWidth );
 		SetHEIGHT( iClientHeight );
+			
+		t_OptionVideo option;
+		g_ClientStorage.GetVideoOption( option );
+		option.tResolution.iWidth = iClientWidth;
+		option.tResolution.iHeight = iClientHeight;
+		g_ClientStorage.SetVideoOption( option );
 	}
 	else
 	{
@@ -544,14 +572,17 @@ void CApplication::ResizeWindowByClientSize(int& iClientWidth, int& iClientHeigh
 //-------------------------------------------------------------------------------------------------
 bool CApplication::CreateWND(char *szClassName, char *szWindowName, short nWidth, short nHeight,int iDepth, HINSTANCE hInstance, int iClientX, int iClientY)
 {
+	//Numenor: by default : int iClientX = m_nScrX, int iClientY = m_nScrY (see declaration of CreateWND)
+
 /*    if ( ::FindWindow (szClassName, szWindowName) ) {
         return false;
 	}*/
 
-	//Numenor: by default : int iClientX = m_nScrX, int iClientY = m_nScrY
-
-	m_nScrWidth  = nWidth;
-	m_nScrHeight = nHeight;
+	//Numenor: if resolution option passed by launcher, write the resolution found in the .ini file into "original", so we can use it to check if the resolution has changed or not compared to the .ini file.
+	if(!m_nScrWidth)	m_nScrWidth  = nWidth;	//Numenor: if no option passed, then use .ini file instead of launcher option.
+	else m_nScrWidth_original = nWidth;
+	if(!m_nScrHeight)	m_nScrHeight = nHeight;
+	else m_nScrHeight_original = nHeight;
 
     WNDCLASSEX  wcex;
 
@@ -580,8 +611,8 @@ bool CApplication::CreateWND(char *szClassName, char *szWindowName, short nWidth
             DEFAULT_WINDOWED_STYLE,	// window style
             iClientX,					// (GetSystemMetrics (SM_CXSCREEN)-START_SCR_XLEN)/2,     // horizontal position of window
             iClientY,						//(GetSystemMetrics (SM_CYSCREEN)-START_SCR_YLEN)/2,     // vertical position of window
-            nWidth,					// window width
-            nHeight,				// window height
+            m_nScrWidth,					// window width
+            m_nScrHeight,				// window height
             NULL,                   // handle to parent or owner window
             NULL,                   // handle to menu, or child-window identifier
             hInstance,              // handdle to application instance
@@ -631,8 +662,17 @@ bool CApplication::CreateWND(char *szClassName, char *szWindowName, short nWidth
 //	g_pCMouse->LoadUserCursor( hInstance );	
 
 //	g_pCMouse->SetUserCursor( CURSOR_DEFAULT );	
+		//g_itMGR.InitInterfacePos();
 
-    return ( m_hWND != NULL );
+	//Numenor: Warn the world that your selution has changed
+	if ( !m_bFullScreenMode ) {
+		t_OptionVideo option;
+		g_ClientStorage.GetVideoOption( option );
+		option.tResolution.iWidth = m_nScrWidth;
+		option.tResolution.iHeight = m_nScrHeight;
+		g_ClientStorage.SetVideoOption( option );
+	}
+	return ( m_hWND != NULL );
 }
 //-------------------------------------------------------------------------------------------------
 void CApplication::DestroyWND ()

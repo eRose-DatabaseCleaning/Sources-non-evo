@@ -27,6 +27,8 @@ private :
 	bool		m_bViewWireMode;
 	short		m_nScrWidth;
 	short		m_nScrHeight;
+	short		m_nScrWidth_original;
+	short		m_nScrHeight_original;
 	
 	static int			m_nScrX;
 	static int			m_nScrY;
@@ -54,7 +56,9 @@ public  :
 //	void		SetStatus(WORD wStatus)	{	m_wStatus = wStatus;		}
 
 	short		GetWIDTH()				{	return m_nScrWidth;			}
+	short		GetWIDTH_original()		{	return m_nScrWidth_original;			}
 	short		GetHEIGHT()				{	return m_nScrHeight;		}
+	short		GetHEIGHT_original()	{	return m_nScrHeight_original;		}
 	void		SetWIDTH(short iWidth)	{	m_nScrWidth = iWidth;	}
 	void		SetHEIGHT(short iHeight){	m_nScrHeight = iHeight;	}
 

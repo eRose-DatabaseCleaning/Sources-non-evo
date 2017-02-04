@@ -624,9 +624,15 @@ void IT_MGR::InitDLG()
 
 	InitInterfacePos();
 
+	//Numenor: Check if there are a config saved in .ini file
 	if( g_ClientStorage.HasSavedDialogPos() )
 	{		
-		SetInterfacePosBySavedData();
+		t_OptionVideo option;
+		g_ClientStorage.GetVideoOption( option );
+		//Numenor: if resolution has changed compare to .ini file, then don't use the config in .ini.
+		if(g_pCApp->GetWIDTH_original() == option.tResolution.iWidth && g_pCApp->GetHEIGHT_original() == option.tResolution.iHeight){
+			SetInterfacePosBySavedData();
+		}
 	}
 
 #ifdef _NEWUI

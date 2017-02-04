@@ -1527,6 +1527,7 @@ void	CGame::ChangeScreenMode()
 	g_pCApp->ResizeWindowByClientSize( iWidth, iHeight, iDepth , true);
 
 	CCursor::GetInstance().ReloadCursor();
+	g_itMGR.InitInterfacePos();	//Numenor:	Reset interface when changing from and to full screen
 }
 
 short	CGame::Get_XPos ()
