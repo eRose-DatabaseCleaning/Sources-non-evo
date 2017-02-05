@@ -568,12 +568,12 @@ void CTDialog::ProcessLButtonDown()
 	for( iter = m_listChild.begin(); iter != m_listChild.end(); ++iter )
 	{
 		///REMARK : For Debuging
-		pCtrl = *iter;
+		/*pCtrl = *iter;
 		if( pCtrl->GetControlType() == CTRL_EDITBOX )
 		{
 			pCtrl->SetFocus( true );
 			return;
-		}
+		}*/	//Numenor: commenting this prevent the chat to be activated by clicking on the chat history.
 	}
 
 }
