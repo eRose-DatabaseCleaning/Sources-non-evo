@@ -45,9 +45,21 @@ CJString* CJStringParser::GetString( int index )
 	return &m_Strings[index];
 }
 
+
+CJString CJStringParser::GetJString( int index )
+{
+	_ASSERT( index >= 0 && index < (int)m_Strings.size() );
+	return m_Strings[index];
+}
+
 int CJStringParser::GetStringCount()
 {
 	return m_Strings.size();
+}
+
+void CJStringParser::Push_Back(CJString JString)
+{
+	m_Strings.push_back( JString );
 }
 
 int CJStringParser::SetString( const char* pszString ,int iDisplayWidth)

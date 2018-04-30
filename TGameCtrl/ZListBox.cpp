@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include ".\zlistbox.h"
 
 CZListBox::CZListBox(void)
@@ -6,6 +6,7 @@ CZListBox::CZListBox(void)
 	SetControlType( CTRL_ZLISTBOX );
 	m_iValue		= 0;
 	m_iExtent		= 1;
+	m_iMaxSize		= 0;
 }
 
 CZListBox::~CZListBox(void)
@@ -110,9 +111,22 @@ void CZListBox::Add( CWinCtrl* pCtrl )
 	_ASSERT( pCtrl );
 	if( pCtrl )
 	{
-		pCtrl->SetParent( this );
+		///ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Û¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
+		if( (m_iMaxSize > 0) && !m_Items.empty() && (m_iMaxSize <= (int)m_Items.size()) )
+		{
+			// 06. 10. 24 - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½Ï¸ï¿½ ï¿½Þ¸ð¸®°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½É±ï¿½??
+			std::deque<CWinCtrl*>::iterator iter;
+			iter = m_Items.begin();
+			CWinCtrl* pCtrl1;
+			pCtrl1 = *iter;
+			m_Items.erase( iter );
+			delete pCtrl1;
+			pCtrl1 = NULL;
+//			m_Items.pop_front();
+		}
+		pCtrl->SetParent( this ); 
 		m_Items.push_back( pCtrl );
-		SetValue( m_Items.size() - 1 );///¸Ç¹ØÀ¸·Î ÀÌµ¿, ±×·¸Áö ¾ÊÀ»½Ã °æ¿ì¿¡ µû¶ó À§Ä¡ ÀçÁ¶Á¤ ÇÊ¿ä
+		SetValue( m_Items.size() - 1 );///ï¿½Ç¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½, ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ì¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
 	}
 }
 void CZListBox::Update( POINT ptMouse )
@@ -196,7 +210,7 @@ int CZListBox::GetSelectedItemIndex()
 	return -1;
 }
 
-///¾ðÁ¨°¡´Â EventHandler¸¦ ±¸ÇöÇØ¾ß ÇÒÅÙÅ× ¾ðÁ¦ ±îÁö ÀÌ·¸°Ô ÀÛ¼ºÇØ¾ß ÇÒÁö..
+///ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ EventHandlerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½ï¿½ï¿½..
 void CZListBox::DeselectAll()
 {
 	std::deque<CWinCtrl*>::iterator iter;
@@ -272,4 +286,14 @@ void CZListBox::InsertItem( int iIndex, CWinCtrl* pCtrl )
 
 	swap( m_Items, tempContainer );	
 
+}
+
+void CZListBox::SetMaxLn(int iMaxLn)
+{
+	m_iMaxSize = iMaxLn;
+}
+
+int CZListBox::GetMaxLn()
+{
+	return m_iMaxSize;
 }

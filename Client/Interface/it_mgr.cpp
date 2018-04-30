@@ -121,7 +121,7 @@
 
 const D3DCOLOR c_dwChatColorAll		= D3DCOLOR_ARGB( 255,255,255,255 );
 const D3DCOLOR c_dwChatColorShout	= D3DCOLOR_ARGB( 255,189,250,255 );
-const D3DCOLOR c_dwChatColorParty	= D3DCOLOR_ARGB( 255,255,237,140 );
+const D3DCOLOR c_dwChatColorParty	= D3DCOLOR_ARGB( 255,255,0,140 );
 const D3DCOLOR c_dwChatColorWhisper	= D3DCOLOR_ARGB( 255,201,255,144 );
 const D3DCOLOR c_dwChatColorNotice	= D3DCOLOR_ARGB( 255,255,188,172 );
 const D3DCOLOR c_dwChatColorSystem	= D3DCOLOR_ARGB( 255,255,224,229 );
@@ -302,12 +302,14 @@ void IT_MGR::Free()
 		pDlg = *iter;
 		g_ClientStorage.SetSavedDialogPos( pDlg->GetDialogType(), pDlg->GetPosition());
 
-
-	/*	if( pDlg->GetDialogType() == DLG_TYPE_CHAT )
+		if( pDlg->GetDialogType() == DLG_TYPE_CHAT )
 		{
 			CChatDLG* pChatDlg = (CChatDLG*)pDlg;
-			g_ClientStorage.SetChatDlgType( pChatDlg->GetListType() );
-		}*/
+			if(pChatDlg)
+			{
+				g_ClientStorage.SetChatDlgType( pChatDlg->GetChatSizeMode() );
+			}			
+}
 
 		/////Quick Type
 		if( pDlg->GetDialogType() == DLG_TYPE_QUICKBAR )
@@ -635,22 +637,22 @@ void IT_MGR::InitDLG()
 		}
 	}
 
-#ifdef _NEWUI
-	SetInterfacePos_After();
-#endif
+//#ifdef _NEWUI
+	SetInterfacePos_After(DLG_TYPE_CHAT); //Numenor: We only have a new UI for the chat for now.
+//#endif
 	
 
 	return;
 }
 
-void IT_MGR::SetInterfacePos_After()
+void IT_MGR::SetInterfacePos_After(int DLG_TYPE)
 {
 	CTDialog* pDlg = NULL;
 	list_dlgs_itor iter;
 	for( iter = m_Dlgs.begin(); iter != m_Dlgs.end(); ++iter )
 	{
 		pDlg = *iter;
-        pDlg->SetInterfacePos_After();		
+		if( pDlg->GetDialogType() == DLG_TYPE || DLG_TYPE == -1) pDlg->SetInterfacePos_After();		
 	}
 }
 
@@ -1152,10 +1154,7 @@ void IT_MGR::AppendChatMsg( const char* pszMsg, int iType ,DWORD forceapply_colo
 			dwColor = c_dwChatColorNotice;
 
 		iFilterType = CChatDLG::FILTER_SYSTEM;
-#ifdef FRAROSE
-		pChatDlg->AppendMsg2( pszMsg, dwColor, iFilterType );
-		return;
-#endif
+
 		break;
 	case CHAT_TYPE_SYSTEM:
 		if( forceapply_color )
@@ -1164,10 +1163,7 @@ void IT_MGR::AppendChatMsg( const char* pszMsg, int iType ,DWORD forceapply_colo
 			dwColor = c_dwChatColorSystem;
 
 		iFilterType = CChatDLG::FILTER_SYSTEM;
-#ifdef FRAROSE
-		pChatDlg->AppendMsg2( pszMsg, dwColor, iFilterType );
-		return;
-#endif
+
 		break;
 	case CHAT_TYPE_QUEST:
 		if( forceapply_color )
@@ -1176,10 +1172,7 @@ void IT_MGR::AppendChatMsg( const char* pszMsg, int iType ,DWORD forceapply_colo
 			dwColor = c_dwChatColorQuest;
 		
 		iFilterType = CChatDLG::FILTER_SYSTEM;
-#ifdef FRAROSE
-		pChatDlg->AppendMsg2( pszMsg, dwColor, iFilterType );
-		return;
-#endif
+
 		break;
 	case CHAT_TYPE_QUESTREWARD:
 		if( forceapply_color )
@@ -1188,10 +1181,7 @@ void IT_MGR::AppendChatMsg( const char* pszMsg, int iType ,DWORD forceapply_colo
 			dwColor = c_dwChatColorQuestReward;
 
 		iFilterType = CChatDLG::FILTER_SYSTEM;
-#ifdef FRAROSE
-		pChatDlg->AppendMsg2( pszMsg, dwColor, iFilterType );
-		return;
-#endif
+
 		break;
 	case CHAT_TYPE_TRADE:
 		if( forceapply_color )
@@ -1452,21 +1442,6 @@ void IT_MGR::SetInterfacePosBySavedData()
 			}
 		}
 		
-		///Chat List Type Set
-		//if( pDlg->GetDialogType() == DLG_TYPE_CHAT )
-		//{
-		//	CChatDLG* pChatDlg = (CChatDLG*)pDlg;
-		//	pChatDlg->ChangeListType( g_ClientStorage.GetChatDlgType() );
-		//	if( g_ClientStorage.GetChatDlgType() == CChatDLG::LIST_TYPE_BIG )
-		//	{
-		//		///REMARK TEMP CODE:Big일경우 ChangeListType에서 강제로 -143을 해준다.이를 임시적으로 막는 코드
-		//		///
-		//		POINT pt = pChatDlg->GetPosition();
-		//		pt.y += 143;
-		//		pChatDlg->MoveWindow( pt );
-		//	}
-		//}
-
 		///Quick Type
 		if( pDlg->GetDialogType() == DLG_TYPE_QUICKBAR )
 		{

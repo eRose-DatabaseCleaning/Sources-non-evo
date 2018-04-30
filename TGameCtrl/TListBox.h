@@ -83,6 +83,8 @@ public:
 
 	void	SetFont( int iFont );
 
+	int	GetLineHeight();
+
 protected:
 	///리스트가 선택가능한 타입일경우 메세지 처리하는 method
 	bool	ProcessSelectable(UINT uiMsg,WPARAM wParam,LPARAM lParam);

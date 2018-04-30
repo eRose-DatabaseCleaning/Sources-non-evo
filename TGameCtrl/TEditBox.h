@@ -44,6 +44,7 @@ public:
 	void    Insert( const char* text );							// 스트링을 현재 프롬프트위치에 Insert한다.
 	static CTEditBox*	s_pFocusEdit;							// 현재 포커스를 가지고 있는 에디트 박스의 포인터
 
+	void	SetFont( int iFont );
 
 	enum{
 		TES_NONE		= 0x0000,

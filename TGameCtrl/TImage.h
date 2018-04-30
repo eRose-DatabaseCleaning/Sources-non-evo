@@ -1,11 +1,11 @@
-#ifndef	_TIMAGE_
+ï»¿#ifndef	_TIMAGE_
 #define _TIMAGE_
 #include "winctrl.h"
 
 /**
 * Image Class
 *
-* @Author	ÃÖÁ¾Áø
+* @Author	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 *
 * @Date		2005/8/30
 */
@@ -28,13 +28,21 @@ public:
 	void					SetUnblink();
 	void					SetBlinkSwapTime( DWORD swap_time );
 
+	//font
+	void					SetFont(int iFont);
+	void					SetText(const char * szText);
+	void					SetAlign(DWORD dwAlign);
+	void					SetTextColor(DWORD swColor);
+
+	CTImage					* Clone();
+
 
 protected:
-	int		m_iModuleID;				// º¸Åë»óÅÂÀÇ ¸ðµâ ID
-	int		m_iGraphicID;				// º¸Åë»óÅÂÀÇ ±×·¡ÇÈ ID
+	int		m_iModuleID;				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ID
+	int		m_iGraphicID;				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ID
 
-	int		m_iBlinkGraphicID;			// ±ô¹ÚÀÏ¶§ÀÇ ±×·¡ÇÈ ID
-	int		m_iBlinkModuleID;			// ±ô¹ÚÀÏ¶§ÀÇ ¸ðµâ ID
+	int		m_iBlinkGraphicID;			// ï¿½ï¿½ï¿½ï¿½ï¿½Ï¶ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ID
+	int		m_iBlinkModuleID;			// ï¿½ï¿½ï¿½ï¿½ï¿½Ï¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ID
 
 	bool	m_bBlink;					
 	bool	m_bBlinkEnable;
@@ -44,6 +52,11 @@ protected:
 	int		m_dwBlinkCurrentGID;
 	int		m_dwBlinkCurrentMID;
 
+	ITFont*			m_pFontImpl;
+	int				m_iFont;
+	std::string		m_strText;
+	DWORD			m_dwAlgin;
+	DWORD			m_dwTextColor;
 };
 
 #endif ///_TIMAGE_

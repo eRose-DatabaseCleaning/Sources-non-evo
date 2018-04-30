@@ -728,3 +728,8 @@ void CTEditBox::Insert( const char* text )
 	}
 	m_iPromptPos += iLen;
 }
+
+void CTEditBox::SetFont( int iFont )
+{
+	m_iFont = iFont;
+}

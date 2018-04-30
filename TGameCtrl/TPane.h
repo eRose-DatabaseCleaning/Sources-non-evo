@@ -26,6 +26,7 @@ public:
 	void		AddChild( CWinCtrl* pCtrl );
 	CWinCtrl*	FindChild( unsigned iID );
 	CWinCtrl*	Find( const char * szName );
+	//CJContainer* CTPane::FindChildPane();
 
 protected:
 	CJContainer		m_Children;

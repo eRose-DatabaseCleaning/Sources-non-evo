@@ -697,7 +697,7 @@ void CManufacture::SetMakeItem( tagITEM& Item )
 		delete m_pMakeItem;
 		m_pMakeItem = NULL;
 	}
-	//Numenor: Let's add some durability to this itme so it shows basic stat
+	//Numenor: Let's add some durability to this item so it shows basic stat
 	Item.m_nLife = MAX_ITEM_LIFE;
 	Item.m_cDurability = ITEM_DURABITY( Item.m_cType, Item.m_nItemNo );
 

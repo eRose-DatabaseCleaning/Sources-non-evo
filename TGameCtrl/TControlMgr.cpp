@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include ".\tcontrolmgr.h"
 #include "TButton.h"
 #include "TPushButton.h"
@@ -271,13 +271,16 @@ bool CTControlMgr::MakeMsgBoxByXML( char* szIDD, CTMsgBox* pBase )
 		long iSize = 0;
 		(childList)->get_length(&iSize);
 
-		CTImage* pImageTop		= NULL;
-		CTImage* pImageMiddle	= NULL;
-		CTImage* pImageBottom	= NULL;
-		CTListBox* pListBox		= NULL;
-		CTButton* pButtonOk		= NULL;
-		CTButton* pButtonCancel	= NULL;
-		CTCaption* pCaption		= NULL;
+		CTImage*	pImageTop		= NULL;
+		CTImage*	pImageMiddle	= NULL;
+		CTImage*	pImageBottom	= NULL;
+		CTImage*	pImage			= NULL;
+		CTListBox*	pListBox		= NULL;
+		CTButton*	pButtonOk		= NULL;
+		CTButton*	pButtonCancel	= NULL;
+		CTCaption*	pCaption		= NULL;
+		CTButton*	pButton			= NULL;
+		
 		for( int i = 0 ; i < iSize; i++ )
 		{
 
@@ -296,17 +299,59 @@ bool CTControlMgr::MakeMsgBoxByXML( char* szIDD, CTMsgBox* pBase )
 				pButtonCancel = MakeButtonByXML2( pNode );
 			else if( strcmp( szNodeName, "CAPTION" ) == 0 )
 				pCaption = MakeCaptionByXML2( pNode );
+			else if( strcmp( szNodeName, "LISTBOX" ) == 0 )
+			{
+				pListBox = MakeListBoxByXML2( pNode );
+			}
+
+			else if(strcmp( szNodeName, "IMAGE") == 0)
+			{
+				pImage = MakeImageByXML2( pNode );
+
+				if( pImage )
+				{
+					if(strcmp( pImage->GetControlName(), "IMAGETOP") == 0)
+					{
+						pImageTop = pImage;						
+					}                    
+					else if(strcmp( pImage->GetControlName(), "IMAGEMIDDLE") == 0)
+					{
+						pImageMiddle = pImage;
+					}                    
+					else if(strcmp( pImage->GetControlName(), "IMAGEBOTTOM") == 0)
+					{
+						pImageBottom = pImage;
+					}                    
+				}
+			}
+
+			else if(strcmp( szNodeName, "BUTTON") == 0)
+			{
+				pButton = MakeButtonByXML2( pNode );
+				if(pButton)
+				{
+					if(strcmp( pButton->GetControlName(), "CANCEL") == 0)
+					{
+						pButtonCancel = pButton;
+					}
+					else if(strcmp( pButton->GetControlName(), "OK") == 0)
+					{
+						pButtonOk = pButton;
+					}
+				}				
+			}			
 		}
 
 		pBase->SetButtons( pButtonOk, pButtonCancel );
 		pBase->SetImages( pImageTop, pImageMiddle, pImageBottom );
 		pBase->SetCaption( pCaption );
+		pBase->SetListBox( pListBox );
 
 	}catch( ... )
 	{
 		bRet = false;
 		char szMsg[255];
-		sprintf("XML·Î MsgBox»ý¼ºÁß ¿¡·¯ ¹ß»ý:%s",szIDD );
+		sprintf("XMLï¿½ï¿½ MsgBoxï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½:%s",szIDD );
 		MessageBox( NULL,szMsg,"Error",MB_OK );
 	}
 
@@ -332,11 +377,11 @@ bool CTControlMgr::MakeMsgBoxByXML( char* szIDD, CTMsgBox* pBase )
 	return bRet;
 }
 //////////////////////////////////////////////////////////////////////////////////////
-/// 2003 / 12 / 1 / ÃÖÁ¾Áø
-/// ÁÖÀÇ)
-///		1. ÀÌ operation¾È¿¡¼­ Initialize¿Í CoUninitialize¸¦ »ç¿ëÇÏ¸é return½Ã ¿¡·¯¹ß»ý
-///			:	IXMLDOMNodePtrÀÌ ½º¸¶Æ® Æ÷ÀÎÅÍ¿©¼­ »ý±ä ¹®Á¦¿´À½. scope¸¦ ¹þ¾î³¯¶§ »èÁ¦µÇ±â ¶§¹®¿¡ ¹ß»ýÇÔ.
-///				IXMLDoMNode(raw pointer)·Î ¼öÁ¤ÇÏ¿© ¹®Á¦ ÇØ°áÇÔ => ´Ù½Ã ¹®Á¦ ¹ß»ý :ÀÌ¸§ ¸ø °¡Á®¿È
+/// 2003 / 12 / 1 / ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+/// ï¿½ï¿½ï¿½ï¿½)
+///		1. ï¿½ï¿½ operationï¿½È¿ï¿½ï¿½ï¿½ Initializeï¿½ï¿½ CoUninitializeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ returnï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß»ï¿½
+///			:	IXMLDOMNodePtrï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½. scopeï¿½ï¿½ ï¿½ï¿½ï¿½î³¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ï¿½.
+///				IXMLDoMNode(raw pointer)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø°ï¿½ï¿½ï¿½ => ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ :ï¿½Ì¸ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //////////////////////////////////////////////////////////////////////////////////////
 bool CTControlMgr::MakeDialogByXML( const char* IDD, CTDialog* pBase )
 {
@@ -358,7 +403,8 @@ bool CTControlMgr::MakeDialogByXML( const char* IDD, CTDialog* pBase )
 		return false;
 	}
 
-	try{
+	try
+	{
 		char szBuf[512];
 		char szNodeName[256];
 		BSTR nodeName;
@@ -375,10 +421,14 @@ bool CTControlMgr::MakeDialogByXML( const char* IDD, CTDialog* pBase )
 		
 		document->put_async(VARIANT_FALSE);
 
-		/*VARIANT_BOOL varOkay = */document->load( szBuf );
+		if( !document->load( szBuf ) )
+		{
+            throw 3;
+		}		
 
 		hr = document->get_documentElement(&element);///ROOT
-		if( FAILED( hr )){
+		if( FAILED( hr ))
+		{
 			throw 2;
 		}
 
@@ -397,7 +447,7 @@ bool CTControlMgr::MakeDialogByXML( const char* IDD, CTDialog* pBase )
 		if( iExtent > 1 )
 			pBase->SetExtent( iExtent );
 
-		///µðÆúÆ® À§Ä¡ 
+		///ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Ä¡ 
 		iDefaultPosX = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "DEFAULT_X");
 		iDefaultPosY = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "DEFAULT_Y");
 		iDefaultAdjustPosX = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "ADJUST_X");
@@ -514,14 +564,32 @@ bool CTControlMgr::MakeDialogByXML( const char* IDD, CTDialog* pBase )
 			}
 
 		}
-
-	}catch( ... )
+	}
+	catch( int ei )
 	{
 		bRet = false;
 		char szMsg[255];
-		sprintf(szMsg,"XML·Î UI»ý¼ºÁß ¿¡·¯ ¹ß»ý:%s",IDD );
+
+		switch( ei )
+		{
+		case 2:
+			sprintf(szMsg,"XMLï¿½ï¿½ UIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½:%s",IDD );			
+			break;
+		case 3:
+			sprintf(szMsg,"%s.XML ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½. È®ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½.",IDD );			
+			break;
+		}
 		MessageBox( NULL,szMsg,"Error",MB_OK );
 	}
+	catch( ... )
+	{
+		bRet = false;
+		char szMsg[255];
+		sprintf(szMsg,"XMLï¿½ï¿½ UIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½:%s",IDD );
+		MessageBox( NULL,szMsg,"Error",MB_OK );
+	}
+
+	
 
 	if( element )
 	{
@@ -879,9 +947,10 @@ CTImage* CTControlMgr::MakeImageByXML2( MSXML::IXMLDOMNodePtr pNode )
 	pNamedNodeMap = NULL;
 	
 	if( sGID.size() && iGID == -1 )
-	{
-		_RPTF1( _CRT_ASSERT, "%s is not Found", sGID.c_str() );
-		return NULL;
+	{	
+		// È«ï¿½ï¿½
+		//_RPTF1( _CRT_ASSERT, "%s is not Found", sGID.c_str() );
+		//return NULL;
 	}
 
 	CTImage* pImage = MakeImage( iID, iScrX, iScrY, iWidth, iHeight, iGID,iModuleID );
@@ -1006,6 +1075,40 @@ void CTControlMgr::MakeStaticByXML( MSXML::IXMLDOMNodePtr pNode , CTDialog* pBas
 
 }
 
+
+CTStatic * CTControlMgr::MakeStaticByXML2( MSXML::IXMLDOMNodePtr pNode )
+{
+	MSXML::IXMLDOMNamedNodeMap* pNamedNodeMap = NULL;
+
+	HRESULT hr = pNode->get_attributes(&pNamedNodeMap);
+	if( FAILED( hr ) )
+		return NULL;
+
+	int iID = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "ID" );
+	std::string strCtrlName = GetNodeStringValueFromNamedNodeMapByName(pNamedNodeMap, "NAME" );
+
+	int iScrX = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "X" );
+	int iScrY = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "Y" );
+	int iWidth = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "WIDTH" );
+	int iHeight = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "HEIGHT" );
+
+	int iOffsetX = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "OFFSETX" );
+	int iOffsetY = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "OFFSETY" );
+
+	CTStatic* pStatic = MakeStatic(iID, iScrX, iScrY, iWidth, iHeight );
+
+	if( pStatic )
+	{
+		pStatic->SetControlName( strCtrlName.c_str() );
+		pStatic->SetOffset(iOffsetX, iOffsetY);
+	}
+
+	pNamedNodeMap->Release();
+	pNamedNodeMap = NULL;
+
+	return pStatic;
+}
+
 CTEditBox* CTControlMgr::MakeEditBoxByXML2( MSXML::IXMLDOMNodePtr pNode )
 {
 	CTEditBox* pEditBox = NULL;
@@ -1026,16 +1129,17 @@ CTEditBox* CTControlMgr::MakeEditBoxByXML2( MSXML::IXMLDOMNodePtr pNode )
 
 	int iWidth = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "WIDTH" );
 
-	int iHeight = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "HEIGHT" );
+	int iHeight		= GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "HEIGHT" );
 	int iCharWidth  = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "CHARWIDTH" );
 	int iCharHeight = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "CHARHEIGHT" );
-	int iNumber = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "NUMBER" );
-	int iLimitText = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "LIMITTEXT" );
+	int iNumber		= GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "NUMBER" );
+	int iLimitText	= GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "LIMITTEXT" );
 	int iPassword   = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "PASSWORD" );
 	int iHideCursor = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "HIDECURSOR" );
 	int iTextAlign  = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "TEXTALIGN" );
 	int iMultiline  = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "MULTILINE" );
 	int iTextColor	= GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "TEXTCOLOR" );
+	int iFont		= GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "FONT" );
 	
 	pEditBox = MakeEditBox( iID, iScrX, iScrY, iWidth, iHeight ,iCharWidth );
 	
@@ -1063,6 +1167,11 @@ CTEditBox* CTControlMgr::MakeEditBoxByXML2( MSXML::IXMLDOMNodePtr pNode )
 
 		if( iLimitText > 0 )
 			pEditBox->SetLimitText( iLimitText );
+
+		if( iFont > 0)
+		{
+			pEditBox->SetFont( iFont );
+		}
 
 		pEditBox->SetOffset( iOffsetX, iOffsetY );
 		pEditBox->SetControlName( strCtrlName.c_str() );
@@ -1152,6 +1261,8 @@ CZListBox*	CTControlMgr::MakeZListBoxByXML( MSXML::IXMLDOMNodePtr pNode )
 	int iScrX = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "X" );
 	int iScrY = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "Y" );
 
+	const int iMaxLn = 200; // ZListBoxï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+
 	pNamedNodeMap->Release();
 	pNamedNodeMap = NULL;
 
@@ -1167,6 +1278,7 @@ CZListBox*	CTControlMgr::MakeZListBoxByXML( MSXML::IXMLDOMNodePtr pNode )
 		pListBox->SetHeight( iHeight );
 		pListBox->SetWidth( iWidth );
 		pListBox->SetControlName( strCtrlName.c_str() );
+		pListBox->SetMaxLn( iMaxLn );
 	}
 	return pListBox;
 }
@@ -1406,21 +1518,25 @@ void CTControlMgr::AddTab( MSXML::IXMLDOMNodePtr pNode , CTabbedPane* pPane )
 		else if( strcmp( szNodeName, "IMAGE" ) == 0 )
 		{
 			CTImage* pImage = MakeImageByXML2( pChildNode );
+			_ASSERT(pImage);
 			pContainer->Add( pImage );
 		}
 		else if( strcmp( szNodeName, "BUTTON" ) == 0 )
 		{
 			CTButton* pButton = MakeButtonByXML2( pChildNode );
+			_ASSERT(pButton);
 			pContainer->Add( pButton );
 		}
 		else if( strcmp( szNodeName,"ZLISTBOX" ) == 0 )
 		{
 			CZListBox* pZListBox = MakeZListBoxByXML( pChildNode );
+			_ASSERT(pZListBox);
 			pContainer->Add( pZListBox );
 		}
 		else if( strcmp( szNodeName,"LISTBOX" ) == 0 )
 		{
 			CTListBox* pListBox = MakeListBoxByXML2( pChildNode );
+			_ASSERT(pListBox);
 			pContainer->Add( pListBox );
 		}
 		else if( strcmp( szNodeName,"SCROLLBAR" ) == 0 )
@@ -1428,6 +1544,8 @@ void CTControlMgr::AddTab( MSXML::IXMLDOMNodePtr pNode , CTabbedPane* pPane )
 			unsigned iOutScrollModel = 0;
 			CTScrollBar* pScrollBar = MakeScrollBarByXML2( pChildNode , iOutScrollModel );
 			CZListBox* pZListBox = (CZListBox*)pContainer->Find( iOutScrollModel );
+
+			_ASSERT(pScrollBar);
 			pScrollBar->SetModel( pZListBox );
 			pContainer->Add( pScrollBar );
 		}
@@ -1480,6 +1598,22 @@ void CTControlMgr::AddTab( MSXML::IXMLDOMNodePtr pNode , CTabbedPane* pPane )
 			CTGuage* pGuage = MakeGuageByXML( pChildNode );
 			if( pGuage )
 				pContainer->Add( pGuage );
+		}
+
+		else if( strcmp( szNodeName, "TABBEDPANE" ) == 0 )
+		{
+			CWinCtrl * pCtrl = MakeTabbedPane( pChildNode );
+			if( pCtrl )
+			{
+				pContainer->Add( pCtrl );
+			}
+		}
+		else if( strcmp( szNodeName,"PANE" ) == 0 )
+		{
+			if( CTPane* pPane = MakePaneByXML( pNode ) )
+			{
+				pContainer->Add( pPane );
+			}
 		}
 	}
 
@@ -1573,6 +1707,7 @@ CTScrollBar*	CTControlMgr::MakeScrollBarByXML2( MSXML::IXMLDOMNodePtr pNode, uns
 	(childList)->get_length(&iSize);
 	char szNodeName[256];
 	CTButton* pButton;
+	CTImage* pImage = NULL;
 	for( int i = 0; i < iSize; i++ )
 	{
 		pChildNode = (childList)->Getitem( i );
@@ -1586,6 +1721,14 @@ CTScrollBar*	CTControlMgr::MakeScrollBarByXML2( MSXML::IXMLDOMNodePtr pNode, uns
 
 			pScrollBar->SetPrevButton( pButton );
 		}
+		else if( strcmp( szNodeName, "IMAGE" ) == 0 )
+		{
+			pImage = MakeImageByXML2( pChildNode );
+			if( pImage == NULL )
+				return NULL;
+
+			pScrollBar->SetBackImage( pImage );
+		}
 		else if( strcmp( szNodeName, "NEXTBUTTON" ) == 0 )
 		{
 			pButton = MakeButtonByXML2( pChildNode );
@@ -1597,6 +1740,9 @@ CTScrollBar*	CTControlMgr::MakeScrollBarByXML2( MSXML::IXMLDOMNodePtr pNode, uns
 		else if( strcmp( szNodeName, "SCROLLBOX" ) == 0 )
 		{
 			CTScrollBox* pScrollBox = MakeScrollBoxByXML( pChildNode, iType );
+
+			_ASSERT(pScrollBox);
+
 			if( pScrollBox == NULL )
 				return NULL;
 
@@ -1652,6 +1798,9 @@ void CTControlMgr::MakeScrollBarByXML( MSXML::IXMLDOMNodePtr pNode , CTDialog* p
 		if( strcmp( szNodeName, "PREVBUTTON" ) == 0 )
 		{
 			pButton = MakeButtonByXML2( pChildNode );
+
+			_ASSERT( pButton && "MakeScrollBarByXML" );
+
 			if( pButton == NULL )
 				return;
 
@@ -1660,6 +1809,7 @@ void CTControlMgr::MakeScrollBarByXML( MSXML::IXMLDOMNodePtr pNode , CTDialog* p
 		else if( strcmp( szNodeName, "NEXTBUTTON" ) == 0 )
 		{
 			pButton = MakeButtonByXML2( pChildNode );
+			_ASSERT( pButton && "MakeScrollBarByXML" );
 			if( pButton == NULL )
 				return;
 
@@ -1668,6 +1818,7 @@ void CTControlMgr::MakeScrollBarByXML( MSXML::IXMLDOMNodePtr pNode , CTDialog* p
 		else if( strcmp( szNodeName, "SCROLLBOX" ) == 0 )
 		{
 			CTScrollBox* pScrollBox = MakeScrollBoxByXML( pChildNode, iType );
+			_ASSERT( pScrollBox && "MakeScrollBarByXML, SCROLLBOX" );
 			if( pScrollBox == NULL )
 				return;
 
@@ -2010,7 +2161,13 @@ CTPane* CTControlMgr::MakePaneByXML( MSXML::IXMLDOMNodePtr pNode )
 		pCtrl = NULL;
 		
 		if( strcmp( szNodeName,"IMAGE" ) == 0 )
+		{
 			pCtrl = MakeImageByXML2( pChildNode );
+		}
+		else if( strcmp( szNodeName,"STATIC" ) == 0 )
+		{
+			pCtrl = MakeStaticByXML2( pChildNode );
+		}
 		else if( strcmp( szNodeName,"BUTTON" ) == 0 )
 			pCtrl = MakeButtonByXML2( pChildNode );
 		else if( strcmp( szNodeName, "PUSHBUTTON" ) == 0 )
@@ -2020,9 +2177,7 @@ CTPane* CTControlMgr::MakePaneByXML( MSXML::IXMLDOMNodePtr pNode )
 		else if( strcmp( szNodeName,"EDITBOX" ) == 0 )
 			pCtrl = MakeEditBoxByXML2( pChildNode );
 		else if( strcmp( szNodeName, "LISTBOX" ) == 0 )
-			pCtrl = MakeListBoxByXML2( pChildNode );
-	/*	else if( strcmp( szNodeName, "STATIC" ) == 0 )
-			pCtrl = MakeStaticByXML2( pNode );*/
+			pCtrl = MakeListBoxByXML2( pChildNode );		
 		else if( strcmp( szNodeName, "SCROLLBAR" ) == 0 )
 		{
 			unsigned iOutScrollModel = 0;

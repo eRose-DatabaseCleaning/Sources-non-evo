@@ -1,4 +1,4 @@
-#ifndef	_TSCROLLBAR_
+ï»¿#ifndef	_TSCROLLBAR_
 #define _TSCROLLBAR_
 
 #include "winctrl.h"
@@ -9,12 +9,13 @@ class CTButton;
 class CTScrollBox;
 class IScrollModel;
 class CTScrollBarType;
+class CTImage;
 
 /**
-* ½ºÅ©·Ñ ¹Ù Class
-*	- ¿¬°üClass		CTScrollBarType, CTScrollBox
+* ï¿½ï¿½Å©ï¿½ï¿½ ï¿½ï¿½ Class
+*	- ï¿½ï¿½ï¿½ï¿½Class		CTScrollBarType, CTScrollBox
 *
-* @Author	ÃÖÁ¾Áø
+* @Author	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 *
 * @Data		2005/8/30
 */
@@ -28,6 +29,7 @@ public:
 	virtual	void			Update( POINT ptMouse );
 	virtual void			Draw();
 
+	void SetBackImage( CTImage* pImg );
 	void SetPrevButton( CTButton* pButton );
 	void SetNextButton( CTButton* pButton );
 	void SetScrollBox( CTScrollBox* pThumb );
@@ -39,26 +41,29 @@ public:
 	void			MoveEnd();
 	void			MoveHome();
 
-	///	ScrollÀ» ºÙÀÌ±â À§ÇÑ Class(IScrollModelÀ» »ó¼Ó¹ÞÀº)ÀÇ Æ÷ÀÎÅÍ
+	///	Scrollï¿½ï¿½ ï¿½ï¿½ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ Class(IScrollModelï¿½ï¿½ ï¿½ï¿½Ó¹ï¿½ï¿½ï¿½)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	void			SetModel( IScrollModel* pModel );
 
-	/// ScrollBox°¡ ScrollModelÀÇ °ªÀ» ¾Ë±â À§ÇÏ¿© Áß°èÇØÁÖ´Â operation
+	/// ScrollBoxï¿½ï¿½ ScrollModelï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ë±ï¿½ ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ operation
 	int				GetExtent();
 	int				GetMaximum();
 	void			SetModelValue( int i );
 	virtual	void	Show();
 	virtual void	Hide();
 
+	virtual void			SetHeight( int i );
 
-	/// IScrollModel°ú ScrollBox(Thumb)À» Á¶Á¤( Prev,Next¹öÆ°,wheel Ã³¸®½Ã )
+
+	/// IScrollModelï¿½ï¿½ ScrollBox(Thumb)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½( Prev,Nextï¿½ï¿½Æ°,wheel Ã³ï¿½ï¿½ï¿½ï¿½ )
 	void			SetValue(int iValue);
 
 protected:
-	CTButton*		m_pPrevButton;				// "´ÙÀ½" ¹öÆ°						
-	CTButton*		m_pNextButton;				// "ÀÌÀü" ¹öÆ°
-	CTScrollBox*	m_pScrollBox;				// ¼öÆò,¼öÁ÷¿¡ µû¶ó ½ºÅ×ÀÌÆ® ÆÐÅÏ»ç¿ë
+	CTButton*		m_pPrevButton;				// "ï¿½ï¿½ï¿½ï¿½" ï¿½ï¿½Æ°						
+	CTButton*		m_pNextButton;				// "ï¿½ï¿½ï¿½ï¿½" ï¿½ï¿½Æ°
+	CTScrollBox*	m_pScrollBox;				// ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½Ï»ï¿½ï¿½
+	CTImage*		m_pBackImage;
 
-	IScrollModel*		m_pScrollModel;			// ScrollBar¿Í °°ÀÌ µ¿ÀÛµÉ ModelÀÇ Æ÷ÀÎÅÍ
-	CTScrollBarType*	m_pScrollBarType;		// ¼öÆò,¼öÁ÷¿¡ µû¶ó ½ºÆ®·¹Æ¼Áö ÆÐÅÏ »ç¿ë
+	IScrollModel*		m_pScrollModel;			// ScrollBarï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ûµï¿½ Modelï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	CTScrollBarType*	m_pScrollBarType;		// ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½Æ¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 };
 #endif ///_TSCROLLBAR_

@@ -1181,6 +1181,9 @@
     <ClCompile Include="Tutorial\TutorialEventUtility.cpp">
       <Filter>Source Files\Tutorial</Filter>
     </ClCompile>
+    <ClCompile Include="Interface\DLGs\SubClass\CZLBAppendText.cpp">
+      <Filter>Source Files\Interface\DLGs\SubClass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCamera.h">
@@ -2319,6 +2322,9 @@
     </ClInclude>
     <ClInclude Include="..\Engine\include\zz_interface.h">
       <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\DLGs\SubClass\CZLBAppendText.h">
+      <Filter>Source Files\Interface\DLGs\SubClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

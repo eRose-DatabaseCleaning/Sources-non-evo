@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include ".\tpane.h"
+#include <vector>
 
 CTPane::CTPane(void)
 {
@@ -69,3 +70,8 @@ CWinCtrl* CTPane::Find( const char * szName )
 	return m_Children.Find( szName );
 }
 
+//std::list< CWinCtrl* > CTPane::FindChildPane()
+/*CJContainer CTPane::FindChildPane()
+{
+	return m_Children.FindPanes();
+}*/

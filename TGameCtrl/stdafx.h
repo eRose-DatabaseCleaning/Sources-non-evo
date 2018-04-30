@@ -10,4 +10,8 @@
 // Windows 헤더 파일입니다.
 #include <windows.h>
 
+#ifndef SAFE_DELETE
+#define SAFE_DELETE(p)       { if(p) { delete (p);     (p)=NULL; } }
+#endif
+
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.

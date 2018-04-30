@@ -367,3 +367,8 @@ void CTListBox::SetFont( int iFont )
 {
 	m_iFont = iFont;
 }
+
+int CTListBox::GetLineHeight()
+{
+	return ( GetLineSpace() + GetCharHeight() );
+}

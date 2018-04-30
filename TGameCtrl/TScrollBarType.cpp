@@ -3,6 +3,7 @@
 
 CTScrollBarType::CTScrollBarType(void)
 {
+	
 }
 
 CTScrollBarType::~CTScrollBarType(void)
@@ -11,6 +12,13 @@ CTScrollBarType::~CTScrollBarType(void)
 ///*----------------------------------------------------------------------------------------------------------------------------*/
 ///CTScrollBarTypeVertical
 ///*----------------------------------------------------------------------------------------------------------------------------*/
+POINT CTScrollBarTypeVertical::GetBackImageOffset( POINT ptScrollBarOffset, SIZE ScrollBarSize, SIZE BackImageSize )
+{
+	POINT ptRet = ptScrollBarOffset;
+	ptRet.x     += ScrollBarSize.cx / 2 - BackImageSize.cx / 2;
+	return ptRet;
+}
+
 POINT CTScrollBarTypeVertical::GetPrevButtonOffset( POINT ptScrollBarOffset, SIZE ScrollBarSize, SIZE PrevButtonSize )
 {
 	POINT ptRet = ptScrollBarOffset;
@@ -22,6 +30,7 @@ POINT CTScrollBarTypeVertical::GetNextButtonOffset( POINT ptScrollBarOffset, SIZ
 	POINT ptRet = {0,0};
 
 	ptRet   = ptScrollBarOffset;
+	ptRet.x     += ScrollBarSize.cx / 2 - NextButtonSize.cx / 2;
 	ptRet.y = ptRet.y + ScrollBarSize.cy - NextButtonSize.cy;
 
 	return ptRet;
@@ -52,6 +61,13 @@ RECT  CTScrollBarTypeVertical::GetThumbMoveRange( POINT ptScrollBarPos,POINT ptN
 ///*----------------------------------------------------------------------------------------------------------------------------*/
 ///CTScrollBarTypeHorizontal
 ///*----------------------------------------------------------------------------------------------------------------------------*/
+POINT CTScrollBarTypeHorizontal::GetBackImageOffset( POINT ptScrollBarOffset, SIZE ScrollBarSize, SIZE BackImageSize )
+{
+	POINT ptRet = ptScrollBarOffset;
+	ptRet.y     += ScrollBarSize.cy / 2 - BackImageSize.cy / 2;
+	return ptRet;
+}
+
 POINT CTScrollBarTypeHorizontal::GetPrevButtonOffset( POINT ptScrollBarOffset, SIZE ScrollBarSize, SIZE PrevButtonSize )
 {
 	POINT ptRet = ptScrollBarOffset;

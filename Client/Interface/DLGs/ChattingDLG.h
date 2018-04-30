@@ -1,24 +1,32 @@
-
+ï»¿
 #ifndef _CHATTING_DLG_H
 #define _CHATTING_DLG_H
 #include <vector>
 #include <queue>
 #include "TDialog.h"
 #include "IActionListener.h"
+#include "subclass/CZLBAppendText.h"
 
 /// 0: false, 1: true, 2:true(can't change)
 struct ChatFilter{
-	BYTE	Filters[6];
+	BYTE	Filters[10];
+};
+
+struct _sCHATSIZE
+{
+	POINT pt;
+	int width;
+	int height;
 };
 
 
 /**
-* Ã¤ÆÃ ÀÔ/Ãâ·ÂÀ» À§ÇÑ ´ÙÀÌ¾ó·Î±×
-*	- Ã¤ÆÃ¸í·É¾î( ¿ÜÄ¡±âµî )´Â 2¹ÙÀÌÆ®¹®ÀÚ¿¡¼­µµ µ¿ÀÛ°¡´ÉÇÏµµ·Ï À¯´ÏÄÚµå·Î 2°³¸¦ ÀúÀå
-*	- GM¸í·É¾îÁß Ã¤ÆÃ±ÝÁö ±â´É ±¸Çö( Å¬¶óÀÌ¾ðÆ®¿¡¼­¸¸ ±¸ÇöµÇ¾î ÀÖÀ¸¸é Àç Á¢¼Ó½Ã ÇØ´ç ±â´ÉÁ¤Áö )
+* Ã¤ï¿½ï¿½ ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¾ï¿½Î±ï¿½
+*	- Ã¤ï¿½Ã¸ï¿½ï¿½É¾ï¿½( ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ )ï¿½ï¿½ 2ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Û°ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ 2ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+*	- GMï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ Ã¤ï¿½Ã±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½( Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ó½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ )
 *
-* @Todo			GM¸í·É¾îÁß Ã¤ÆÃ±ÝÁö±â´ÉÀ» ¼­¹ö¿¡¼­ ±¸ÇöÇÏ°Å³ª ÀúÀåÈÄ ´Ù½Ã °¡Á®¿À´Â ¹æ½ÄÀ¸·Î ¼öÁ¤ ÇÊ¿ä
-* @Author		ÃÖÁ¾Áø
+* @Todo			GMï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ Ã¤ï¿½Ã±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
+* @Author		ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 * @Date			2005/9/12
 */
 class CChatDLG : public CTDialog, public IActionListener
@@ -32,13 +40,26 @@ public:
 	virtual unsigned int	Process( UINT uiMsg,WPARAM wParam,LPARAM lParam );
 	virtual void			Update( POINT ptMouse );
 	virtual void			Show();
-
+/*
+	virtual void			Draw();
+*/
 	virtual unsigned		ActionPerformed( CActionEvent* e );
+	bool					IsInside4Move(int x, int y);
+
+	bool					On_LButtonDN( unsigned iProcID, WPARAM wParam, LPARAM lParam );
 
 
 	ChatFilter& GetCurrentTabFilter( );
 	void		SetCurrentTabFilter( ChatFilter& filter );
 
+	void		RefreshDlg();
+	void		SetInterfacePos_After();
+
+	void		SetChangeSize(bool bChange = true);	
+
+	void		SetSystemChat();
+	
+	void		SetMoveTab( LPARAM lParam );
 
 	enum{
 		IID_BTN_FILTER = 10,
@@ -70,12 +91,11 @@ public:
 		IID_BTN_CLAN	= 55,
 		IID_BTN_ALLIED  = 56,
 
-
 		IID_BTN_CAPTURE = 60,
+		IID_BTN_CHANGE_SIZE = 60,
 
-		IDD_LISTBOX_TOP = 75,
-		IDD_SCROLLBAR_TOP = 76,
-		IDD_BTN_SCROLLDOWN = 100,
+		IID_LISTBOX_SYSTEM = 75,
+		IID_SCROLLBAR_SYSTEM = 76,
 	};
 	
 
@@ -88,6 +108,7 @@ public:
 		FILTER_CLAN,
 		FILTER_WHISPER,
 		FILTER_ALLIED,
+		FILTER_SHOUT = FILTER_ALLIED,
 	};
 
 	void		SetChatBlock( DWORD BlockTime );
@@ -95,14 +116,26 @@ public:
 	void		SetChatUnBlock();
 
 	void		AppendMsg( const char* pszMsg, DWORD color, int iType );
-	void		AppendMsg2( const char* pszMsg, DWORD color, int iType );
-	void		AppendMsg2System( const char* pszMsg, DWORD color);
 	void		SendChatMsgRepeat();
-	void		SetEnableShoutRestrict();									/// ¿ÜÄ¡±â ½Ã°£ Á¦ÇÑ ¼³Á¤
-	void		SetDisableShoutRestrict();									/// ¿ÜÄ¡±â ½Ã°£ Á¦ÇÑ ¾ø¾Ú
+	void		SetEnableShoutRestrict();									/// ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	void		SetDisableShoutRestrict();									/// ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 	int			GetLineCount();
 	const char* GetLineString( int index );
+
+	int		GetChatSizeMode()
+	{	
+		return m_iChatSizeMode;
+	}
+
+	enum
+	{		
+		CHATSIZE_MODE_SMALL = 0,
+		CHATSIZE_MODE_MIDDLE,
+		CHATSIZE_MODE_LARGE,
+		CHATSIZE_MODE_LARGE_SYSTEM,
+		CHATSIZE_MODE_SIZE,
+	};
 
 protected:
 
@@ -123,9 +156,6 @@ protected:
 	};
 	void	TabSelected( int iTab );
 
-
-
-
 	enum{
 		CHAT_NORMAL,
 		CHAT_SHOUT,
@@ -144,7 +174,6 @@ protected:
 	void	SetFocusEditBox( unsigned iID );
 	int		GetActiveListBox();
 	int		GetActiveScrollBar();
-	void	AppendMsg2sys( const char* pszMsg, DWORD dwColor , int iFilterType );
 	void	AppendMsg2All( const char* pszMsg, DWORD dwColor , int iFilterType );
 	void	AppendMsg2Whisper( const char* pszMsg, DWORD dwColor , int iFilterType );
 	void	AppendMsg2Trade( const char* pszMsg, DWORD dwColor , int iFilterType );
@@ -153,39 +182,49 @@ protected:
 	void	AppendMsg2Allied( const char* pszMsg, DWORD dwColor , int iFilterType );
 	void	AppendMsg2ListBox( int iListBoxID, int iScrollBarID , const char* pszMsg, DWORD dwColor );
 
+	void	AppendMsg2ZListBox( int iListBoxID, int iScrollBarID , const char* pszMsg, DWORD dwColor );
+	
+	void	AppendMsg2System( const char* pszMsg, DWORD dwColor );
+
 	void	ActiveListBoxMoveEnd();
 
+	CWinCtrl* FindChildInPane( unsigned uiPaneID, unsigned uiChildID );
+	CWinCtrl* FindChildInPane( const char * strPaneName, const char * strChildName );
+	CWinCtrl* FindChildInPane( const char * strPaneName, unsigned uiChildID );
+		
 protected:
-	/// µµ¹è ±ÝÁö ±â´É¿¡ »ç¿ëµÇ´Â ¸â¹öµé
+	/// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½É¿ï¿½ ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 	queue< DWORD >	m_PrevSendMessageTimes;
 	int				m_iCheckChatCount;///3
 	DWORD			m_dwCheckChatTime;///5 * 1000
 
-	/// GM¸í·É¾îÁß Ã¤ÆÃ±ÝÁö¿¡ »ç¿ëµÇ´Â ¸â¹öµé
+	/// GMï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ Ã¤ï¿½Ã±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 	bool			m_bChatBlock;				
 	DWORD			m_dwChatBlockStartTime;
 	DWORD			m_dwChatBlockTime;
 
-	/// ¿ÜÄ¡±â ½Ã°£ Á¦ÇÑ¿¡ »ç¿ëµÇ´Â ¸â¹ö
+	/// ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½Ñ¿ï¿½ ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½
 	bool	m_bCheckShoutRestrict;
 	DWORD   m_dwShoutRestrictTime;
 	DWORD   m_dwPrevUseShoutTime;
 	
 
 
-	//DWORD   m_dwChatRestrictTime;	///»ç¿ë¾ÈÇÔ
-	//DWORD   m_dwPrevSendChatTime; ///»ç¿ë¾ÈÇÔ
+	//DWORD   m_dwChatRestrictTime;	///ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//DWORD   m_dwPrevSendChatTime; ///ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-	std::string				m_strLastSendMsg;					/// ¸¶Áö¸· ¼­¹ö¿¡ º¸³½ ÀÔ·Â±Û ÀúÀå
-	int						m_iSelectedTab;						/// ÇöÀç ÅÇ ±¸ºÐ
+	std::string				m_strLastSendMsg;					/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·Â±ï¿½ ï¿½ï¿½ï¿½ï¿½
+	int						m_iSelectedTab;						/// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-	short					m_nChatLineCNT;						/// Ã¤ÆÃ ¶óÀÎ¼ö 
+	short					m_nChatLineCNT;						/// Ã¤ï¿½ï¿½ ï¿½ï¿½ï¿½Î¼ï¿½ 
 	static					int m_iCaptureCount;	
 
 	vector< ChatFilter >	m_Filters;				
 
+	int				m_iChatSizeMode;
+	int				m_iShowSystemChat;
 
-	/// ´Ù±¹¾î Áö¿ø¿ë : 2¹ÙÀÌÆ®¹®ÀÚ¿¡¼­µµ µ¿ÀÛÇÒ¼ö ÀÖµµ·Ï À¯´ÏÄÚµå·Î µî·Ï
+	/// ï¿½Ù±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : 2ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ò¼ï¿½ ï¿½Öµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ ï¿½ï¿½ï¿½
 	std::vector< std::wstring >		m_ShoutCommands;			
 	std::vector< std::wstring > 	m_TradeCommands;
 	std::vector< std::wstring >		m_WhisperCommands;
@@ -194,5 +233,9 @@ protected:
 	std::vector< std::wstring >		m_HelpCommands;
 	std::vector< std::wstring >		m_AlliedCommands;
 	std::vector< std::wstring >		m_Spaces;
+
+	_sCHATSIZE m_ChatSize[2][CHATSIZE_MODE_SIZE];
+
+	CJString m_szStirng; // ZListBoxï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ó½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
 };
 #endif

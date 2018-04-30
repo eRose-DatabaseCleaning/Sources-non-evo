@@ -36,11 +36,14 @@ void CJString::AddString( const char* pszString, SIZE sizeString, int iFont, DWO
 /// @param y :  bTramsform == true 일경우에는 offset_y에 더하지 않는다.
 ///				bTransform == false 일경우에는 라인간격으로도 사용된다.( 버그성 코드 - 추후 수정되어야 한다. 2005_6_14_23:55)
 //----------------------------------------------------------------------------------------
-void CJString::Draw( int x, int y, bool bTransform ,DWORD force_text_color)
+void CJString::Draw( int x, int y, bool bTransform ,DWORD force_text_color, bool bTrans2)
 {
 	ITFont* IFont = CTControlMgr::GetInstance()->GetFontMgr();
 	if( bTransform )
 		IFont->SetTransformSprite( (float)x, (float)y, 0 );
+
+	if( bTrans2 )
+IFont->SetTransformSprite(0, 0);
 
 	std::list< CJLetter >::iterator iter;
 	POINT ptOffset = { x };

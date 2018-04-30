@@ -20,6 +20,7 @@
 
 #include "ActionEvent.h"
 #include "TPane.h"
+#include <set>
 const	int	MAX_DROP_MONEY	= 100000;///돈을 바닥에 버릴경우 최대 10만까지
 
 const POINT c_ptEquipedSlotOffsets[] = {	
@@ -998,4 +999,50 @@ void CItemDlg::RemoveActionEventListener2Slots( )
 	for( int iType = 0; iType < MAX_INV_TYPE; ++iType )
 		for( int iSlot = 0; iSlot < INVENTORY_PAGE_SIZE; ++iSlot )
 			m_ItemSlots[iType][iSlot].RemoveActionListener( this );
+}
+
+static bool ItemIconSorter(CIconItem* i1, CIconItem* i2)
+{
+	return i1->GetItemNo() < i2->GetItemNo();
+}
+
+void CItemDlg::SortItems()
+{
+	int iSlot;
+	std::set<int> itemTypes;
+	std::map<int, std::vector<CIconItem* > > itemMap;
+	for( iSlot = 0 ; iSlot < INVENTORY_PAGE_SIZE; ++iSlot ) {
+		CIcon* slotIcon = m_ItemSlots[m_iInventoryTab][iSlot].GetIcon();
+		CIconItem* itemIcon = NULL;
+		CItem* slotItem = NULL;
+		if (slotIcon) {
+			itemIcon = reinterpret_cast<CIconItem*>(slotIcon);
+			if (itemIcon) {
+				slotItem = itemIcon->GetCItem();
+				if (slotItem) {
+					itemMap[slotItem->GetType()].push_back(itemIcon);
+					itemTypes.insert( slotItem->GetType());
+				}
+			}
+		}
+	}
+
+
+	for (iSlot = 0 ; iSlot < INVENTORY_PAGE_SIZE; ++iSlot) {
+		CIcon* icon = m_ItemSlots[m_iInventoryTab][iSlot].MoveIcon();
+	}
+
+
+	iSlot = 0;
+	std::set<int>::const_iterator typeIter;
+	for (typeIter = itemTypes.begin(); typeIter != itemTypes.end(); ++typeIter)
+	{
+		std::sort(itemMap[*typeIter].begin(), itemMap[*typeIter].end(), ItemIconSorter);
+		std::vector<CIconItem* >::iterator iconIter;
+		for (iconIter = itemMap[*typeIter].begin(); iconIter != itemMap[*typeIter].end(); ++iconIter)
+		{
+			m_ItemSlots[m_iInventoryTab][iSlot].AttachIcon(*iconIter);
+			iSlot++;
+		}
+	}
 }

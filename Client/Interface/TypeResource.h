@@ -14,6 +14,7 @@
 
 
 
+#define LIST_STRING(I) CStringManager::GetSingleton().GetString( I )
 
 #define STR_RESULT_SELECT_SERVER_FAILED					CStringManager::GetSingleton().GetString( 5 )
 #define	STR_RESULT_SELECT_SERVER_FULL					CStringManager::GetSingleton().GetString( 6 )

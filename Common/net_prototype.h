@@ -1526,7 +1526,7 @@ struct gsv_EQUIP_ITEM : public t_PACKETHEADER {
 	short		m_nEquipIndex;
 //	short		m_nItemNO;
 	tagPartITEM m_PartITEM;
-	short		m_nRunSPEED[ 0 ];	// 패시브 스킬에의해 보정된 값까지 : 지속에 의해 보정된값 제외 :: 팻 미 탑승 안했을때..
+	short		m_nRunSPEED[ 0 ];	// Move Speed calculated entirely by the server. Here we set it and forget it
 } ;
 
 

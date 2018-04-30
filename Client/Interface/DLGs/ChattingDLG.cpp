@@ -1,25 +1,36 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "ChattingDLG.h"
 #include "CTargetMenu.h"
 #include "ExchangeDlg.h"
 #include "CPartyDlg.h"
+#include "CCommDlg.h"
+#include "CItemDlg.h"
 #include "../it_mgr.h"
 #include "../CToolTipMgr.h"
 #include "../../GameData/CExchange.h"
 #include "../../Network/CNetwork.h"
 #include "../../GameCommon/CFilterWord.h"
+#include "../../GameCommon/Skill.h"
+#include "../Command/CTCmdHotExec.h"
+
 #include "../../GameData/CParty.h"
 #include "../../Util/Localizing.h"
 #include "../../GameProc/CaptureChatList.h"
-
+#include "TCaption.h"
 #include "TEditBox.h"
 #include "TListBox.h"
+#include "ZListBox.h"
 #include "TRadioBox.h"
 #include "TScrollBar.h"
 #include "ActionEvent.h"
 #include "TControlMgr.h"
-
+#include "TImage.h"
+#include "TRadioButton.h"
 #include <algorithm>
+#include ".\cclientstorage.h"
+#include "system/CGAME.h"
+#include "TPane.h"
+
 
 int CChatDLG::m_iCaptureCount = 0;
 
@@ -30,12 +41,9 @@ CChatDLG::CChatDLG()
 	m_dwChatBlockStartTime	= 0;
 	m_dwChatBlockTime		= 0;
 
-	m_bCheckShoutRestrict	= true;
+	m_bCheckShoutRestrict	= false;
 	m_dwShoutRestrictTime   = 20 * 1000;
 	m_dwPrevUseShoutTime	= 0;
-	//m_dwChatRestrictTime	= 1  * 1000;
-	//m_dwPrevSendChatTime	= 0;
-
 
 	m_iSelectedTab			= TAB_ALL;
 
@@ -45,7 +53,8 @@ CChatDLG::CChatDLG()
 	filter.Filters[2] = 1;///TRADE
 	filter.Filters[3] = 1;///PARTY
 	filter.Filters[4] = 1;///CLAN
-	filter.Filters[5] = 1;///ALLIED
+	filter.Filters[5] = 1;///ALLIED,whisper
+	filter.Filters[6] = 1;///shout
 
 	m_Filters.push_back( filter );///All
 
@@ -55,6 +64,7 @@ CChatDLG::CChatDLG()
 	filter.Filters[3] = 0;
 	filter.Filters[4] = 0;
 	filter.Filters[5] = 0;
+	filter.Filters[6] = 0;
 	m_Filters.push_back( filter );///Whisper
 
 
@@ -64,6 +74,7 @@ CChatDLG::CChatDLG()
 	filter.Filters[3] = 0;
 	filter.Filters[4] = 0;
 	filter.Filters[5] = 0;
+	filter.Filters[6] = 0;
 	m_Filters.push_back( filter );///Trade
 
 	filter.Filters[0] = 0;
@@ -72,6 +83,7 @@ CChatDLG::CChatDLG()
 	filter.Filters[3] = 2;
 	filter.Filters[4] = 0;
 	filter.Filters[5] = 0;
+	filter.Filters[6] = 0;
 	m_Filters.push_back( filter );///Party
 
 	filter.Filters[0] = 0;
@@ -80,6 +92,7 @@ CChatDLG::CChatDLG()
 	filter.Filters[3] = 0;
 	filter.Filters[4] = 2;
 	filter.Filters[5] = 0;
+	filter.Filters[6] = 0;
 	m_Filters.push_back( filter );///Clan
 
 
@@ -89,6 +102,7 @@ CChatDLG::CChatDLG()
 	filter.Filters[3] = 0;
 	filter.Filters[4] = 0;
 	filter.Filters[5] = 2;
+	filter.Filters[6] = 0;
 	m_Filters.push_back( filter );///Allied
 
 
@@ -98,16 +112,18 @@ CChatDLG::CChatDLG()
 
 	///ASCii
 	Util.MulityByte2WideString("!", wstrTemp ); m_ShoutCommands.push_back( wstrTemp );
-	Util.MulityByte2WideString("$", wstrTemp ); m_TradeCommands.push_back( wstrTemp );
-	Util.MulityByte2WideString("@", wstrTemp ); m_WhisperCommands.push_back( wstrTemp );
-	Util.MulityByte2WideString("&", wstrTemp ); m_ClanCommands.push_back( wstrTemp );
-	Util.MulityByte2WideString("#", wstrTemp ); m_PartyCommands.push_back( wstrTemp );
 	Util.MulityByte2WideString("~", wstrTemp ); m_AlliedCommands.push_back( wstrTemp );
+
+	Util.MulityByte2WideString("$", wstrTemp ); m_TradeCommands.push_back( wstrTemp );	
+	Util.MulityByte2WideString("@", wstrTemp ); m_ClanCommands.push_back( wstrTemp );
+	Util.MulityByte2WideString("#", wstrTemp ); m_PartyCommands.push_back( wstrTemp );
+	
+	Util.MulityByte2WideString("\"", wstrTemp ); m_WhisperCommands.push_back( wstrTemp );
+		
 	Util.MulityByte2WideString( CStr::Printf("/%s", STR_HELP), wstrTemp); m_HelpCommands.push_back( wstrTemp );
 	Util.MulityByte2WideString( " ", wstrTemp); m_Spaces.push_back( wstrTemp );
 
-
-	/// 2¹ÙÀÌÆ® Æ¯¹®/ ÀÏº»¾î Àü°¢½Ã¿¡µµ Ã³¸®°¡´ÉÇÏµµ·Ï Ãß°¡ÇÑ´Ù.
+	/// 2ï¿½ï¿½ï¿½ï¿½Æ® Æ¯ï¿½ï¿½/ ï¿½Ïºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ñ´ï¿½.
 	wchar_t wchar[2] = { 0, 0 };
 	wchar[0] = 0xFF01; m_ShoutCommands.push_back( wchar );
 	wchar[0] = 0xFF04; m_TradeCommands.push_back( wchar );
@@ -125,9 +141,12 @@ CChatDLG::CChatDLG()
 
 
 
-	/// 5ÃÊ¾È¿¡ 3¹ø¸¸ º¸³¾¼ö ÀÖ´Ù
+	/// 5ï¿½Ê¾È¿ï¿½ 3ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½
 	m_iCheckChatCount	= 3;///3
 	m_dwCheckChatTime	= 5 * 1000;///
+
+	m_iChatSizeMode = CHATSIZE_MODE_MIDDLE;
+	m_iShowSystemChat = 1;
 
 }
 
@@ -135,117 +154,74 @@ CChatDLG::~CChatDLG()
 {
 }
 
+CWinCtrl* CChatDLG::FindChildInPane( unsigned uiPaneID, unsigned uiChildID )
+{
+	CWinCtrl* pCtrl = Find( uiPaneID );
+	if( pCtrl && pCtrl->GetControlType() == CTRL_PANE )
+	{
+		CTPane* pPane = (CTPane*)pCtrl;
+		return pPane->FindChild( uiChildID );
+	}
+	return NULL;
+}
+
+CWinCtrl* CChatDLG::FindChildInPane( const char * strPaneName, const char * strChildName )
+{
+	CWinCtrl* pCtrl = Find( strPaneName );
+	if( pCtrl && pCtrl->GetControlType() == CTRL_PANE )
+	{
+		CTPane* pPane = (CTPane*)pCtrl;
+		return pPane->Find( strChildName );
+	}
+	return NULL;
+}
+
+CWinCtrl* CChatDLG::FindChildInPane( const char * strPaneName, unsigned uiChildID )
+{
+	CWinCtrl* pCtrl = Find( strPaneName );
+	if( pCtrl && pCtrl->GetControlType() == CTRL_PANE )
+	{
+		CTPane* pPane = (CTPane*)pCtrl;
+		return pPane->FindChild( uiChildID );
+	}
+	return NULL;
+}
 
 void CChatDLG::Update( POINT ptMouse )
 {
 	CTDialog::Update( ptMouse );
 
-
-
-	///ÀÌÇÏ ÅøÆÁ Ç¥½Ã
+	///ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½
 	CTDialog* pDlg = CTDialog::GetProcessMouseOverDialog();
-	if( pDlg && pDlg != this )
-			return ;
 
-	WINCTRL_LIST_ITOR iter;
-	CWinCtrl*	pCtrl;
+	if( pDlg && pDlg != this ){		return ;	}
+
+
+	//Add text over the chat resize button
+	std::string strBuf = LIST_STRING(886);
 	
-	for( iter = m_listChild.begin(); iter != m_listChild.end(); ++iter)
+	CWinCtrl * pCtrl = NULL;
+	if( pCtrl = Find("SCALE_BTN" ) )
 	{
-		pCtrl = *iter;
-		if( pCtrl->GetControlType() == CTRL_IMAGE )
-			continue;
-
-		if( pCtrl->IsInside(ptMouse.x, ptMouse.y ) )
+		
+		if( pCtrl->IsInside(ptMouse.x, ptMouse.y) )
 		{
-			CToolTipMgr::GetInstance().RegUIInfo( ptMouse.x,  ptMouse.y, GetDialogType(), pCtrl->GetControlID());
-			break;
+			CToolTipMgr::GetInstance().RegToolTip( ptMouse.x-20, ptMouse.y-20, strBuf.c_str() );
 		}
+
 	}
 }
 
 unsigned int CChatDLG::Process( UINT uiMsg,WPARAM wParam,LPARAM lParam )
 {
-	//if( wParam == VK_RETURN && uiMsg == WM_KEYDOWN )
-	//{
-	//	CWinCtrl* pCtrl = Find( IID_EDITBOX );
-	//	if( pCtrl == NULL )
-	//		return 0;
-
-	//	if( pCtrl->GetControlType() != CTRL_EDITBOX )
-	//		return 0;
-
-	//	CTEditBox* pEditBox = (CTEditBox*)pCtrl;
-	//	if( pEditBox->IsFocus() )
-	//	{
-	//		SendChatMsg(pEditBox->get_text());
-
-
-	//		switch( m_iSelectedTab )
-	//		{
-	//		case TAB_PARTY:
-	//			if( CWinCtrl* pCtrl = Find( IID_EDITBOX ) )
-	//			{
-	//				CTEditBox* pBox = (CTEditBox*)pCtrl;
-
-	//				if( pBox->get_text() == NULL )
-	//					pBox->AppendText("#");
-	//				else if( strlen(pBox->get_text()) < 1 )
-	//					pBox->AppendText("#");
-	//			}
-	//			break;
-	//		case TAB_CLAN:
-	//			if( CWinCtrl* pCtrl = Find( IID_EDITBOX ) )
-	//			{
-	//				CTEditBox* pBox = (CTEditBox*)pCtrl;
-	//				if( pBox->get_text() == NULL )
-	//					pBox->AppendText("&");
-	//				else if( strlen(pBox->get_text()) < 1 )
-	//					pBox->AppendText("&");
-	//			}
-	//			break;
-	//		case TAB_ALLIED:
-	//			{
-	//				if( CWinCtrl* pCtrl = Find( IID_EDITBOX ) )
-	//				{
-	//					CTEditBox* pBox = (CTEditBox*)pCtrl;
-	//					if( pBox->get_text() == NULL )
-	//						pBox->AppendText("~");
-	//					else if( strlen(pBox->get_text()) < 1 )
-	//						pBox->AppendText("~");
-	//				}
-	//			}
-	//			break;
-	//		default:
-	//			break;
-	//		}
-	//		/////³»°¡ Ã¤ÆÃ ¸Þ¼¼Áö¸¦ º¸³»¸é Ç×»ó ¸®½ºÆ®´Â ¸Ç¹ØÀ¸·Î ÀÌµ¿
-	//		//if( int iActiveListBox = GetActiveListBox() )
-	//		//{
-	//		//	CWinCtrl* pCtrl = Find( iActiveListBox );
-	//		//	if( pCtrl )
-	//		//	{
-	//		//		CTListBox* pListBox = (CTListBox*)pCtrl;
-	//		//		if( int iActiveScrollBar = GetActiveScrollBar() )
-	//		//		{
-	//		//			pCtrl = Find( iActiveScrollBar );
-	//		//			if( pCtrl && pCtrl->GetControlType() == CTRL_SCROLLBAR )
-	//		//			{
-	//		//				CTScrollBar* pScrollBar = (CTScrollBar*)pCtrl;
-	//		//				pScrollBar->SetValue( pListBox->GetMaximum() );
-	//		//			}
-	//		//		}
-	//		//	}
-	//		//}
-	//	}
-	//	else
-	//	{
-	//		pEditBox->SetFocus(true);
-	//	}
-	//	return uiMsg;
-	//}
-	
 	unsigned iProcID = 0;
+
+	CWinCtrl * pCtrl = NULL;
+	if( pCtrl = Find("MOVE_TAB") )
+	{
+		pCtrl->Hide();
+	}
+
 	if( iProcID = CTDialog::Process(uiMsg,wParam,lParam)) 
 	{
 		switch(uiMsg)
@@ -263,23 +239,34 @@ unsigned int CChatDLG::Process( UINT uiMsg,WPARAM wParam,LPARAM lParam )
 		case WM_LBUTTONDOWN:
 			{
 				OnLButtonDown( iProcID, wParam , lParam );
-				if( iProcID == 1 )///Dialog¸¦ ClickÇß´Ù¸é  ÀÌµ¿°¡´ÉÇÏµµ·Ï
+				
+				if(IsInside4Move( LOWORD(lParam), HIWORD(lParam ) ) )
+				{
+					return true;
+				}
+
+				if( iProcID == 1 )///Dialogï¿½ï¿½ Clickï¿½ß´Ù¸ï¿½  ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½
 					return 0;
 			}
+		case WM_MOUSEMOVE:
+			{				
+				SetMoveTab( lParam );
+			}
+			break;
 		}	
 		return uiMsg;
-		
+
 	}
 
 	switch(uiMsg)
 	{
 	case WM_KEYDOWN:
-				
+
 		switch( wParam)
 		{
 		case VK_SPACE:
 			{
-				//20050902 È«±Ù 2ÀÎ½Â Ä«Æ® : ½ºÆäÀÌ½º¹Ù·Î ³»°¡ º¸Á¶¼®¿¡ ÅÀÀ» ¶§ ³»¸®±â.
+				//20050902 È«ï¿½ï¿½ 2ï¿½Î½ï¿½ Ä«Æ® : ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½Ù·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
 				if( CTControlMgr::GetInstance()->GetKeyboardInputType() == CTControlMgr::INPUTTYPE_NORMAL 
 					&& NULL == CTEditBox::s_pFocusEdit 
 					&& g_pAVATAR->IsRideUser() )
@@ -294,29 +281,153 @@ unsigned int CChatDLG::Process( UINT uiMsg,WPARAM wParam,LPARAM lParam )
 	return 0;
 }
 
+void CChatDLG::SetMoveTab( LPARAM lParam )
+{
+	CWinCtrl * pCtrl = NULL;
+
+	if( pCtrl = Find( "CHAT_BG" ) )
+	{
+		if( pCtrl->IsInside( LOWORD(lParam), HIWORD(lParam ) ) )
+		{
+			if( pCtrl = Find("MOVE_TAB") )
+			{
+				pCtrl->Show();						
+				return;
+			}
+		}
+	}		
+	if( pCtrl = Find("CHAT_BG_S") )
+	{
+		if( pCtrl->IsInside( LOWORD(lParam), HIWORD(lParam ) ) )
+		{
+			if( pCtrl = Find("MOVE_TAB") )
+			{
+				pCtrl->Show();						
+				return;
+			}
+		}
+	}
+	if( pCtrl = Find("MOVE_TAB") )
+	{
+		pCtrl->Hide();
+	}
+}
+
+void CChatDLG::SetChangeSize(bool bChange)
+{
+	CWinCtrl * pCtrl = NULL;
+
+	int iPreChatSizeMode = m_iChatSizeMode; 
+
+	if( bChange )
+	{
+		m_iChatSizeMode++;
+	}
+	
+
+	if( m_iChatSizeMode >= CHATSIZE_MODE_SIZE )
+	{
+		m_iChatSizeMode = CHATSIZE_MODE_SMALL;
+	}
+
+	//Background for normal chat
+	if( pCtrl = Find( "CHAT_BG" ) )
+	{
+		pCtrl->SetSizeFit(true);
+		pCtrl->SetWidth(m_ChatSize[0][m_iChatSizeMode].width);
+		pCtrl->SetHeight(m_ChatSize[0][m_iChatSizeMode].height);
+
+		//Numenor: This gives a transparent background chat when the chat is small. I kind of like it actually ^^
+		/*if( m_iChatSizeMode == CHATSIZE_MODE_SMALL)
+		{
+			pCtrl->Hide();
+		}
+		else
+		{
+			pCtrl->Show();
+		}*/
+	}
+
+	//Background for system chat
+	if( pCtrl = Find("CHAT_BG_S") )
+	{
+		pCtrl->SetSizeFit(true);
+		pCtrl->SetWidth( m_ChatSize[1][m_iChatSizeMode].width );
+		pCtrl->SetHeight( m_ChatSize[1][m_iChatSizeMode].height);
+		pCtrl->SetOffset(pCtrl->GetOffset().x, m_ChatSize[1][CHATSIZE_MODE_SMALL].height - m_ChatSize[1][m_iChatSizeMode].height );
+	}	
+
+	if(pCtrl = Find("CHAT_BOTTOM_PANE")) //Numenor: CHAT_BOTTOM_PANE corresponds to the part of the chat with the channels and where you write.
+	{
+		pCtrl->SetOffset(0, m_ChatSize[0][m_iChatSizeMode].height + m_ChatSize[0][m_iChatSizeMode].pt.y );
+	}
+
+	//Numenor: Normal chat changing writing zone area
+	for(int i=0 ; i<6; i++)
+	{
+		if( pCtrl = Find( CStr::Printf( "SCROLLBAR%02d", i )) )
+		{
+            pCtrl->SetHeight( m_ChatSize[0][m_iChatSizeMode].height - pCtrl->GetOffset().y );			
+		}		
+		if( pCtrl = Find( CStr::Printf( "LISTBOX%02d", i )) )
+		{
+			pCtrl->SetHeight( m_ChatSize[0][m_iChatSizeMode].height  );
+			((CTListBox*)pCtrl)->SetExtent( m_ChatSize[0][m_iChatSizeMode].height / ((CTListBox*)pCtrl)->GetLineHeight() );
+		}
+	}
+
+	//Numenor: System chat changing writing zone area
+	if( pCtrl = Find( "SCROLLBAR06" ) ) //The scroll bar
+	{
+		   pCtrl->SetOffset(pCtrl->GetOffset().x, m_ChatSize[1][CHATSIZE_MODE_SMALL].height - m_ChatSize[1][m_iChatSizeMode].height );
+		   pCtrl->SetHeight( m_ChatSize[1][m_iChatSizeMode].height );
+	}		
+	if( pCtrl = Find( "LISTBOX06" ) ) //Where the text is written
+	{
+		pCtrl->SetHeight( m_ChatSize[1][m_iChatSizeMode].height  );
+		((CTListBox*)pCtrl)->SetExtent( m_ChatSize[1][m_iChatSizeMode].height / ((CTListBox*)pCtrl)->GetLineHeight() );
+		pCtrl->SetOffset(pCtrl->GetOffset().x, m_ChatSize[1][CHATSIZE_MODE_SMALL].height - m_ChatSize[1][m_iChatSizeMode].height );
+	}
+	
+	ActiveListBoxMoveEnd();
+
+	MoveWindow( GetPosition().x, GetPosition().y - (m_ChatSize[0][m_iChatSizeMode].height - m_ChatSize[0][iPreChatSizeMode].height) );	
+	
+
+}
 
 bool CChatDLG::On_LButtonUP( unsigned iProcID )
 {
 	switch( iProcID )
 	{
-	case IID_BTN_CAPTURE:
+	case IID_BTN_CHANGE_SIZE:
 		{
-			//CCaptureChatList captureChatList;
-			//captureChatList.DoCaptureChatList();
-			//g_itMGR.AppendChatMsg( STR_SAVED_CHAT, IT_MGR::CHAT_TYPE_SYSTEM );
+			SetChangeSize();
+			SetSystemChat();
 		}
 		break;
 	case IID_BTN_FILTER:
+
 		g_itMGR.OpenDialog( DLG_TYPE_CHATFILTER );
-		break;
-	case IDD_BTN_SCROLLDOWN:
-		//g_itMGR.CloseDialog( DLG_TYPE_CHAT );
-		ActiveListBoxMoveEnd();
+
+		{
+			CWinCtrl * pCtrl = NULL;
+			CTDialog * pDlg = g_itMGR.FindDlg( DLG_TYPE_CHATFILTER );
+			if(pDlg)
+			{
+				if(pCtrl = Find( iProcID ))
+				{
+					if(m_iShowSystemChat == 0)	pDlg->MoveWindow(	GetPosition().x, GetPosition().y - pDlg->GetHeight() + m_ChatSize[1][CHATSIZE_MODE_SMALL].height );
+					else	pDlg->MoveWindow(	GetPosition().x, GetPosition().y - pDlg->GetHeight() + m_ChatSize[1][CHATSIZE_MODE_SMALL].height - m_ChatSize[1][m_iChatSizeMode].height );
+				}
+			}			
+		}
+
 		break;
 	default:
 		break;
 	}
-	
+
 	return true;
 }
 
@@ -331,6 +442,10 @@ void CChatDLG::Show()
 			pCtrl->SetFocus( true );
 	}
 	TabSelected( TAB_ALL  );
+
+	m_iChatSizeMode = g_ClientStorage.GetChatDlgType();
+	SetChangeSize(false);
+	SetSystemChat();
 }
 
 void CChatDLG::SendChatMsg( char* szMsg )
@@ -346,7 +461,7 @@ void CChatDLG::SendChatMsg( char* szMsg )
 
 	ActiveListBoxMoveEnd();
 
-	
+
 	if( IsChatBlock() )
 	{
 		g_itMGR.AppendChatMsg(STR_STATE_BLOCK_CHAT,IT_MGR::CHAT_TYPE_SYSTEM);	
@@ -355,17 +470,17 @@ void CChatDLG::SendChatMsg( char* szMsg )
 	string stMsg = szMsg;
 	string stTargetID;
 	string stRealMsg;
-	
+
 	int iChatType = ChatParser( stMsg, stRealMsg, stTargetID );
-	
-	///À§Ä¡¿¡ ÁÖÀÇÇÒ²¯ szMsgÀÇ Æ÷ÀÎÅÍ°¡ ÆÄ±«µÉ¼ö ÀÖ´Ù.
-	CWinCtrl* pCtrl = Find(IID_EDITBOX);
+
+	///ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ò²ï¿½ szMsgï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½Ä±ï¿½ï¿½É¼ï¿½ ï¿½Ö´ï¿½.
+	CWinCtrl* pCtrl = Find( IID_EDITBOX );
 	if( pCtrl == NULL ) return;
 	if( pCtrl->GetControlType() != CTRL_EDITBOX ) return;
 
 	CTEditBox* pEditBox = (CTEditBox*) pCtrl;
 	pEditBox->clear_text();
-	
+
 
 	if( !CFilterWord::GetInstance().CheckString( (char*)stRealMsg.c_str() ) )
 		g_itMGR.AppendChatMsg(STR_FILTER_BADWORD,IT_MGR::CHAT_TYPE_SYSTEM );
@@ -388,7 +503,7 @@ void CChatDLG::SendChatMsg( char* szMsg )
 #else
 				return;
 #endif
-				
+
 			}
 			m_PrevSendMessageTimes.pop();
 		}
@@ -397,36 +512,21 @@ void CChatDLG::SendChatMsg( char* szMsg )
 
 	//m_dwPrevSendChatTime = dwCurrentTime;
 
+	CFilterWord& Util = CFilterWord::GetInstance();
+
 	switch( iChatType )
 	{
 	case CHAT_ALLIED:
-		if( g_pAVATAR && g_pAVATAR->Get_TeamNO() != 2 )///Defalt Team NoÀÏ°æ¿ì¿¡´Â µ¿¸ÍÃÂÀ» º¸³»Áö ¾Ê´Â´Ù
+		if( g_pAVATAR && g_pAVATAR->Get_TeamNO() != 2 )///Defalt Team Noï¿½Ï°ï¿½ì¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´Â´ï¿½
 			g_pNet->Send_cli_ALLIED_SHOUT( (char*)stRealMsg.c_str() );
 		break;
 	case CHAT_OPEN_HELP:
-		g_itMGR.OpenDialog(DLG_TYPE_HELP);
 		break;
 	case CHAT_CLAN:
-		{
-			g_pNet->Send_cli_CLAN_CHAT( (char*)stRealMsg.c_str() );
-
-			pEditBox = (CTEditBox*)pCtrl;
-			std::string stTemp = "&";
-			stTemp.append( stTargetID );
-			pEditBox->AppendText( (char*)stTemp.c_str() );
-			pEditBox->AppendText(" ");
-		}
+		g_pNet->Send_cli_CLAN_CHAT( (char*)stRealMsg.c_str() );
 		break;
 	case CHAT_PARTY:
-		{
-			g_pNet->Send_cli_PARTY_CHAT((char*)stRealMsg.c_str());
-
-			pEditBox = (CTEditBox*)pCtrl;
-			std::string stTemp = "#";
-			stTemp.append( stTargetID );
-			pEditBox->AppendText( (char*)stTemp.c_str() );
-			pEditBox->AppendText(" ");
-		}
+		g_pNet->Send_cli_PARTY_CHAT((char*)stRealMsg.c_str());
 		break;
 	case CHAT_NORMAL:
 		g_pNet->Send_cli_CHAT( (char*)stRealMsg.c_str()  );
@@ -443,17 +543,20 @@ void CChatDLG::SendChatMsg( char* szMsg )
 		break;
 	case CHAT_WHISPER:
 		{
-			///¼­¹ö¿¡ ³¯¸®°í
+			///ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			g_pNet->Send_cli_WHISPER(  (char*)stTargetID.c_str(), (char*)stRealMsg.c_str() );
 
-			///ÀÚ½ÅÀÇ Ã¤ÆÃÃ¢¿¡ ¸Þ¼¼Áö »Ñ¸®°í
+			///ï¿½Ú½ï¿½ï¿½ï¿½ Ã¤ï¿½ï¿½Ã¢ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½Ñ¸ï¿½ï¿½ï¿½
 			string Temp = g_pAVATAR->Get_NAME();
 			Temp.append(">");
 			Temp.append( stMsg );
 			g_itMGR.AppendChatMsg( Temp.c_str(), IT_MGR::CHAT_TYPE_WHISPER);
-			///¿¡µðÆ®¹Ú½º¿¡ @ID¸¦ Ãß°¡ÇÑ´Ù.
+			///ï¿½ï¿½ï¿½ï¿½Æ®ï¿½Ú½ï¿½ï¿½ï¿½ @IDï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ñ´ï¿½.
 			pEditBox = (CTEditBox*)pCtrl;
-			std::string stTemp = "@";
+
+			std::string stTemp;
+			Util.Wide2MultyByteString( m_WhisperCommands[0], stTemp );			
+
 			stTemp.append( stTargetID );
 			pEditBox->AppendText( (char*)stTemp.c_str() );
 			pEditBox->AppendText(" ");
@@ -467,7 +570,7 @@ void CChatDLG::SendChatMsg( char* szMsg )
 			{
 				if( CExchange::GetInstance().SendCliTradeReq( g_pObjMGR->Get_ServerObjectIndex(pObjChar->Get_INDEX()) ) )
 				{
-					///ÀÚ½ÅÀÇ Ã¤ÆÃÃ¢¿¡ ¸Þ¼¼Áö »Ñ¸®°í
+					///ï¿½Ú½ï¿½ï¿½ï¿½ Ã¤ï¿½ï¿½Ã¢ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½Ñ¸ï¿½ï¿½ï¿½
 					string Temp = stTargetID;
 					Temp.append(STR_REQ_TRADE);
 					g_itMGR.AppendChatMsg( Temp.c_str(), IT_MGR::CHAT_TYPE_SYSTEM);
@@ -531,21 +634,21 @@ int	 CChatDLG::ChatParser( string stMsg, string& stRealMsg ,string& stTargetID )
 		}
 	}
 
-	//for( iter = m_TradeCommands.begin(); iter != m_TradeCommands.end(); ++iter )
-	//{
-	//	index = wstrMsg.find( *iter );
-	//	if( index == 0 )
-	//	{
-	//		std::wstring wstrRealMsg = wstrMsg.substr( 1, wstrMsg.size() - 1 );
-	//		Util.Wide2MultyByteString( wstrRealMsg, stRealMsg );
-	//		return CHAT_TRADE;
-	//	}
-	//}
+	for( iter = m_TradeCommands.begin(); iter != m_TradeCommands.end(); ++iter )
+	{
+		index = wstrMsg.find( *iter );
+		if( index == 0 )
+		{
+			std::wstring wstrRealMsg = wstrMsg.substr( 1, wstrMsg.size() - 1 );
+			Util.Wide2MultyByteString( wstrRealMsg, stRealMsg );
+			return CHAT_TRADE;
+		}
+	}
 
 
 	for( iter = m_ClanCommands.begin(); iter != m_ClanCommands.end(); ++iter )
 	{
-		index = wstrMsg.find( *iter );
+		index = wstrMsg.find( *iter );		
 		if( index == 0 )
 		{
 			std::wstring wstrRealMsg = wstrMsg.substr( 1, wstrMsg.size() - 1 );
@@ -573,6 +676,8 @@ int	 CChatDLG::ChatParser( string stMsg, string& stRealMsg ,string& stTargetID )
 
 	for( iter = m_WhisperCommands.begin(); iter != m_WhisperCommands.end(); ++iter )
 	{
+		wstring wstrBuf = *iter;
+		
 		index = wstrMsg.find( *iter );
 		if( index == 0 )
 		{
@@ -601,7 +706,7 @@ int	 CChatDLG::ChatParser( string stMsg, string& stRealMsg ,string& stTargetID )
 			break;
 		}
 	}
-	
+
 	stRealMsg = stMsg;	
 	return CHAT_NORMAL;
 }
@@ -629,22 +734,25 @@ bool CChatDLG::IsChatBlock()
 	return m_bChatBlock;
 }
 
-/// »óÈ²¿¡ µû¶ó List¿Í ScrollBarÀÇ ScrollÀ» ±¸ºÐÇÑ´Ù.
+/// ï¿½ï¿½È²ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Listï¿½ï¿½ ScrollBarï¿½ï¿½ Scrollï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 void CChatDLG::AppendMsg( const char* pszMsg, DWORD color, int iType )
 {
+	if( iType == FILTER_SYSTEM )
+	{
+		AppendMsg2System( pszMsg, color);
+		return;
+	}
+
 	AppendMsg2All( pszMsg, color , iType );
 	AppendMsg2Whisper( pszMsg, color , iType );
 	AppendMsg2Trade( pszMsg, color , iType );
 	AppendMsg2Party( pszMsg, color , iType );
 	AppendMsg2Clan( pszMsg, color , iType );
 	AppendMsg2Allied( pszMsg, color , iType );
-	
+
 }
 
-void CChatDLG::AppendMsg2( const char* pszMsg, DWORD color, int iType )
-{
-	AppendMsg2sys( pszMsg, color , iType );
-}
+
 
 void CChatDLG::SetEnableShoutRestrict()
 {
@@ -664,134 +772,148 @@ void CChatDLG::SendChatMsgRepeat()
 
 void CChatDLG::TabSelected( int iTab )
 {
+	HideChild("SELECTED_ALL" );
+	HideChild("SELECTED_TRADE" );
+	HideChild("SELECTED_CLAN" );
+	HideChild("SELECTED_PARTY" );
+	HideChild("SELECTED_WHISPER" );
+
 	m_iSelectedTab = iTab;
 	switch( iTab )
 	{
 	case TAB_ALL:
 		{
-			ShowChild( IID_LISTBOX_ALL );
-			ShowChild( IID_SCROLLBAR_ALL );
-			HideChild( IID_LISTBOX_WHISPER );
-			HideChild( IID_SCROLLBAR_WHISPER );
-			HideChild( IID_LISTBOX_TRADE );
-			HideChild( IID_SCROLLBAR_TRADE );
-			HideChild( IID_LISTBOX_PARTY );
-			HideChild( IID_SCROLLBAR_PARTY );
-			HideChild( IID_LISTBOX_CLAN );
-			HideChild( IID_SCROLLBAR_CLAN );
-			HideChild( IID_LISTBOX_ALLIED );
-			HideChild( IID_SCROLLBAR_ALLIED );
+			ShowChild(IID_LISTBOX_ALL );
+			ShowChild(IID_SCROLLBAR_ALL );
+			HideChild(IID_LISTBOX_WHISPER );
+			HideChild(IID_SCROLLBAR_WHISPER );
+			HideChild(IID_LISTBOX_TRADE );
+			HideChild(IID_SCROLLBAR_TRADE );
+			HideChild(IID_LISTBOX_PARTY );
+			HideChild(IID_SCROLLBAR_PARTY );
+			HideChild(IID_LISTBOX_CLAN );
+			HideChild(IID_SCROLLBAR_CLAN );
+			HideChild(IID_LISTBOX_ALLIED );
+			HideChild(IID_SCROLLBAR_ALLIED );
 			CWinCtrl* pCtrl = NULL;
-			if( pCtrl = Find( IID_LISTBOX_ALL ) )
+			if( pCtrl = Find( IID_LISTBOX_ALL) )
 			{
 				CTListBox* pListBox = (CTListBox*)pCtrl;
 				pListBox->SetValue( pListBox->GetMaximum() );
 			}
+			ShowChild("SELECTED_ALL" );
+			
 		}
 		break;
 	case TAB_WHISPER:
 		{
-			ShowChild( IID_LISTBOX_WHISPER );
-			ShowChild( IID_SCROLLBAR_WHISPER );
-			HideChild( IID_LISTBOX_ALL );
-			HideChild( IID_SCROLLBAR_ALL );
-			HideChild( IID_LISTBOX_TRADE );
-			HideChild( IID_SCROLLBAR_TRADE );
-			HideChild( IID_LISTBOX_PARTY );
-			HideChild( IID_SCROLLBAR_PARTY );
-			HideChild( IID_LISTBOX_CLAN );
-			HideChild( IID_SCROLLBAR_CLAN );
-			HideChild( IID_LISTBOX_ALLIED );
-			HideChild( IID_SCROLLBAR_ALLIED );
+			ShowChild(IID_LISTBOX_WHISPER );
+			ShowChild(IID_SCROLLBAR_WHISPER );
+			HideChild(IID_LISTBOX_ALL );
+			HideChild(IID_SCROLLBAR_ALL );
+			HideChild(IID_LISTBOX_TRADE );
+			HideChild(IID_SCROLLBAR_TRADE );
+			HideChild(IID_LISTBOX_PARTY );
+			HideChild(IID_SCROLLBAR_PARTY );
+			HideChild(IID_LISTBOX_CLAN );
+			HideChild(IID_SCROLLBAR_CLAN );
+			HideChild(IID_LISTBOX_ALLIED );
+			HideChild(IID_SCROLLBAR_ALLIED );
 			CWinCtrl* pCtrl = NULL;
-			if( pCtrl = Find( IID_LISTBOX_WHISPER ) )
+			if( pCtrl = Find(  IID_LISTBOX_WHISPER ) )
 			{
 				CTListBox* pListBox = (CTListBox*)pCtrl;
 				pListBox->SetValue( pListBox->GetMaximum() );
-			}
+			}			
+			ShowChild("SELECTED_WHISPER" );
 		}
 		break;
 	case TAB_TRADE:
 		{
-			ShowChild( IID_LISTBOX_TRADE );
-			ShowChild( IID_SCROLLBAR_TRADE );
-			HideChild( IID_LISTBOX_ALL );
-			HideChild( IID_SCROLLBAR_ALL );
-			HideChild( IID_LISTBOX_WHISPER );
-			HideChild( IID_SCROLLBAR_WHISPER );
-			HideChild( IID_LISTBOX_PARTY );
-			HideChild( IID_SCROLLBAR_PARTY );
-			HideChild( IID_LISTBOX_CLAN );
-			HideChild( IID_SCROLLBAR_CLAN );
-			HideChild( IID_LISTBOX_ALLIED );
-			HideChild( IID_SCROLLBAR_ALLIED );
+			ShowChild(IID_LISTBOX_TRADE );
+			ShowChild(IID_SCROLLBAR_TRADE );
+			HideChild(IID_LISTBOX_ALL );
+			HideChild(IID_SCROLLBAR_ALL );
+			HideChild(IID_LISTBOX_WHISPER );
+			HideChild(IID_SCROLLBAR_WHISPER );
+			HideChild(IID_LISTBOX_PARTY );
+			HideChild(IID_SCROLLBAR_PARTY );
+			HideChild(IID_LISTBOX_CLAN );
+			HideChild(IID_SCROLLBAR_CLAN );
+			HideChild(IID_LISTBOX_ALLIED );
+			HideChild(IID_SCROLLBAR_ALLIED );
 			CWinCtrl* pCtrl = NULL;
 			if( pCtrl = Find( IID_LISTBOX_TRADE ) )
 			{
 				CTListBox* pListBox = (CTListBox*)pCtrl;
 				pListBox->SetValue( pListBox->GetMaximum() );
 			}
+			
+			ShowChild( "SELECTED_TRADE" );
+			
 		}
 		break;
 	case TAB_PARTY:
 		{
-			ShowChild( IID_LISTBOX_PARTY );
-			ShowChild( IID_SCROLLBAR_PARTY );
-			HideChild( IID_LISTBOX_ALL );
-			HideChild( IID_SCROLLBAR_ALL );
-			HideChild( IID_LISTBOX_WHISPER );
-			HideChild( IID_SCROLLBAR_WHISPER );
-			HideChild( IID_LISTBOX_TRADE );
-			HideChild( IID_SCROLLBAR_TRADE );
-			HideChild( IID_LISTBOX_CLAN );
-			HideChild( IID_SCROLLBAR_CLAN );
-			HideChild( IID_LISTBOX_ALLIED );
-			HideChild( IID_SCROLLBAR_ALLIED );
+			ShowChild(IID_LISTBOX_PARTY );
+			ShowChild(IID_SCROLLBAR_PARTY );
+			HideChild(IID_LISTBOX_ALL );
+			HideChild(IID_SCROLLBAR_ALL );
+			HideChild(IID_LISTBOX_WHISPER );
+			HideChild(IID_SCROLLBAR_WHISPER );
+			HideChild(IID_LISTBOX_TRADE );
+			HideChild(IID_SCROLLBAR_TRADE );
+			HideChild(IID_LISTBOX_CLAN );
+			HideChild(IID_SCROLLBAR_CLAN );
+			HideChild(IID_LISTBOX_ALLIED );
+			HideChild(IID_SCROLLBAR_ALLIED );
 			CWinCtrl* pCtrl = NULL;
 			if( pCtrl = Find( IID_LISTBOX_PARTY ) )
 			{
 				CTListBox* pListBox = (CTListBox*)pCtrl;
 				pListBox->SetValue( pListBox->GetMaximum() );
 			}
+			ShowChild( "SELECTED_PARTY" );
 		}
 		break;
 	case TAB_CLAN:
 		{
-			ShowChild( IID_LISTBOX_CLAN );
-			ShowChild( IID_SCROLLBAR_CLAN );
+			ShowChild(IID_LISTBOX_CLAN );
+			ShowChild(IID_SCROLLBAR_CLAN );
 
-			HideChild( IID_LISTBOX_ALL );
-			HideChild( IID_SCROLLBAR_ALL );
-			HideChild( IID_LISTBOX_WHISPER );
-			HideChild( IID_SCROLLBAR_WHISPER );
-			HideChild( IID_LISTBOX_TRADE );
-			HideChild( IID_SCROLLBAR_TRADE );
-			HideChild( IID_LISTBOX_PARTY );
-			HideChild( IID_SCROLLBAR_PARTY );
-			HideChild( IID_LISTBOX_ALLIED );
-			HideChild( IID_SCROLLBAR_ALLIED );
+			HideChild(IID_LISTBOX_ALL );
+			HideChild(IID_SCROLLBAR_ALL );
+			HideChild(IID_LISTBOX_WHISPER );
+			HideChild(IID_SCROLLBAR_WHISPER );
+			HideChild(IID_LISTBOX_TRADE );
+			HideChild(IID_SCROLLBAR_TRADE );
+			HideChild(IID_LISTBOX_PARTY );
+			HideChild(IID_SCROLLBAR_PARTY );
+			HideChild(IID_LISTBOX_ALLIED );
+			HideChild(IID_SCROLLBAR_ALLIED );
 			CWinCtrl* pCtrl = NULL;
 			if( pCtrl = Find( IID_LISTBOX_CLAN ) )
 			{
 				CTListBox* pListBox = (CTListBox*)pCtrl;
 				pListBox->SetValue( pListBox->GetMaximum() );
 			}
+			ShowChild( "SELECTED_CLAN" );
 		}
 		break;
 	case TAB_ALLIED:
 		{
-			HideChild( IID_LISTBOX_CLAN );
-			HideChild( IID_SCROLLBAR_CLAN );
-			HideChild( IID_LISTBOX_ALL );
-			HideChild( IID_SCROLLBAR_ALL );
-			HideChild( IID_LISTBOX_WHISPER );
-			HideChild( IID_SCROLLBAR_WHISPER );
-			HideChild( IID_LISTBOX_TRADE );
-			HideChild( IID_SCROLLBAR_TRADE );
-			HideChild( IID_LISTBOX_PARTY );
-			HideChild( IID_SCROLLBAR_PARTY );
-			ShowChild( IID_LISTBOX_ALLIED );
-			ShowChild( IID_SCROLLBAR_ALLIED );
+			HideChild(IID_LISTBOX_CLAN );
+			HideChild(IID_SCROLLBAR_CLAN );
+			HideChild(IID_LISTBOX_ALL );
+			HideChild(IID_SCROLLBAR_ALL );
+			HideChild(IID_LISTBOX_WHISPER );
+			HideChild(IID_SCROLLBAR_WHISPER );
+			HideChild(IID_LISTBOX_TRADE );
+			HideChild(IID_SCROLLBAR_TRADE );
+			HideChild(IID_LISTBOX_PARTY );
+			HideChild(IID_SCROLLBAR_PARTY );
+			ShowChild(IID_LISTBOX_ALLIED );
+			ShowChild(IID_SCROLLBAR_ALLIED );
 			CWinCtrl* pCtrl = NULL;
 			if( pCtrl = Find( IID_LISTBOX_ALLIED ) )
 			{
@@ -848,37 +970,31 @@ int CChatDLG::GetActiveScrollBar()
 	}
 	return 0;
 }
-//Dagnarus
+
 void CChatDLG::AppendMsg2System( const char* pszMsg, DWORD dwColor )
 {
-	AppendMsg2ListBox ( IDD_LISTBOX_TOP, IDD_SCROLLBAR_TOP, pszMsg, dwColor);
-}
-
-void CChatDLG::AppendMsg2sys( const char* pszMsg, DWORD dwColor , int iFilterType )
-{
-	AppendMsg2ListBox( IDD_LISTBOX_TOP, IDD_SCROLLBAR_TOP, pszMsg, dwColor );
+	AppendMsg2ListBox( IID_LISTBOX_SYSTEM, IID_SCROLLBAR_SYSTEM, pszMsg, dwColor );
 }
 
 void CChatDLG::AppendMsg2All( const char* pszMsg, DWORD dwColor , int iFilterType )
 {
-	if( iFilterType == FILTER_WHISPER )///¹«Á¶°Ç ³Ö´Â´Ù.
+	if( iFilterType == FILTER_WHISPER )///ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Â´ï¿½.
 	{
 		AppendMsg2ListBox( IID_LISTBOX_ALL, IID_SCROLLBAR_ALL, pszMsg, dwColor );
 	}
-	else///ÇÊÅÍ Å¸ÀÔ¿¡ µû¶ó ³Ö°Å³ª¾È³Ö´Â´Ù.
+	else///ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ô¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°Å³ï¿½ï¿½È³Ö´Â´ï¿½.
 	{
-		if( m_Filters[0].Filters[iFilterType] > 0 )
-			AppendMsg2ListBox( IID_LISTBOX_ALL, IID_SCROLLBAR_ALL, pszMsg, dwColor );
+		if( m_Filters[0].Filters[iFilterType] > 0 ) AppendMsg2ListBox( IID_LISTBOX_ALL, IID_SCROLLBAR_ALL, pszMsg, dwColor );
 	}
 }
 
 void CChatDLG::AppendMsg2Whisper( const char* pszMsg, DWORD dwColor , int iFilterType )
 {
-	if( iFilterType == FILTER_WHISPER )///¹«Á¶°Ç ³Ö´Â´Ù.
+	if( iFilterType == FILTER_WHISPER )///ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Â´ï¿½.
 	{
 		AppendMsg2ListBox( IID_LISTBOX_WHISPER, IID_SCROLLBAR_WHISPER, pszMsg, dwColor );
 	}
-	else///ÇÊÅÍ Å¸ÀÔ¿¡ µû¶ó ³Ö°Å³ª¾È³Ö´Â´Ù.
+	else///ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ô¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°Å³ï¿½ï¿½È³Ö´Â´ï¿½.
 	{
 		if( m_Filters[1].Filters[iFilterType] > 0 )
 			AppendMsg2ListBox( IID_LISTBOX_WHISPER, IID_SCROLLBAR_WHISPER, pszMsg, dwColor );
@@ -887,11 +1003,11 @@ void CChatDLG::AppendMsg2Whisper( const char* pszMsg, DWORD dwColor , int iFilte
 
 void CChatDLG::AppendMsg2Trade( const char* pszMsg, DWORD dwColor , int iFilterType )
 {
-	if( iFilterType == FILTER_WHISPER )///¹«Á¶°Ç ³Ö´Â´Ù.
+	if( iFilterType == FILTER_WHISPER )///ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Â´ï¿½.
 	{
 		AppendMsg2ListBox( IID_LISTBOX_TRADE, IID_SCROLLBAR_TRADE, pszMsg, dwColor );
 	}
-	else///ÇÊÅÍ Å¸ÀÔ¿¡ µû¶ó ³Ö°Å³ª¾È³Ö´Â´Ù.
+	else///ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ô¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°Å³ï¿½ï¿½È³Ö´Â´ï¿½.
 	{
 		if( m_Filters[2].Filters[iFilterType] > 0 )
 			AppendMsg2ListBox( IID_LISTBOX_TRADE, IID_SCROLLBAR_TRADE, pszMsg, dwColor );
@@ -900,11 +1016,11 @@ void CChatDLG::AppendMsg2Trade( const char* pszMsg, DWORD dwColor , int iFilterT
 
 void CChatDLG::AppendMsg2Party( const char* pszMsg, DWORD dwColor , int iFilterType )
 {
-	if( iFilterType == FILTER_WHISPER )///¹«Á¶°Ç ³Ö´Â´Ù.
+	if( iFilterType == FILTER_WHISPER )///ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Â´ï¿½.
 	{
 		AppendMsg2ListBox( IID_LISTBOX_PARTY, IID_SCROLLBAR_PARTY, pszMsg, dwColor );
 	}
-	else///ÇÊÅÍ Å¸ÀÔ¿¡ µû¶ó ³Ö°Å³ª¾È³Ö´Â´Ù.
+	else///ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ô¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°Å³ï¿½ï¿½È³Ö´Â´ï¿½.
 	{
 		if( m_Filters[3].Filters[iFilterType] > 0 )
 			AppendMsg2ListBox( IID_LISTBOX_PARTY, IID_SCROLLBAR_PARTY, pszMsg, dwColor );
@@ -913,11 +1029,11 @@ void CChatDLG::AppendMsg2Party( const char* pszMsg, DWORD dwColor , int iFilterT
 
 void CChatDLG::AppendMsg2Clan( const char* pszMsg, DWORD dwColor , int iFilterType )
 {
-	if( iFilterType == FILTER_WHISPER )///¹«Á¶°Ç ³Ö´Â´Ù.
+	if( iFilterType == FILTER_WHISPER )///ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Â´ï¿½.
 	{
 		AppendMsg2ListBox( IID_LISTBOX_CLAN, IID_SCROLLBAR_CLAN, pszMsg, dwColor );
 	}
-	else///ÇÊÅÍ Å¸ÀÔ¿¡ µû¶ó ³Ö°Å³ª¾È³Ö´Â´Ù.
+	else///ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ô¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°Å³ï¿½ï¿½È³Ö´Â´ï¿½.
 	{
 		if( m_Filters[4].Filters[iFilterType] > 0 )
 			AppendMsg2ListBox( IID_LISTBOX_CLAN, IID_SCROLLBAR_CLAN, pszMsg, dwColor );
@@ -926,11 +1042,11 @@ void CChatDLG::AppendMsg2Clan( const char* pszMsg, DWORD dwColor , int iFilterTy
 
 void CChatDLG::	AppendMsg2Allied( const char* pszMsg, DWORD dwColor , int iFilterType )
 {
-	if( iFilterType == FILTER_WHISPER )///¹«Á¶°Ç ³Ö´Â´Ù.
+	if( iFilterType == FILTER_WHISPER )///ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Â´ï¿½.
 	{
 		AppendMsg2ListBox( IID_LISTBOX_ALLIED, IID_SCROLLBAR_ALLIED, pszMsg, dwColor );
 	}
-	else///ÇÊÅÍ Å¸ÀÔ¿¡ µû¶ó ³Ö°Å³ª¾È³Ö´Â´Ù.
+	else///ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ô¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°Å³ï¿½ï¿½È³Ö´Â´ï¿½.
 	{
 		if( m_Filters[5].Filters[iFilterType] > 0 )
 			AppendMsg2ListBox( IID_LISTBOX_ALLIED, IID_SCROLLBAR_ALLIED, pszMsg, dwColor );
@@ -965,8 +1081,78 @@ void CChatDLG::AppendMsg2ListBox( int iListBoxID, int iScrollBarID , const char*
 	}
 }
 
+void CChatDLG::AppendMsg2ZListBox( int iListBoxID, int iScrollBarID , const char* pszMsg, DWORD dwColor )
+{
+	CWinCtrl* pCtrl = Find( iListBoxID );
+	assert( pCtrl );
+
+	if( pCtrl && pCtrl->GetControlType() == CTRL_ZLISTBOX)
+	{
+		CZListBox* pListBox = (CZListBox*)pCtrl;
+
+		int iItemCount = pListBox->GetSize();
+
+		int iWidth	 = pListBox->GetWidth();
+
+		CJStringParser	m_jString;
+
+		m_jString.SetSplitType( CJStringParser::SPLIT_WORD );
+		m_jString.SetDefaultColor( dwColor );
+		m_jString.SetString( CStr::Printf( "%s", pszMsg), iWidth - 10 );
+
+		CTScrollBar* pScrollBar;
+
+		if(m_jString.GetStringCount() > 1)
+		{
+			for(int i = 0; i < m_jString.GetStringCount(); i++)
+			{
+				m_szStirng = m_jString.GetJString(i);
+				
+				CZLBAppendText* pAppText = new CZLBAppendText(m_szStirng, iWidth, dwColor );	
+
+				pListBox->Add( pAppText );
+				pListBox->SetValue( pListBox->GetMaximum() );
+
+				pListBox->SetWidth( iWidth );
+
+				SetHeight( GetHeight() + pAppText->GetHeight() );
+
+				pCtrl = Find( iScrollBarID );
+				if( pCtrl && pCtrl->GetControlType() == CTRL_SCROLLBAR )
+				{
+					pScrollBar = (CTScrollBar*)pCtrl;
+					pScrollBar->SetValue( pListBox->GetMaximum() );
+				}
+			}
+		}
+		else
+		{
+			CZLBAppendText* pAppText = new CZLBAppendText( pszMsg, iWidth, dwColor);			
+
+			pListBox->Add( pAppText );
+
+			pListBox->SetValue( pListBox->GetMaximum() );
+
+			pListBox->SetWidth( iWidth );
+
+			SetHeight( GetHeight() + pAppText->GetHeight() );
+
+			pCtrl = Find( iScrollBarID );
+			if( pCtrl && pCtrl->GetControlType() == CTRL_SCROLLBAR )
+			{
+				CTScrollBar* pScrollBar = (CTScrollBar*)pCtrl;
+				pScrollBar->SetValue( pListBox->GetMaximum() );
+			}
+		}
+		
+	}
+}
+
+
 void CChatDLG::OnLButtonDown( unsigned uiProcID, WPARAM wParam , LPARAM lParam )
 {
+	CFilterWord& Util = CFilterWord::GetInstance();
+
 	switch( uiProcID )
 	{
 	case IID_BTN_ALL:
@@ -984,7 +1170,10 @@ void CChatDLG::OnLButtonDown( unsigned uiProcID, WPARAM wParam , LPARAM lParam )
 		{
 			CTEditBox* pBox = (CTEditBox*)pCtrl;
 			pBox->clear_text();
-			pBox->AppendText("@");
+
+			std::string stTemp;
+			Util.Wide2MultyByteString( m_WhisperCommands[0], stTemp );			
+			pBox->AppendText( stTemp.c_str() );
 		}
 		ActiveListBoxMoveEnd();
 		break;
@@ -994,7 +1183,6 @@ void CChatDLG::OnLButtonDown( unsigned uiProcID, WPARAM wParam , LPARAM lParam )
 		{
 			CTEditBox* pBox = (CTEditBox*)pCtrl;
 			pBox->clear_text();
-			pBox->AppendText("$");
 		}
 		ActiveListBoxMoveEnd();
 		break;
@@ -1014,7 +1202,10 @@ void CChatDLG::OnLButtonDown( unsigned uiProcID, WPARAM wParam , LPARAM lParam )
 		{
 			CTEditBox* pBox = (CTEditBox*)pCtrl;
 			pBox->clear_text();
-			pBox->AppendText("&");
+
+			std::string stTemp;
+			Util.Wide2MultyByteString( m_ClanCommands[0], stTemp );			
+			pBox->AppendText( stTemp.c_str() );
 		}
 		ActiveListBoxMoveEnd();
 		break;
@@ -1053,7 +1244,11 @@ bool CChatDLG::Create( const char* IDD )
 		pCtrl = Find( IID_EDITBOX );
 		assert( pCtrl );
 		if( pCtrl )
+		{
+			CTEditBox* pEditBox = (CTEditBox*) pCtrl;
+			pEditBox->SetLimitText(150);
 			pCtrl->AddActionListener( this );
+		}
 
 		return true;
 	}
@@ -1069,6 +1264,93 @@ ChatFilter& CChatDLG::GetCurrentTabFilter( )
 void CChatDLG::SetCurrentTabFilter( ChatFilter& filter )
 {
 	m_Filters[ m_iSelectedTab - 1] = filter;
+
+	SetSystemChat();
+}
+
+void CChatDLG::SetSystemChat()
+{
+	CWinCtrl * pCtrl = NULL;
+	CWinCtrl * pCtrl2 = NULL;
+
+	int		iBefore_ShowSystemChat = m_iShowSystemChat;
+	bool	bChange_ShowSystemChat = false;
+
+	if( pCtrl = Find("PAN_SYSTEM_CHAT") )
+	{
+		if( m_Filters[ m_iSelectedTab - 1].Filters[FILTER_SYSTEM] <= 0 
+			|| m_iChatSizeMode == CHATSIZE_MODE_SMALL )
+		{        
+			pCtrl->Hide();
+			m_iShowSystemChat = 0;
+		}
+		else
+		{
+			pCtrl->Show();
+			m_iShowSystemChat = 1;
+		}
+	}	
+
+	if( iBefore_ShowSystemChat != m_iShowSystemChat )
+	{
+		bChange_ShowSystemChat = true;
+	}
+
+	if(m_iShowSystemChat==0)
+	{
+		if( pCtrl = Find("MOVE_TAB") )
+		{
+            pCtrl->SetOffset( pCtrl->GetOffset().x, m_ChatSize[1][m_iChatSizeMode].height+5 );	
+			GetCaption()->SetOffset( pCtrl->GetOffset() );
+		}
+		if( pCtrl = Find("PAN_INPUT") ) //Numenor: no system chat = no bars to change chat filter
+		{
+			pCtrl->SetOffset( 0, 2 );			
+		}	
+		if( pCtrl = Find("PAN_CHANNEL_TAB") )
+		{
+			pCtrl->Hide();
+		}
+	}
+	else
+	{
+		if( pCtrl = Find("MOVE_TAB") )
+		{
+			pCtrl->SetOffset( pCtrl->GetOffset().x, - m_ChatSize[1][m_iChatSizeMode].height + m_ChatSize[1][CHATSIZE_MODE_SMALL].height );
+			GetCaption()->SetOffset( pCtrl->GetOffset() );
+		}
+		if( pCtrl = Find("PAN_INPUT") )
+		{			
+			if( pCtrl2 = Find("PAN_INPUT_POS") )
+			{
+				pCtrl->SetOffset( pCtrl2->GetOffset() );
+			}
+		}
+		if( pCtrl = Find("PAN_CHANNEL_TAB") )
+		{
+			pCtrl->Show();
+		}
+	}
+
+	if( bChange_ShowSystemChat == true )
+	{
+		if( pCtrl = Find("PAN_INPUT_POS") )
+		{
+			if(m_iShowSystemChat==0)
+			{
+				MoveWindow( GetPosition().x, GetPosition().y + pCtrl->GetOffset().y );
+			}
+			else
+			{
+				MoveWindow( GetPosition().x, GetPosition().y - pCtrl->GetOffset().y );
+			}			
+		}		
+	}
+	else
+	{
+		MoveWindow(GetPosition());
+	}
+	
 }
 
 
@@ -1076,6 +1358,8 @@ unsigned CChatDLG::ActionPerformed( CActionEvent* e )
 {
 	assert( e );
 	if( e == NULL ) return 0;
+
+	CFilterWord& Util = CFilterWord::GetInstance();
 
 	switch( e->GetID() )
 	{
@@ -1090,48 +1374,165 @@ unsigned CChatDLG::ActionPerformed( CActionEvent* e )
 					CTEditBox* pEditBox = (CTEditBox*)pCtrl;
 					if( CTEditBox::s_pFocusEdit && CTEditBox::s_pFocusEdit == pEditBox && pEditBox->get_text() )
 					{
-						SendChatMsg(pEditBox->get_text());
-
-						switch( m_iSelectedTab )
+						char* msgtext = pEditBox->get_text();
+						if (strlen(msgtext) > 0)
 						{
-						case TAB_WHISPER:
-							if( pEditBox->get_text() == NULL )
-								pEditBox->AppendText("@");
-							else if( strlen(pEditBox->get_text()) < 1 )
-								pEditBox->AppendText("@");
-							break;
-						case TAB_TRADE:
-							if( pEditBox->get_text() == NULL )
-								pEditBox->AppendText("$");
-							else if( strlen(pEditBox->get_text()) < 1 )
-								pEditBox->AppendText("$");
-							break;
-						case TAB_PARTY:
-							if( pEditBox->get_text() == NULL )
-								pEditBox->AppendText("#");
-							else if( strlen(pEditBox->get_text()) < 1 )
-								pEditBox->AppendText("#");
-							break;
-						case TAB_CLAN:
-							if( pEditBox->get_text() == NULL )
-								pEditBox->AppendText("&");
-							else if( strlen(pEditBox->get_text()) < 1 )
-								pEditBox->AppendText("&");
-							break;
-						case TAB_ALLIED:
-							if( pEditBox->get_text() == NULL )
-								pEditBox->AppendText("~");
-							else if( strlen(pEditBox->get_text()) < 1 )
-								pEditBox->AppendText("~");
-							break;
-						default:
-							break;
+							bool sendMsg = true;
+
+							if (msgtext[0] == '/')
+							{
+								int skillIdx = 0;
+								if (strncmp(msgtext, "/sit", 4) == 0) {
+									skillIdx = 11;
+								} else if (strncmp(msgtext, "/stand", 6) == 0) {
+									assert( g_pAVATAR );
+									if ( g_pAVATAR->Get_STATE() == CS_SIT ) {
+										skillIdx = 11;
+									}
+								} else if (strncmp(msgtext, "/pick", 5) == 0) {
+									skillIdx = 12;
+								} else if (strncmp(msgtext, "/atk", 4) == 0 || strncmp(msgtext, "/attack", 7) == 0) {
+									skillIdx = 16;
+								} else if (strncmp(msgtext, "/party", 6) == 0) {
+									skillIdx = 19;
+								} else if (strncmp(msgtext, "/trade", 6) == 0) {
+									skillIdx = 20;
+								} else if (strncmp(msgtext, "/vend", 5) == 0 || strncmp(msgtext, "/vending", 8) == 0) {
+									skillIdx = 21;
+								} else if (strncmp(msgtext, "/self", 5) == 0) {
+									skillIdx = 15;
+								} else if (strncmp(msgtext, "/tgt", 4) == 0 || strncmp(msgtext, "/target", 7) == 0) {
+									skillIdx = 20; //doesn't work
+								} else if (strncmp(msgtext, "/leave", 6) == 0) {
+									CTMacroCommand* pMacroCmd = new CTMacroCommand;
+
+									CTCmdSendPacketPartyReq*	pSubCmd1 = new CTCmdSendPacketPartyReq(PARTY_REQ_LEFT, g_pObjMGR->Get_ServerObjectIndex(g_pAVATAR->Get_INDEX() ) );
+									CTCmdLeaveParty*			pSubCmd2 = new CTCmdLeaveParty;
+
+									pMacroCmd->AddSubCommand( pSubCmd1 );
+									pMacroCmd->AddSubCommand( pSubCmd2 );
+
+									g_itMGR.OpenMsgBox( STR_PARTY_QUERY_LEAVE,CMsgBox::BT_OK | CMsgBox::BT_CANCEL, true, 0 ,pMacroCmd, NULL );
+									sendMsg = false;
+								} else if (strncmp(msgtext, "/friend", 7) == 0) {
+									if (msgtext[7] == ' ') {
+										char* paramStr = msgtext + 8;
+										if( paramStr && *paramStr )
+										{
+											if( _strcmpi( paramStr, g_pAVATAR->Get_NAME() ) != 0)
+											{
+												CTDialog* pDlg = g_itMGR.FindDlg( DLG_TYPE_COMMUNITY );
+												assert( pDlg );
+												if( pDlg )
+												{
+													CCommDlg* pCommDlg = (CCommDlg*)pDlg;
+													if( pCommDlg->FindFriendByName( paramStr ) == NULL )
+														g_pNet->Send_cli_MCMD_APPEND_REQ( paramStr );
+													else
+														g_itMGR.OpenMsgBox(STR_DUPLICATED_FRIENDNAME);
+												}
+											}
+										}
+									}
+									sendMsg = false;
+								} else if (strncmp(msgtext, "/sort", 5) == 0) {
+									CTDialog* pDlg = g_itMGR.FindDlg( DLG_TYPE_ITEM );
+									if( pDlg )
+									{
+										CItemDlg* pItemDlg = ( CItemDlg* ) pDlg;
+										pItemDlg->SortItems();
+									}
+								} else if (strncmp(msgtext, "/logout", 7) == 0) {
+									g_itMGR.SetWaitDisconnectType( 1 );
+									g_pNet->Send_cli_CHAR_CHANGE();
+									sendMsg = false;
+								} else if (strncmp(msgtext, "/quit", 5) == 0) {
+									g_pCApp->SetExitGame();
+									sendMsg = false;
+								} else if (strncmp(msgtext, "/help", 5) == 0) {
+									AppendMsg2System("Available commands:", 0xffffffff);
+									AppendMsg2System("/sit - Sets character to sit state", 0xffffffff);
+									AppendMsg2System("/stand - Stands up from sit state", 0xffffffff);
+									AppendMsg2System("/pick - Pick object on the ground", 0xffffffff);
+									AppendMsg2System("/atk | /attack - Attack target", 0xffffffff);
+									AppendMsg2System("/party - Asks someone to join party", 0xffffffff);
+									AppendMsg2System("/leave - Leaves a party", 0xffffffff);
+									AppendMsg2System("/trade - Requests a trade", 0xffffffff);
+									AppendMsg2System("/vend | /vending - Opens a store", 0xffffffff);
+									AppendMsg2System("/self - Targets your own character", 0xffffffff);
+									//AppendMsg2System("/tgt | /target - Targets nearby enemy", 0xffffffff);
+									AppendMsg2System("/friend - Adds to your friend list", 0xffffffff);
+									AppendMsg2System("/logout - Returns to character select", 0xffffffff);
+									AppendMsg2System("/quit - Exits the game", 0xffffffff);
+									AppendMsg2System("/help - Prints this help list", 0xffffffff);
+								}
+								
+
+								if (skillIdx != 0)
+								{
+									assert( g_pAVATAR );
+									CSkillSlot* pSkillSlot = g_pAVATAR->GetSkillSlot();
+									assert( pSkillSlot );
+									CSkill* pSkill = pSkillSlot->GetSkillBySkillIDX( skillIdx );
+									assert( pSkill );
+									if( pSkill )
+										pSkill->Execute();
+									sendMsg = false;
+								}
+							}
+
+
+							if (sendMsg) {
+								SendChatMsg(msgtext);
+							}
+
+							switch( m_iSelectedTab )
+							{
+							case TAB_PARTY:
+								if( pEditBox->get_text() == NULL )
+									pEditBox->AppendText("#");
+								else if( strlen(pEditBox->get_text()) < 1 )
+									pEditBox->AppendText("#");
+
+								break;
+							case TAB_CLAN:
+								{
+									std::string stTemp;
+									Util.Wide2MultyByteString( m_ClanCommands[0], stTemp );			
+									
+
+									if( pEditBox->get_text() == NULL )
+										pEditBox->AppendText( stTemp.c_str() );
+									else if( strlen(pEditBox->get_text()) < 1 )
+										pEditBox->AppendText( stTemp.c_str() );
+								}
+								
+								break;
+							case TAB_ALLIED:
+								if( pEditBox->get_text() == NULL )
+									pEditBox->AppendText("~");
+								else if( strlen(pEditBox->get_text()) < 1 )
+									pEditBox->AppendText("~");
+								break;
+
+							case TAB_WHISPER:
+								{
+									std::string stTemp;
+									Util.Wide2MultyByteString( m_WhisperCommands[0], stTemp );			
+
+
+									if( pEditBox->get_text() == NULL )
+										pEditBox->AppendText( stTemp.c_str() );
+									else if( strlen(pEditBox->get_text()) < 1 )
+										pEditBox->AppendText( stTemp.c_str() );
+								}
+								break;
+
+							default:
+								break;
+							}
 						}
 					}
-					//else
-					//{
-					//	pEditBox->SetFocus( true );
-					//}
 					return pEditBox->GetControlID();
 				}
 			}
@@ -1144,7 +1545,7 @@ unsigned CChatDLG::ActionPerformed( CActionEvent* e )
 }
 
 //*-------------------------------------------------------------------------------------*/
-/// @brief ÇöÀç È°¼ºÈ­µÈ(¼±ÅÃµÈÅÇ) ¸®½ºÆ®¹Ú½ºÀÇ item count¸¦ ¸®ÅÏÇÑ´Ù.
+/// @brief ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½(ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½Æ®ï¿½Ú½ï¿½ï¿½ï¿½ item countï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 //*-------------------------------------------------------------------------------------*/
 int CChatDLG::GetLineCount()
 {
@@ -1159,7 +1560,7 @@ int CChatDLG::GetLineCount()
 
 //*-------------------------------------------------------------------------------------*/
 /// @param index : 0-based
-/// @brief ÇöÀç È°¼ºÈ­µÈ(¼±ÅÃµÈÅÇ) ¸®½ºÆ®¹Ú½ºÀÇ indexÀÇ stringÀ» ¸®ÅÏÇÑ´Ù.
+/// @brief ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½(ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½Æ®ï¿½Ú½ï¿½ï¿½ï¿½ indexï¿½ï¿½ stringï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 //*-------------------------------------------------------------------------------------*/
 const char* CChatDLG::GetLineString( int index )
 {
@@ -1172,7 +1573,7 @@ const char* CChatDLG::GetLineString( int index )
 	return NULL;
 }
 //*-------------------------------------------------------------------------------------*/
-/// @brief ÇöÀç È°¼ºÈ­µÈ(¼±ÅÃµÈÅÇ) ¸®½ºÆ®¹Ú½º¸¦ ¸Ç¹ØÀ¸·Î ÀÌµ¿½ÃÅ²´Ù
+/// @brief ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½(ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½Æ®ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½Ç¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½Å²ï¿½ï¿½
 //*-------------------------------------------------------------------------------------*/
 void CChatDLG::ActiveListBoxMoveEnd()
 {
@@ -1192,4 +1593,154 @@ void CChatDLG::ActiveListBoxMoveEnd()
 			pScrollBar->SetValue( pListBox->GetMaximum() );
 		}
 	}
+}
+
+void CChatDLG::RefreshDlg()
+{
+}
+
+
+void CChatDLG::SetInterfacePos_After()
+{
+	CWinCtrl * pCtrl = NULL;
+	CWinCtrl * pCtrl2 = NULL;
+	
+
+
+	if( pCtrl = Find("SMALL_POS"))
+	{	
+		m_ChatSize[0][CHATSIZE_MODE_SMALL].pt.x = pCtrl->GetOffset().x;
+		m_ChatSize[0][CHATSIZE_MODE_SMALL].pt.y = pCtrl->GetOffset().y;
+		m_ChatSize[0][CHATSIZE_MODE_SMALL].width = pCtrl->GetWidth();
+		m_ChatSize[0][CHATSIZE_MODE_SMALL].height = pCtrl->GetHeight();		
+	}
+	if( pCtrl = Find("MIDDLE_POS"))
+	{
+		m_ChatSize[0][CHATSIZE_MODE_MIDDLE].pt.x = pCtrl->GetOffset().x;
+		m_ChatSize[0][CHATSIZE_MODE_MIDDLE].pt.y = pCtrl->GetOffset().y;
+		m_ChatSize[0][CHATSIZE_MODE_MIDDLE].width = pCtrl->GetWidth();
+		m_ChatSize[0][CHATSIZE_MODE_MIDDLE].height = pCtrl->GetHeight();
+	}
+	if( pCtrl = Find("LARGE_POS"))
+	{	
+		m_ChatSize[0][CHATSIZE_MODE_LARGE].pt.x = pCtrl->GetOffset().x;
+		m_ChatSize[0][CHATSIZE_MODE_LARGE].pt.y = pCtrl->GetOffset().y;
+		m_ChatSize[0][CHATSIZE_MODE_LARGE].width = pCtrl->GetWidth();
+		m_ChatSize[0][CHATSIZE_MODE_LARGE].height = pCtrl->GetHeight();
+	}
+
+	//CHATSIZE_MODE_LARGE_SYSTEM = LARGE for system and SMALL for chat
+	m_ChatSize[0][CHATSIZE_MODE_LARGE_SYSTEM].pt.x = m_ChatSize[0][CHATSIZE_MODE_SMALL].pt.x;
+	m_ChatSize[0][CHATSIZE_MODE_LARGE_SYSTEM].pt.y = m_ChatSize[0][CHATSIZE_MODE_SMALL].pt.y;
+	m_ChatSize[0][CHATSIZE_MODE_LARGE_SYSTEM].width = m_ChatSize[0][CHATSIZE_MODE_SMALL].width;
+	m_ChatSize[0][CHATSIZE_MODE_LARGE_SYSTEM].height = m_ChatSize[0][CHATSIZE_MODE_SMALL].height;
+	
+	if( pCtrl = Find("CHAT_BG") )
+	{
+		pCtrl->SetSizeFit(true);
+		pCtrl->SetWidth(m_ChatSize[0][m_iChatSizeMode].width);
+		pCtrl->SetHeight(m_ChatSize[0][m_iChatSizeMode].height);
+	}
+
+	if( pCtrl = Find("CHAT_BG_SS") )
+	{
+		pCtrl->SetSizeFit(true);
+		pCtrl->SetWidth(m_ChatSize[0][m_iChatSizeMode].width);		
+	}
+
+	if(pCtrl = Find("SYSTEM_POS"))
+	{		
+		m_ChatSize[1][CHATSIZE_MODE_SMALL].width = pCtrl->GetWidth();
+		m_ChatSize[1][CHATSIZE_MODE_SMALL].height = pCtrl->GetHeight();
+	}
+	if( pCtrl2 = Find("CHAT_BG_S") )
+	{
+			pCtrl2->SetSizeFit(true);
+			m_ChatSize[1][CHATSIZE_MODE_MIDDLE].width = pCtrl->GetWidth();
+			m_ChatSize[1][CHATSIZE_MODE_MIDDLE].height = pCtrl->GetHeight();
+			//pCtrl2->SetWidth( pCtrl->GetWidth() );
+			//pCtrl2->SetHeight( pCtrl->GetHeight() );
+	}
+
+	//SYSTEM CHAT SIZE
+	m_ChatSize[1][CHATSIZE_MODE_LARGE].width = m_ChatSize[1][CHATSIZE_MODE_MIDDLE].width;
+	m_ChatSize[1][CHATSIZE_MODE_LARGE].height = m_ChatSize[1][CHATSIZE_MODE_MIDDLE].height;
+
+	m_ChatSize[1][CHATSIZE_MODE_LARGE].width = m_ChatSize[1][CHATSIZE_MODE_MIDDLE].width;
+	m_ChatSize[1][CHATSIZE_MODE_LARGE].height = m_ChatSize[1][CHATSIZE_MODE_MIDDLE].height;
+
+	m_ChatSize[1][CHATSIZE_MODE_LARGE_SYSTEM].width = m_ChatSize[0][CHATSIZE_MODE_LARGE].width;
+	m_ChatSize[1][CHATSIZE_MODE_LARGE_SYSTEM].height = m_ChatSize[0][CHATSIZE_MODE_LARGE].height;
+
+	if( pCtrl = Find( "SELECTED_ALL"  ) )
+	{
+		//ï¿½ï¿½Ã¼ 887
+		((CTImage*)pCtrl)->SetText( LIST_STRING(887) );
+		((CTImage*)pCtrl)->SetAlign( DT_BOTTOM | DT_CENTER );
+	}
+	if( pCtrl = Find( "SELECTED_WHISPER" ) )
+	{
+		//ï¿½Ó¼Ó¸ï¿½ 779
+		((CTImage*)pCtrl)->SetText( LIST_STRING(779) );
+		((CTImage*)pCtrl)->SetAlign( DT_BOTTOM | DT_CENTER );
+	}
+	if( pCtrl = Find( "SELECTED_TRADE" ) )
+	{
+		//ï¿½Å¸ï¿½ 888
+		((CTImage*)pCtrl)->SetText( LIST_STRING(888) );
+		((CTImage*)pCtrl)->SetAlign( DT_BOTTOM | DT_CENTER );
+	}
+	if( pCtrl = Find( "SELECTED_PARTY" ) )
+	{
+		//ï¿½ï¿½Æ¼ 27
+		((CTImage*)pCtrl)->SetText( LIST_STRING(27) );
+		((CTImage*)pCtrl)->SetAlign( DT_BOTTOM | DT_CENTER );
+	}
+	if( pCtrl = Find( "SELECTED_CLAN" ) )
+	{
+		//Å¬ï¿½ï¿½ 36
+		((CTImage*)pCtrl)->SetText( LIST_STRING(36) );
+		((CTImage*)pCtrl)->SetAlign( DT_BOTTOM | DT_CENTER );
+	}
+	
+	MoveWindow(GetPosition());
+}
+
+
+
+bool CChatDLG::IsInside4Move(int x, int y)
+{
+	CWinCtrl * pCtrl = NULL;
+
+	if(pCtrl = Find("MOVE_TAB"))
+	{
+		if( pCtrl->IsInside(x, y) )
+		{
+			return true;
+		}
+	}
+
+	if(pCtrl = Find("MAIN_LEFT"))
+	{
+		if( pCtrl->IsInside(x, y) )
+		{
+			return true;
+		}
+	}
+
+	if(pCtrl = Find("MAIN_MIDDLE"))
+	{
+		if( pCtrl->IsInside(x, y) )
+		{
+			return true;
+		}
+	}
+	
+
+	return false;
+}
+
+bool CChatDLG::On_LButtonDN( unsigned iProcID, WPARAM wParam, LPARAM lParam )
+{
+	return false;
 }

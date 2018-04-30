@@ -1,14 +1,14 @@
-#ifndef _CSinglelineString_
+ï»¿#ifndef _CSinglelineString_
 #define _CSinglelineString_
 
 #include "TGameCtrl.h"
 #include <string>
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-/// Ç¥½ÃÇÒ StringÀÌ ÇØ´ç ¿µ¿ªÀ» ¹þ¾î³¯ °æ¿ì µÚ¿¡ ".."À» ºÙÇô¼­ ¿µ¿ª¾È¿¡ ´Ù Ç¥½ÃµÇµµ·Ï ÇÏ´Â Class
-///		- Client¿¡¼­ get_rect()¿Í is_ellipsis()·Î ¸¶¿ì½ºÀÇ À§Ä¡¿Í Â©¸²À» Ã¼Å©ÇÏ¿© ÅøÆÁÀ¸·Î ÀüÃ¼ ½ºÆ®¸µÀ» º¸¿©ÁÖ´Â µ¥ »ç¿ëÇÏ°í ÀÖ´Ù.
+/// Ç¥ï¿½ï¿½ï¿½ï¿½ Stringï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î³¯ ï¿½ï¿½ï¿½ ï¿½Ú¿ï¿½ ".."ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½È¿ï¿½ ï¿½ï¿½ Ç¥ï¿½ÃµÇµï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ Class
+///		- Clientï¿½ï¿½ï¿½ï¿½ get_rect()ï¿½ï¿½ is_ellipsis()ï¿½ï¿½ ï¿½ï¿½ï¿½ì½ºï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ Â©ï¿½ï¿½ï¿½ï¿½ Ã¼Å©ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ö´ï¿½.
 ///
-/// @Author					ÃÖÁ¾Áø
+/// @Author					ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 /// @Date					2005/8/30
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 class TGAMECTRL_API CSinglelineString
@@ -16,11 +16,12 @@ class TGAMECTRL_API CSinglelineString
 public:
 	CSinglelineString(void);
 	~CSinglelineString(void);
-	void	set_string( const char* msg, const RECT& rect);
-	void	set_string( const char* msg, const RECT& rect , int ifont );
-	void	set_rect( const RECT& rect );
-	void	set_color( DWORD color );
-	void	set_format( DWORD format );
+	void	set_string( const char* msg, const RECT& rect );				// ï¿½ï¿½ï¿½Ú¿ï¿½
+	void	set_string( const char* msg, const RECT& rect , int ifont );	// ï¿½ï¿½ï¿½Ú¿ï¿½
+	void	set_rect( const RECT& rect );									// ï¿½ï¿½ï¿½ï¿½
+	void	set_color( DWORD color );										// ï¿½ï¿½ï¿½ï¿½
+	void	set_format( DWORD format );										// ï¿½ï¿½ï¿½ï¿½
+	void	set_font( int iFont );											// ï¿½ï¿½Æ®
 
 	const char* get_string();
 	const RECT&	get_rect();
@@ -32,12 +33,12 @@ public:
 
 
 protected:
-	std::string		m_msg;			/// ¿øº» ½ºÆ®¸µ
-	std::string		m_ellipsis_msg; /// ¿µ¿ª¾È¿¡ ´Ù Ç¥½Ã°¡ ¾ÈµÉ°æ¿ì ¿µ¿ª¾È¿¡ Ç¥½ÃÇÒ stringÀ» ¸¸µé¾î¼­ ÀúÀåÇØµÎ´Â string
+	std::string		m_msg;			/// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½
+	std::string		m_ellipsis_msg; /// ï¿½ï¿½ï¿½ï¿½ï¿½È¿ï¿½ ï¿½ï¿½ Ç¥ï¿½Ã°ï¿½ ï¿½ÈµÉ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½È¿ï¿½ Ç¥ï¿½ï¿½ï¿½ï¿½ stringï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½î¼­ ï¿½ï¿½ï¿½ï¿½ï¿½ØµÎ´ï¿½ string
 	DWORD			m_format;		/// 
-	RECT			m_rect;			/// ½ºÆ®¸µÀ» Ç¥½ÃÇÒ ¿µ¿ª
-	bool			m_end_ellipsis;	/// ½ºÆ®¸µÀÌ ÇØ´ç ¿µ¿ª¾È¿¡ ´Ù Ç¥½Ã°¡ ¾ÈµÇ´Â°¡?
-	int				m_font;			/// ÆùÆ®
-	DWORD			m_color;		/// ÆùÆ® »ö»ó
+	RECT			m_rect;			/// ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	bool			m_end_ellipsis;	/// ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½È¿ï¿½ ï¿½ï¿½ Ç¥ï¿½Ã°ï¿½ ï¿½ÈµÇ´Â°ï¿½?
+	int				m_font;			/// ï¿½ï¿½Æ®
+	DWORD			m_color;		/// ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 };
 #endif

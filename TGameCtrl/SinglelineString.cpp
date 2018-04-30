@@ -5,14 +5,15 @@
 CSinglelineString::CSinglelineString(void)
 {
 	m_color  = D3DCOLOR_ARGB( 255, 255, 255, 255);
-	m_format = 0;
+	m_format = 0;	
+	m_font = 0;
 }
 
 CSinglelineString::~CSinglelineString(void)
 {
 }
 
-void	CSinglelineString::set_string( const char* msg, const RECT& rect)
+void	CSinglelineString::set_string( const char* msg, const RECT& rect )
 {
 	_ASSERT( msg );
 	if( msg == NULL ) return;
@@ -22,7 +23,6 @@ void	CSinglelineString::set_string( const char* msg, const RECT& rect)
 
 	set_rect( rect );
 }
-
 
 void	CSinglelineString::set_string( const char* msg, const RECT& rect , int ifont )
 {
@@ -91,6 +91,12 @@ const RECT&	CSinglelineString::get_rect()
 
 void	CSinglelineString::draw()
 {
+
+	if( m_msg.empty() )
+	{
+		return;
+	}
+
 	if( m_end_ellipsis && !m_ellipsis_msg.empty() )
 		CTControlMgr::GetInstance()->GetFontMgr()->Draw( m_font, true, &m_rect, m_color, 0, m_ellipsis_msg.c_str() );
 	else
@@ -128,4 +134,9 @@ void CSinglelineString::clear()
 void CSinglelineString::set_format( DWORD format )
 {
 	m_format = format;
+}
+
+void CSinglelineString::set_font( int iFont )
+{
+	m_font = iFont;
 }

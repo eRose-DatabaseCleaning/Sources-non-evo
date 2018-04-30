@@ -46,6 +46,7 @@ public:
 
 	void SetButtons( CTButton* pBtnOk, CTButton* pBtnCancel );
 	void SetImages( CTImage* pImageTop, CTImage* pImageMiddle, CTImage* pImageBottom );
+	void SetListBox( CTListBox * pListBox );
 	virtual void SetString( const char* szString );
 	void SetMsgType( unsigned int iType ){ m_iMsgType = iType; }
 
@@ -67,6 +68,8 @@ protected:
 	CTImage*	m_pImageMiddle;									// 배경이미지중 가운데( 메세지 박스에 표시될 스트링의 길이에 따라서 자동으로 반복되어 그려진다 )
 	CTImage*	m_pImageBottom;									// 배경이미지중 하단
 	
+	CTListBox * m_pListBox;
+
 	short int   m_iButtonType;									// BT_NONE, BT_OK, BT_CANCEL
 
 	unsigned int m_iMsgType;

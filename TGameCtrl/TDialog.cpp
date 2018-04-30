@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include ".\tdialog.h"
 #include "TCaption.h"
 #include "TStatusBar.h"
@@ -9,19 +9,21 @@
 #include "TEditBox.h"
 #include <algorithm>
 #include <zmouse.h>
+#include "TPane.h"
+#include "TControlMgr.h"
 
 //-----------------------------------------------------------------------------------------------------------
-///	2003/12/22 ÃÖÁ¾Áø
-/// 1. CommandQÃß°¡ 
-///		1) Hide()¿Í ~CTDailog()¿¡ ¸ðµç TCommand»èÁ¦
-///		2) Update½Ã( IsVision())¿¡ Q¿¡¼­ TCommand ¸¦ °¡Á®¿Í¼­ Ã³¸®
-///			(1) 1 Frame´ç ÇÏ³ªÀÇ TCommand¸¸ Ã³¸®µÈ´Ù.
-///		3) !IsVision()¿¡¼­´Â TCommand¸¦ ÀúÀå¸¸ ÇÑ´Ù.( ???? ) => ShowÈÄ Update¿¡¼­ Ã³¸® ( 
-///			(1) ¹®Á¦ ¹ß»ý½Ã TCommandÃ³¸® ·çÆ¾À» Update()¾È¿¡¼­ ¸ÇÀ§·Î ¿Ã·Á¶ó.
+///	2003/12/22 ÃƒÃ–ÃÂ¾ÃÃ¸
+/// 1. CommandQÃƒÃŸÂ°Â¡ 
+///		1) Hide()Â¿Ã ~CTDailog()Â¿Â¡ Â¸Ã°ÂµÃ§ TCommandÂ»Ã¨ÃÂ¦
+///		2) UpdateÂ½Ãƒ( IsVision())Â¿Â¡ QÂ¿Â¡Â¼Â­ TCommand Â¸Â¦ Â°Â¡ÃÂ®Â¿ÃÂ¼Â­ ÃƒÂ³Â¸Â®
+///			(1) 1 FrameÂ´Ã§ Ã‡ÃÂ³ÂªÃ€Ã‡ TCommandÂ¸Â¸ ÃƒÂ³Â¸Â®ÂµÃˆÂ´Ã™.
+///		3) !IsVision()Â¿Â¡Â¼Â­Â´Ã‚ TCommandÂ¸Â¦ Ã€ÃºÃ€Ã¥Â¸Â¸ Ã‡Ã‘Â´Ã™.( ???? ) => ShowÃˆÃ„ UpdateÂ¿Â¡Â¼Â­ ÃƒÂ³Â¸Â® ( 
+///			(1) Â¹Â®ÃÂ¦ Â¹ÃŸÂ»Ã½Â½Ãƒ TCommandÃƒÂ³Â¸Â® Â·Ã§Ã†Â¾Ã€Â» Update()Â¾ÃˆÂ¿Â¡Â¼Â­ Â¸Ã‡Ã€Â§Â·ÃŽ Â¿ÃƒÂ·ÃÂ¶Ã³.
 ///
 ///
-/// 2003/11/24 ÃÖÁ¾Áø
-/// 1. Ãß°¡ °³¹ß »çÇ×¹× °í·Á»çÇ×
+/// 2003/11/24 ÃƒÃ–ÃÂ¾ÃÃ¸
+/// 1. ÃƒÃŸÂ°Â¡ Â°Â³Â¹ÃŸ Â»Ã§Ã‡Ã—Â¹Ã— Â°Ã­Â·ÃÂ»Ã§Ã‡Ã—
 ///		1) Dialog In Dialog
 ///		2) Process Return Value
 //-----------------------------------------------------------------------------------------------------------
@@ -125,13 +127,13 @@ unsigned int CTDialog::Process( UINT uiMsg,WPARAM wParam,LPARAM lParam )
 		iID = pCtrl->Process( uiMsg, wParam, lParam );
 		if( iID )
 		{
-			/* WM_LBUTTONDOWNÀ» Ã³¸®ÇÑ ¹öÆ°Àº Ç×»ó ¸®½ºÆ®ÀÇ ¸ÇµÚ·Î º¸³»¼­ 
-			   ±×¸®±â°¡ Á¦ÀÏ µÚ¿¡¼­ ÇÏ°Ô²ûÇÑ´Ù. 
-			   ¿¹) ComboBoxÀÇ °æ¿ì Ctrlµé³¢¸® DrawÀÇ Layer°¡ ¾û¸ÁµÉ¼ö ÀÖ´Ù.
+			/* WM_LBUTTONDOWNÃ€Â» ÃƒÂ³Â¸Â®Ã‡Ã‘ Â¹Ã¶Ã†Â°Ã€Âº Ã‡Ã—Â»Ã³ Â¸Â®Â½ÂºÃ†Â®Ã€Ã‡ Â¸Ã‡ÂµÃšÂ·ÃŽ ÂºÂ¸Â³Â»Â¼Â­ 
+			   Â±Ã—Â¸Â®Â±Ã¢Â°Â¡ ÃÂ¦Ã€Ã ÂµÃšÂ¿Â¡Â¼Â­ Ã‡ÃÂ°Ã”Â²Ã»Ã‡Ã‘Â´Ã™. 
+			   Â¿Â¹) ComboBoxÃ€Ã‡ Â°Ã¦Â¿Ã¬ CtrlÂµÃ©Â³Â¢Â¸Â® DrawÃ€Ã‡ LayerÂ°Â¡ Â¾Ã»Â¸ÃÂµÃ‰Â¼Ã¶ Ã€Ã–Â´Ã™.
 			*/
 			if( uiMsg == WM_LBUTTONDOWN )
 			{
-				if( pCtrl->GetControlType() != CTRL_TABBEDPANE && pCtrl->GetControlType() != CTRL_PANE )///ÄÁÅ×ÀÌ³Ê´Â ±âº»ÀûÀ¸·Î À§·Î ¿Ã¶ó¿À¸é ¾ÈµÇ¿ä..
+				if( pCtrl->GetControlType() != CTRL_TABBEDPANE && pCtrl->GetControlType() != CTRL_PANE )///Ã„ÃÃ…Ã—Ã€ÃŒÂ³ÃŠÂ´Ã‚ Â±Ã¢ÂºÂ»Ã€Ã»Ã€Â¸Â·ÃŽ Ã€Â§Â·ÃŽ Â¿ÃƒÂ¶Ã³Â¿Ã€Â¸Ã© Â¾ÃˆÂµÃ‡Â¿Ã¤..
 					MoveCtrl2ListEnd( pCtrl->GetControlID() );
 			}
 
@@ -148,7 +150,7 @@ unsigned int CTDialog::Process( UINT uiMsg,WPARAM wParam,LPARAM lParam )
 		{
 		case CTCaption::IID_BTN_ICON:
 			///if( uiMsg == WM_LBUTTONUP )
-			///¾ÆÀÌÄÜÈ­	
+			///Â¾Ã†Ã€ÃŒÃ„ÃœÃˆÂ­	
 			return m_pCaption->GetControlID();
 		case CTCaption::IID_BTN_CLOSE:
 			if( uiMsg == WM_LBUTTONUP )
@@ -297,7 +299,7 @@ void CTDialog::Add( CWinCtrl* pChild )
 
 	pChild->SetParent( this );
 	pChild->SetOffset( pChild->GetPosition() );
-	///µî·ÏµÈ Child ControlÀÇ ÁÂÇ¥¸¦ »ó´ëÁÂÇ¥·Î °è»êÇÏ¿© ÇöÀç DialogÀÇ ÁÂÇ¥¿¡ ´õÇØÁØ´Ù.
+	///ÂµÃ®Â·ÃÂµÃˆ Child ControlÃ€Ã‡ ÃÃ‚Ã‡Â¥Â¸Â¦ Â»Ã³Â´Ã«ÃÃ‚Ã‡Â¥Â·ÃŽ Â°Ã¨Â»ÃªÃ‡ÃÂ¿Â© Ã‡Ã¶Ã€Ã§ DialogÃ€Ã‡ ÃÃ‚Ã‡Â¥Â¿Â¡ Â´ÃµÃ‡Ã˜ÃÃ˜Â´Ã™.
 	pChild->MoveWindow( GetPosition() );
 
 	m_listChild.push_back( pChild );
@@ -327,11 +329,30 @@ CWinCtrl* CTDialog::Find( int iID )
 {
 	WINCTRL_LIST_ITOR iter;
 	CWinCtrl* pCtrl = NULL;
+	CWinCtrl* pCtrl2 = NULL;
 	for( iter = m_listChild.begin(); iter != m_listChild.end(); ++iter )
 	{
 		pCtrl = *iter;
+		//Numenor: Also search in pane
+		if( pCtrl && pCtrl->GetControlType() == CTRL_PANE )
+		{
+			CTPane* pPane = (CTPane*)pCtrl;
+			pCtrl2 = pPane->FindChild( iID );
+			if( pCtrl2 )
+			{
+				return pCtrl2;
+			}
+		}
+
 		if( (int)pCtrl->GetControlID() == iID )
 			return pCtrl;
+
+		pCtrl = pCtrl->Find( iID );
+		if( pCtrl )
+		{
+			return pCtrl;
+		}
+		
 	}
 	return NULL;
 }
@@ -340,9 +361,21 @@ CWinCtrl*	CTDialog::Find( const char * strName )
 {
 	WINCTRL_LIST_ITOR iter;
 	CWinCtrl* pCtrl = NULL;
+	CWinCtrl* pCtrl2 = NULL;
 	for( iter = m_listChild.begin(); iter != m_listChild.end(); ++iter )
 	{
 		pCtrl = *iter;
+		//Numenor: Also search in pane
+		if( pCtrl && pCtrl->GetControlType() == CTRL_PANE )
+		{
+			CTPane* pPane = (CTPane*)pCtrl;
+			pCtrl2 = pPane->Find( strName );
+			if( pCtrl2 )
+			{
+				return pCtrl2;
+			}
+		}
+
 		if( strcmp( pCtrl->GetControlName(), strName) == 0 )
 			return pCtrl;
 
@@ -351,6 +384,7 @@ CWinCtrl*	CTDialog::Find( const char * strName )
 		{
 			return pCtrl;
 		}
+
 	}
 	return NULL;
 }
@@ -360,9 +394,19 @@ bool	CTDialog::ShowChild( unsigned int iID )
 {
 	WINCTRL_LIST_ITOR iter;
 	CWinCtrl* pCtrl = NULL;
+	CWinCtrl* pCtrl2 = NULL;
 	for( iter = m_listChild.begin(); iter != m_listChild.end(); ++iter )
 	{
 		pCtrl = *iter;
+		if( pCtrl && pCtrl->GetControlType() == CTRL_PANE )
+		{
+			CTPane* pPane = (CTPane*)pCtrl;
+			pCtrl2 = pPane->FindChild( iID );
+			if(pCtrl2){
+				pCtrl2->Show();
+				return true;
+			}
+		}
 		if( pCtrl->GetControlID() == iID )
 		{
 			pCtrl->Show();
@@ -376,9 +420,19 @@ bool	CTDialog::ShowChild( const char * strName )
 {
 	WINCTRL_LIST_ITOR iter;
 	CWinCtrl* pCtrl = NULL;
+	CWinCtrl* pCtrl2 = NULL;
 	for( iter = m_listChild.begin(); iter != m_listChild.end(); ++iter )
 	{
 		pCtrl = *iter;
+		if( pCtrl && pCtrl->GetControlType() == CTRL_PANE )
+		{
+			CTPane* pPane = (CTPane*)pCtrl;
+			pCtrl2 = pPane->Find( strName );
+			if(pCtrl2){
+				pCtrl2->Show();
+				return true;
+			}
+		}
 		if( strcmp( pCtrl->GetControlName(), strName) == 0 )
 		{
 			pCtrl->Show();
@@ -392,9 +446,19 @@ bool	CTDialog::HideChild( unsigned int iID )
 {
 	WINCTRL_LIST_ITOR iter;
 	CWinCtrl* pCtrl = NULL;
+	CWinCtrl* pCtrl2 = NULL;
 	for( iter = m_listChild.begin(); iter != m_listChild.end(); ++iter )
 	{
 		pCtrl = *iter;
+		if( pCtrl && pCtrl->GetControlType() == CTRL_PANE )
+		{
+			CTPane* pPane = (CTPane*)pCtrl;
+			pCtrl2 = pPane->FindChild( iID );
+			if(pCtrl2){
+				pCtrl2->Hide();
+				return true;
+			}
+		}
 		if( pCtrl->GetControlID() == iID )
 		{
 			pCtrl->Hide();
@@ -409,9 +473,19 @@ bool	CTDialog::HideChild( const char * strName )
 {
 	WINCTRL_LIST_ITOR iter;
 	CWinCtrl* pCtrl = NULL;
+	CWinCtrl* pCtrl2 = NULL;
 	for( iter = m_listChild.begin(); iter != m_listChild.end(); ++iter )
 	{
 		pCtrl = *iter;
+		if( pCtrl && pCtrl->GetControlType() == CTRL_PANE )
+		{
+			CTPane* pPane = (CTPane*)pCtrl;
+			pCtrl2 = pPane->Find( strName );
+			if(pCtrl2){
+				pCtrl2->Hide();
+				return true;
+			}
+		}
 		if( strcmp( pCtrl->GetControlName(), strName) == 0 )
 		{
 			pCtrl->Hide();
@@ -421,6 +495,7 @@ bool	CTDialog::HideChild( const char * strName )
 	}
 	return false;
 }
+
 
 bool	CTDialog::SetEnableChild( unsigned int iID, bool bEnable )
 {
@@ -443,9 +518,9 @@ void CTDialog::Show()
 	if( m_pCaption )
 		m_pCaption->Show();
 
-	///Body¸¦ ±×¸®°í
+	///BodyÂ¸Â¦ Â±Ã—Â¸Â®Â°Ã­
 
-	///Ç²ÅÍ¸¦ ±×¸®°í
+	///Ã‡Â²Ã…ÃÂ¸Â¦ Â±Ã—Â¸Â®Â°Ã­
 
 	WINCTRL_LIST_ITOR iter;
 	for( iter = m_listChild.begin(); iter != m_listChild.end(); ++iter )
@@ -557,7 +632,7 @@ void CTDialog::SetImage( CTImage* pImage )
 {
 	m_pImage = pImage;
 }
-///Children Áß¿¡ Ã¹¹øÂ° EditBox¿¡ Focus¸¦ ÁØ´Ù.
+///Children ÃÃŸÂ¿Â¡ ÃƒÂ¹Â¹Ã¸Ã‚Â° EditBoxÂ¿Â¡ FocusÂ¸Â¦ ÃÃ˜Â´Ã™.
 void CTDialog::ProcessLButtonDown()
 {
 	if( CTEditBox::s_pFocusEdit && CTEditBox::s_pFocusEdit->GetParent() == (CWinCtrl*)this )

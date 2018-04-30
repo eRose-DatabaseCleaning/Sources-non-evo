@@ -1,4 +1,4 @@
-#ifndef _ZListBox_
+﻿#ifndef _ZListBox_
 #define _ZListBox_
 #include "winctrl.h"
 #include "IScrollModel.h"
@@ -46,10 +46,14 @@ public:
 	virtual RECT GetWindowRect();
 	//*---------------------------------------------------//
 
+	virtual void SetMaxLn(int iMaxLn);			
+	virtual int  GetMaxLn();
 protected:
 
 	int							m_iValue;
 	int							m_iExtent;
+	int							m_iMaxSize;		// �ִ� ǥ���Ҽ� �ִ� ���� ��.
+
 
 	std::deque<CWinCtrl*>		m_Items;
 };

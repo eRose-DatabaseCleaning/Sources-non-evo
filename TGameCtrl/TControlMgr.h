@@ -1,4 +1,4 @@
-#ifndef _TCONTROLMGR_
+ï»¿#ifndef _TCONTROLMGR_
 #define _TCONTROLMGR_
 
 #include "WinCtrl.h"
@@ -36,15 +36,15 @@ class ITFont;
 
 
 /**
-* 1. XML·ÎºÎÅÍÀÇ control»ý¼º
-*	2. client¿¡¼­ ³Ñ¾î¿Â °¢ ÀÎÅÍÆäÀÌ½ºÀÇ ÀÓÇÃ¸®¸ÕÆ®µÈ objectÀÇ Æ÷ÀÎÅÍ¸¦ ÀúÀåÇØµÐ´Ù.
+* 1. XMLï¿½Îºï¿½ï¿½ï¿½ï¿½ï¿½ controlï¿½ï¿½ï¿½ï¿½
+*	2. clientï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã¸ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ objectï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ØµÐ´ï¿½.
 *		- ITDraw, ITFont, ITSound,
-*	3. client¿¡¼­ÀÇ ±âÅ¸ º¯¼ö¸¦ ÀúÀå
-*		- ±¹°¡ÄÚµå, À©µµ¿ì ÇÚµé, ÀÔ·ÂÅ¸ÀÔ( ¿£ÅÍÃ¤ÆÃÅ¸ÀÔ, ¼¼ºìÇÏÃ÷(³ë¸») Å¸ÀÔ )
+*	3. clientï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+*		- ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½, ï¿½Ô·ï¿½Å¸ï¿½ï¿½( ï¿½ï¿½ï¿½ï¿½Ã¤ï¿½ï¿½Å¸ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ë¸») Å¸ï¿½ï¿½ )
 *
-* @Warning			ScrollBar´Â »ý¼ºÈÄ PrevButton,NextButton(MakeButton),ScrollBox(MakeScrollBox)¸¦ ¸¸µé¾î¼­ ³Ö¾îÁÖ¾î¾ßÇÑ´Ù
+* @Warning			ScrollBarï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ PrevButton,NextButton(MakeButton),ScrollBox(MakeScrollBox)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½î¼­ ï¿½Ö¾ï¿½ï¿½Ö¾ï¿½ï¿½ï¿½Ñ´ï¿½
 *
-* @Author			ÃÖÁ¾Áø
+* @Author			ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 *
 * @Date			2005/8/30 
 */
@@ -64,7 +64,7 @@ public:
 	bool			MakeDialogByXML( const char* IDD, CTDialog* pBase );
 
 
-	/// Control »ý¼º 
+	/// Control ï¿½ï¿½ï¿½ï¿½ 
 	CTButton*		MakeButton(int ID, int iScrX, int iScrY, int iWidth, int iHeight, int iNormalGraphicID, int iOverGraphicID, int iDownGraphicID ,int iModuleID );
 	CTPushButton*	MakePushButton(int ID, int iScrX, int iScrY, int iWidth, int iHeight, int iNormalGraphicID, int iOverGraphicID, int iDownGraphicID ,int iModuleID );
 
@@ -86,22 +86,22 @@ public:
 
 	
 
-	/// 2003 /11 /26 / ÃÖÁ¾Áø
-	/// 1. RadioBox¿¡´Â RadioButton¸¸ÀÌ µî·ÏµÈ´Ù.
-	///	2. RadioBox¿¡ RadioButtonÀÌ µî·ÏµÉ¶§ RadioBox´Â RadioButton¿¡°Ô ÀÚ½ÅÀÇ Æ÷ÀÎÅÍ¸¦ ³Ñ°ÜÁØ´Ù.
+	/// 2003 /11 /26 / ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	/// 1. RadioBoxï¿½ï¿½ï¿½ï¿½ RadioButtonï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ÏµÈ´ï¿½.
+	///	2. RadioBoxï¿½ï¿½ RadioButtonï¿½ï¿½ ï¿½ï¿½ÏµÉ¶ï¿½ RadioBoxï¿½ï¿½ RadioButtonï¿½ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ñ°ï¿½ï¿½Ø´ï¿½.
 	CTRadioBox*		MakeRadioBox(int ID);
 	CTRadioButton*  MakeRadioButton(int ID,int iScrX, int iScrY, int iWidth, int iHeight, int iNormalGraphicID, int iOverGraphicID, int iDownGraphicID ,int iModuleID );
 	CTGuage*		MakeGuage( int ID,int iScrX, int iScrY, int iWidth, int iHeight,int iGraphicID ,int iBGraphicID, int iModuleID );
 
 
-	/// ÇöÀç CTDialog¿¡ Add ½ÃÅ³¼ö ¾ø´Â MsgBox¸¦ ¸¸µå´Â Operation - 2003/12/11 : ÃÖÁ¾Áø
+	/// ï¿½ï¿½ï¿½ï¿½ CTDialogï¿½ï¿½ Add ï¿½ï¿½Å³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ MsgBoxï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Operation - 2003/12/11 : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	bool			MakeMsgBoxByXML( char* szIDD, CTMsgBox* pBase );
 
 
 
-	/// ¸Þ¸ð¸® ÇØÁ¦
+	/// ï¿½Þ¸ï¿½ ï¿½ï¿½ï¿½ï¿½
 //	bool ReleaseCtrl( unsigned int iID );
-	/// Control°Ë»ö
+	/// Controlï¿½Ë»ï¿½
 	///CWinCtrl*		Find( unsigned int iID );
 	ITDraw*			GetDrawMgr(){ return m_pDrawMgr; }
 	void			SetDrawMgr( ITDraw* pDrawMgr ){ m_pDrawMgr = pDrawMgr; }
@@ -134,7 +134,10 @@ private:
 	void			MakePushButtonByXML( MSXML::IXMLDOMNodePtr pNode , CTDialog* pBase );
 	void			MakeImageByXML( MSXML::IXMLDOMNodePtr pNode , CTDialog* pBase );
 	void			MakeCaptionByXML( MSXML::IXMLDOMNodePtr pNode , CTDialog* pBase );
+
 	void			MakeStaticByXML( MSXML::IXMLDOMNodePtr pNode , CTDialog* pBase );
+	CTStatic *		MakeStaticByXML2( MSXML::IXMLDOMNodePtr pNode );
+	
 	void			MakeEditBoxByXML( MSXML::IXMLDOMNodePtr pNode , CTDialog* pBase );
 	CTEditBox*		MakeEditBoxByXML2( MSXML::IXMLDOMNodePtr pNode );
 

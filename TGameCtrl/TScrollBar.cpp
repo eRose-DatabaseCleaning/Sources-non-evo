@@ -1,9 +1,11 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include ".\tscrollbar.h"
 #include "TButton.h"
 #include "TScrollBox.h"
 #include "IScrollModel.h"
 #include <zmouse.h>
+#include "TImage.h"
+
 CTScrollBar::CTScrollBar(void)
 {
 	m_pPrevButton	= NULL;
@@ -11,6 +13,7 @@ CTScrollBar::CTScrollBar(void)
 	m_pScrollBox	= NULL;
 	m_pScrollModel	= NULL;
 	m_pScrollBarType = NULL;
+	m_pBackImage	= NULL;
 }
 
 CTScrollBar::~CTScrollBar(void)
@@ -36,6 +39,8 @@ CTScrollBar::~CTScrollBar(void)
 		delete m_pScrollBox;
 		m_pScrollBox = NULL;
 	}
+
+	SAFE_DELETE( m_pBackImage );
 }
 
 bool CTScrollBar::Create( int iScrX, int iScrY, int iWidth, int iHeight ,int iType)
@@ -102,10 +107,14 @@ unsigned int CTScrollBar::Process( UINT uiMsg,WPARAM wParam,LPARAM lParam )
 	if( m_pScrollBox && m_pScrollBox->Process( uiMsg, wParam, lParam ))
 		return m_pScrollBox->GetControlID();
 
-	///¿µ¿ª¾È¿¡¼­ 
+	///ï¿½ï¿½ï¿½ï¿½ï¿½È¿ï¿½ï¿½ï¿½ 
 	if( uiMsg == WM_LBUTTONDOWN && m_pScrollBox && IsInside( ptMouse.x, ptMouse.y ) )
 	{
 		m_pScrollBox->MoveBoxPositionByScreenPoint( ptMouse );
+
+		//test//
+		return m_iControlID;
+		//test//
 	}
 	if( uiMsg == WM_MOUSEWHEEL  )
 	{
@@ -165,6 +174,11 @@ void CTScrollBar::Draw()
 {
 	if( !IsVision()) return;
 
+	if( m_pBackImage )
+	{
+		m_pBackImage->Draw();
+	}
+
 	if( m_pPrevButton )
 		m_pPrevButton->Draw();
 
@@ -183,6 +197,16 @@ void CTScrollBar::Draw()
 	if( m_pScrollBox )
 		m_pScrollBox->Draw();
 }
+
+void CTScrollBar::SetBackImage( CTImage* pImg )
+{
+	m_pBackImage = pImg;
+	if(m_pBackImage)
+	{
+		m_pBackImage->SetSizeFit(true);
+	}
+}
+
 void CTScrollBar::SetPrevButton( CTButton* pButton )
 {
 	m_pPrevButton = pButton;
@@ -207,6 +231,26 @@ void CTScrollBar::SetOffset( POINT pt )
 
 	POINT	ptNewOffset = {0,0};
 
+	if( m_pBackImage )
+	{
+		SIZE sz;
+		sz.cx  = m_pBackImage->GetWidth();
+		sz.cy  = m_pBackImage->GetHeight();
+
+		if( m_pScrollBarType )
+			ptNewOffset = m_pScrollBarType->GetBackImageOffset( GetOffset(), sizeScrollBar, sz );
+
+		m_pBackImage->SetOffset( ptNewOffset );
+
+		if( m_pScrollBarType->Get_SB_Type() == CTScrollBarType::TSBT_VERTICAL )
+		{
+			m_pBackImage->SetHeight( GetHeight() );
+		}
+		else
+		{
+			m_pBackImage->SetWidth( GetWidth() );
+		}
+	}
 
 	if( m_pPrevButton )
 	{
@@ -252,6 +296,9 @@ void CTScrollBar::SetOffset( POINT pt )
 void CTScrollBar::MoveWindow( POINT pt )
 {
 	CWinCtrl::MoveWindow( pt );
+
+	if( m_pBackImage )
+		m_pBackImage->MoveWindow( pt );
 
 	if( m_pPrevButton )
 		m_pPrevButton->MoveWindow( pt );
@@ -348,6 +395,11 @@ void CTScrollBar::Show()
 
 	if( m_pScrollBox )
 		m_pScrollBox->Show();
+
+	if( m_pBackImage )
+	{
+		m_pBackImage->Show();
+	}
 }
 
 void CTScrollBar::Hide()
@@ -361,6 +413,11 @@ void CTScrollBar::Hide()
 
 	if( m_pScrollBox )
 		m_pScrollBox->Hide();
+
+	if( m_pBackImage )
+	{
+		m_pBackImage->Hide();
+	}
 }
 
 void CTScrollBar::MoveEnd()
@@ -373,4 +430,10 @@ void CTScrollBar::MoveEnd()
 void CTScrollBar::MoveHome()
 {
 	SetValue( 0 );
+}
+
+void CTScrollBar::SetHeight( int i )
+{
+	m_iHeight = i;
+	SetOffset( GetOffset());
 }

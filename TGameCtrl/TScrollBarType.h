@@ -1,12 +1,12 @@
-#ifndef _CTSCROLLBARTYPE_
+ï»¿#ifndef _CTSCROLLBARTYPE_
 #define _CTSCROLLBARTYPE_
 #include <crtdbg.h>
 /**
-* CTScrollBarÀÇ Type¿¡ µû¸¥ Strategy Class( ¼öÆò/¼öÁ÷ )
-*		- ÇöÀç Strategy PatternÀ» ¾²Áö¾Ê¾Æµµ ¹«¹æÇÏÁö¸¸ µð¹ö±ëÀÇ ¿ëÀÌÇÔ°ú ¾ÕÀ¸·Î ½Ç½Ã°£À¸·Î ½ºÅ©·Ñ¹Ù°¡
-*		- Å¸ÀÔÀÌ ¹Ù²ð°æ¿ìµµ »ý°¢ÇØ¼­ ¸¸µç´Ù.
+* CTScrollBarï¿½ï¿½ Typeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Strategy Class( ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ )
+*		- ï¿½ï¿½ï¿½ï¿½ Strategy Patternï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾Æµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½Ñ¹Ù°ï¿½
+*		- Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²ï¿½ï¿½ìµµ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½.
 *
-* @Author		ÃÖÁ¾Áø
+* @Author		ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 *
 * @Date			2005/8/30
 */
@@ -15,26 +15,30 @@ class CTScrollBarType
 public:
 	CTScrollBarType(void);
 	virtual ~CTScrollBarType(void);
-	///½ºÅ©·Ñ¹Ù Å¸ÀÔ(TScrollBar Type )
+	///ï¿½ï¿½Å©ï¿½Ñ¹ï¿½ Å¸ï¿½ï¿½(TScrollBar Type )
 
+	virtual POINT GetBackImageOffset( POINT ptScrollBarOffset, SIZE ScrollBarSize, SIZE BackImageSize ) = 0 { _ASSERT( 0 && "CTScrollBarType::GetPrevButtonOffset"); POINT pt; return pt;};
 	virtual POINT GetPrevButtonOffset( POINT ptScrollBarOffset, SIZE ScrollBarSize, SIZE PrevButtonSize ) = 0 { _ASSERT( 0 && "CTScrollBarType::GetPrevButtonOffset"); POINT pt; return pt;};
 	virtual POINT GetNextButtonOffset( POINT ptScrollBarOffset, SIZE ScrollBarSize, SIZE NextButtonSize ) = 0 { _ASSERT( 0 && "CTScrollBarType::GetNextButtonOffset"); POINT pt; return pt;};
 	virtual POINT GetScrollBoxOffset( POINT ptScrollBarOffset, SIZE ScrollBarSize, SIZE PrevButtonSize ,SIZE ScrollBoxSize ) = 0 { _ASSERT( 0 && "CTScrollBarType::GetScrollBoxOffset"); POINT pt; return pt;};
 	virtual RECT  GetThumbMoveRange( POINT ptScrollBarPos,POINT ptNextButtonPos,SIZE ScrollBarSize, SIZE PrevButtonSize, SIZE ScrollBoxSize ) = 0 { _ASSERT( 0 && "CTScrollBarType::GetThumbMoveRange"); RECT rc; return rc; };
 
+	virtual int		Get_SB_Type()	{	return m_iTSBT;	}
 	enum{
 		TSBT_VERTICAL,
 		TSBT_HORIZONTAL
 	};
+	int m_iTSBT;
 
 };
 
 class CTScrollBarTypeVertical : public CTScrollBarType
 {
 public:
-	CTScrollBarTypeVertical(void){};
-	virtual ~CTScrollBarTypeVertical(void){};
+	CTScrollBarTypeVertical(void){	m_iTSBT = TSBT_VERTICAL;	};
+	virtual ~CTScrollBarTypeVertical(void){		};
 
+	virtual POINT GetBackImageOffset( POINT ptScrollBarOffset, SIZE ScrollBarSize, SIZE BackImageSize );
 	virtual POINT GetPrevButtonOffset( POINT ptScrollBarOffset, SIZE ScrollBarSize, SIZE PrevButtonSize );
 	virtual POINT GetNextButtonOffset( POINT ptScrollBarOffset, SIZE ScrollBarSize, SIZE NextButtonSize );
 	virtual POINT GetScrollBoxOffset( POINT ptScrollBarOffset, SIZE ScrollBarSize, SIZE PrevButtonSize ,SIZE ScrollBoxSize);
@@ -45,9 +49,10 @@ public:
 class CTScrollBarTypeHorizontal : public CTScrollBarType
 {
 public:
-	CTScrollBarTypeHorizontal(void){};
+	CTScrollBarTypeHorizontal(void){	m_iTSBT = TSBT_HORIZONTAL;	};
 	virtual ~CTScrollBarTypeHorizontal(void){};
 
+	virtual POINT GetBackImageOffset( POINT ptScrollBarOffset, SIZE ScrollBarSize, SIZE BackImageSize );
 	virtual POINT GetPrevButtonOffset( POINT ptScrollBarOffset, SIZE ScrollBarSize, SIZE PrevButtonSize );
 	virtual POINT GetNextButtonOffset( POINT ptScrollBarOffset, SIZE ScrollBarSize, SIZE NextButtonSize );
 	virtual POINT GetScrollBoxOffset( POINT ptScrollBarOffset, SIZE ScrollBarSize, SIZE PrevButtonSize ,SIZE ScrollBoxSize);

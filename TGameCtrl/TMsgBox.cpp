@@ -12,6 +12,7 @@ CTMsgBox::CTMsgBox(void)
 	m_iExtraHeight		= 0;
 	m_iExtraHeightStartPoint = 0;
 
+	m_pListBox			= NULL;
 	m_iButtonType		= BT_OK;
 	m_pButtonOk			= NULL;
 	m_pButtonCancel		= NULL;
@@ -285,7 +286,10 @@ void CTMsgBox::SetImages( CTImage* pImageTop, CTImage* pImageMiddle, CTImage* pI
 	m_pImageMiddle	= pImageMiddle;
 	m_pImageBottom	= pImageBottom;
 }
-
+void CTMsgBox::SetListBox( CTListBox * pListBox )
+{
+	m_pListBox = pListBox;
+}
 
 /// 2003 /12 / 11 / Navy
 /// 세단계로 나누어진 이미지들을 그린다.

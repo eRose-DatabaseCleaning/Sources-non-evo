@@ -20,7 +20,7 @@ public:
 	~CJString(void);
 	void	AddString( const char* pszString, SIZE sizeString, int iFont, DWORD dwColor );
 	void    Clear();
-	void	Draw( int x, int y , bool bTransform, DWORD force_text_color = 0);
+	void	Draw( int x, int y , bool bTransform, DWORD force_text_color = 0, bool bTrans2 = false);
 	bool	IsEmpty();
 	int		GetStringHeight();
 

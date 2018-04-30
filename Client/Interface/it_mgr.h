@@ -217,7 +217,7 @@ public:
 	/*---------------------------------------------------------------------------*/
 	void		InitInterfacePos();														/// 인터페이스 초기화, 해상도가 바뀌거나 인터페이스를 최초 위치로 옮기고 싶을때 사용하는 Method
 	void		SetInterfacePosBySavedData();											///	저장되있던 Dialog Position이 있을경우 가져와서 Dialog의 위치들을 수정한다.
-	void		SetInterfacePos_After();												/// 가장 마지막에 강제로 Pos 셋팅
+	void		SetInterfacePos_After(int DLG_TYPE = -1);												/// 가장 마지막에 강제로 Pos 셋팅
 
 	void		ServerDisconnected();													/// 서버와의 연결이 끊어졌을경우 처리하는 method
 	

@@ -2,6 +2,7 @@
 #include ".\jcontainer.h"
 #include "WinCtrl.h"
 #include <algorithm> 
+#include "TPane.h"
 
 CJContainer::CJContainer(void)
 {
@@ -82,8 +83,20 @@ CWinCtrl*	CJContainer::Find( unsigned index )
 {
 	std::list< CWinCtrl* >::iterator iter;
 //	CWinCtrl*	pCtrl = NULL;
+	CWinCtrl * ctrl2 = NULL;
 	for( iter =	m_Children.begin(); iter != m_Children.end(); ++iter)
 	{
+				//Numenor: Also search in pane
+		if( (*iter) && (*iter)->GetControlType() == CTRL_PANE )
+		{
+			CTPane* pPane = (CTPane*)*iter;
+			ctrl2 = pPane->FindChild( index );
+			if( ctrl2 )
+			{
+				return ctrl2;
+			}
+		}
+
 		if( (*iter)->GetControlID() == index )
 			return *iter;
 	}
@@ -93,10 +106,21 @@ CWinCtrl*	CJContainer::Find( unsigned index )
 CWinCtrl*	CJContainer::Find( const char * szName )
 {
 	std::list< CWinCtrl* >::iterator iter;
-	
+	CWinCtrl * ctrl2 = NULL;
 	for( iter =	m_Children.begin(); iter != m_Children.end(); ++iter)
 	{
 		CWinCtrl * ctrl = *iter;
+		//Numenor: Also search in pane
+		if( ctrl && ctrl->GetControlType() == CTRL_PANE )
+		{
+			CTPane* pPane = (CTPane*)ctrl;
+			ctrl2 = pPane->Find( szName );
+			if( ctrl2 )
+			{
+				return ctrl2;
+			}
+		}
+
 		if( strcmp( ctrl->GetControlName(), szName ) == 0 )		
 			return *iter;
 	}
@@ -142,3 +166,25 @@ void CJContainer::RemoveAll()
 		delete pCtrl;
 	}
 }
+
+//std::list< CWinCtrl* >	CJContainer::FindPanes()
+/*CJContainer	CJContainer::FindPanes()
+{
+	std::list< CWinCtrl* >::iterator iter;
+	CJContainer* listPane = NULL;
+	//bool bPaneFound = false;
+	for( iter =	m_Children.begin(); iter != m_Children.end(); ++iter)
+	{
+		CWinCtrl * ctrl = *iter;
+		if( ctrl && ctrl->GetControlType() == CTRL_PANE ){
+			listPane.Add( ctrl );
+			//bPaneFound = true;
+		}
+	}
+	//if(bPaneFound){
+		return listPane;
+	//}
+	//else{
+		//return CJContainer();
+	//}
+}*/

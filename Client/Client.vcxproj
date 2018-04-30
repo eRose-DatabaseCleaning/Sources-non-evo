@@ -816,6 +816,7 @@ copy /y "%IROSE_ROOT%\bin\$(Platform)\Release\Client\znzin.dll" "%IROSE_ROOT%\00
     <ClCompile Include="Interface\DLGs\SubClass\CUpgradeDlgStateNormal.cpp" />
     <ClCompile Include="Interface\DLGs\SubClass\CUpgradeDlgStateResult.cpp" />
     <ClCompile Include="Interface\DLGs\SubClass\CUpgradeDlgStateWait.cpp" />
+    <ClCompile Include="Interface\DLGs\SubClass\CZLBAppendText.cpp" />
     <ClCompile Include="Interface\slotcontainer\CItemSlot.cpp" />
     <ClCompile Include="Interface\SlotContainer\ClanSkillSlot.cpp" />
     <ClCompile Include="Interface\SlotContainer\CSkillSlot.cpp" />
@@ -1209,6 +1210,7 @@ copy /y "%IROSE_ROOT%\bin\$(Platform)\Release\Client\znzin.dll" "%IROSE_ROOT%\00
     <ClInclude Include="Interface\DLGs\SubClass\CUpgradeDlgStateNormal.h" />
     <ClInclude Include="Interface\DLGs\SubClass\CUpgradeDlgStateResult.h" />
     <ClInclude Include="Interface\DLGs\SubClass\CUpgradeDlgStateWait.h" />
+    <ClInclude Include="Interface\DLGs\SubClass\CZLBAppendText.h" />
     <ClInclude Include="Interface\slotcontainer\CItemSlot.h" />
     <ClInclude Include="Interface\SlotContainer\ClanSkillSlot.h" />
     <ClInclude Include="Interface\SlotContainer\CSkillSlot.h" />

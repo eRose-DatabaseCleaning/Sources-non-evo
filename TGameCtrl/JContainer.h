@@ -27,6 +27,8 @@ public:
 
 	CWinCtrl*	Find( unsigned index );
 	CWinCtrl*	Find( const char * szName );
+	//std::list< CWinCtrl* >	FindPanes();
+	//CJContainer*	FindPanes();
 
 	void		Add( CWinCtrl* pCtrl );
 	void		Remove( unsigned index );
@@ -36,5 +38,6 @@ protected:
 	void		MoveCtrl2ListEnd( int iID );
 protected:
 	std::list< CWinCtrl* >	m_Children;
+	//std::list< CWinCtrl* >	m_PaneChildren;
 };
 #endif

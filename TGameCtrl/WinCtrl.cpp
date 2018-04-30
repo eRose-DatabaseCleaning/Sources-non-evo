@@ -1,10 +1,11 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include ".\winctrl.h"
 //#include "CToolTip.h"
 #include "IActionListener.h"
 #include "ActionEvent.h"
+#include <mmsystem.h>
 
-CWinCtrl* CWinCtrl::m_pMouseExclusiveCtrl = NULL;   ///¸¶¿ì½º¸¦ µ¶Á¡ÇÏ°í ÀÖ´Â ÄÁÆ®·Ñ
+CWinCtrl* CWinCtrl::m_pMouseExclusiveCtrl = NULL;   ///ï¿½ï¿½ï¿½ì½ºï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½
 CWinCtrl* CWinCtrl::m_pProcessMouseOverCtrl = NULL;
 
 bool	  CWinCtrl::m_bProcessMouseOver	  = false;
@@ -12,7 +13,7 @@ CWinCtrl::CWinCtrl(void)
 {
 	m_iWidth		= 0;
 	m_iHeight		= 0;
-	m_iControlID	= 0;		/// ÄÁÅÍ·Ñ ¾ÆÀÌµð
+	m_iControlID	= 0;		/// ï¿½ï¿½ï¿½Í·ï¿½ ï¿½ï¿½ï¿½Ìµï¿½
 	m_iParentID		= 0;
 	m_sPosition.x = 0;
 	m_sPosition.y = 0;
@@ -29,6 +30,10 @@ CWinCtrl::CWinCtrl(void)
 	m_fScaleHeight  = 0;
 	m_btAlphaValue  = 0;
 	m_dwStatus		= 0;
+	m_bSizeFit		= false;
+	m_bLock			= false;
+	m_pChild		= NULL;
+	m_dwCurrentTime = 0;
 }
 
 CWinCtrl::~CWinCtrl(void)
@@ -44,7 +49,7 @@ void CWinCtrl::Init( DWORD dwType,int iScrX, int iScrY, int iWidth, int iHeight 
 	m_sPosition.y	= iScrY;
 	m_iWidth		= iWidth;
 	m_iHeight		= iHeight;
-
+	m_pChild		= NULL;
 
 	ZeroMemory( &m_ptOffset, sizeof( POINT ));
 
@@ -57,11 +62,22 @@ void CWinCtrl::MoveWindow( POINT pt )
 	m_sPosition.y = pt.y + m_ptOffset.y;
 }
 
+void CWinCtrl::MoveWindow( int x, int y )
+{
+	m_sPosition.x = x + m_ptOffset.x;
+	m_sPosition.y = y + m_ptOffset.y;
+}
+
 bool CWinCtrl::IsInside( int x, int y )
 {
 	if( m_sPosition.x <= x && m_sPosition.y <= y && m_sPosition.x + m_iWidth > x && m_sPosition.y + m_iHeight > y )
 		return true;
 	return false;
+}
+
+bool CWinCtrl::IsInside( LPARAM lParam )
+{	
+	return IsInside( LOWORD(lParam), HIWORD(lParam) );
 }
 
 bool CWinCtrl::IsExclusive()
@@ -90,6 +106,16 @@ void    CWinCtrl::SetOffset( POINT pt)
 void	CWinCtrl::SetOffset( int x, int y )
 { 
 	m_ptOffset.x = x;
+	m_ptOffset.y = y;
+}
+
+void	CWinCtrl::SetOffsetX( int x )
+{ 
+	m_ptOffset.x = x;
+}
+
+void	CWinCtrl::SetOffsetY( int y )
+{ 
 	m_ptOffset.y = y;
 }
 
@@ -149,6 +175,8 @@ unsigned int CWinCtrl::Process( UINT uiMsg,WPARAM wParam,LPARAM lParam )
 {
 	unsigned uiRet = 0;
 
+	m_dwCurrentTime = timeGetTime();
+
 	if( !m_ActionListenerList.IsEmpty() )
 	{
 		std::list< IActionListener* >& list =  m_ActionListenerList.GetListenerList( );
@@ -176,6 +204,11 @@ CWinCtrl* CWinCtrl::Find( const char * szName )
 	return NULL;
 }
 
+CWinCtrl*  CWinCtrl::Find( int iID )
+{
+	return 0;
+}
+
 void	CWinCtrl::SetSizeFit( bool bFit )
 {
 	m_bSizeFit = bFit;
@@ -184,6 +217,38 @@ bool	CWinCtrl::GetSizeFit()
 {
 	return m_bSizeFit;
 }
+
+void	CWinCtrl::Lock()
+{
+	m_bLock = true;
+}
+void	CWinCtrl::UnLock()
+{
+	m_bLock = false;
+}
+bool	CWinCtrl::IsLock()
+{
+	return m_bLock;
+}
+
+void CWinCtrl::Draw()
+{
+	Draw_Font();
+}
+void CWinCtrl::Draw( POINT ptDraw )
+{
+	RECT rc;
+	SetRect( &rc, ptDraw.x, ptDraw.y, ptDraw.x+m_iWidth, ptDraw.y+m_iHeight );
+	set_rect( rc );	
+
+	Draw_Font();
+}
+
+void CWinCtrl::Draw_Font()
+{
+	CSinglelineString::draw();
+}
+
 void	CWinCtrl::SetText(const char * szText)
 {
 	RECT rc;
@@ -192,6 +257,19 @@ void	CWinCtrl::SetText(const char * szText)
 			2,
 			m_iWidth,
 			m_iHeight );
-	CSinglelineString* pSingleline = new CSinglelineString;
-	pSingleline->set_string( szText, rc);
+
+	set_string( szText, rc );
 }
+void	CWinCtrl::SetTextColor(DWORD dwColor)
+{
+	set_color( dwColor );
+}
+void	CWinCtrl::SetAlign(DWORD dwAlign)
+{
+	set_format( dwAlign );
+}
+void	CWinCtrl::SetFont(int iFont)
+{
+	set_font( iFont );
+}
+

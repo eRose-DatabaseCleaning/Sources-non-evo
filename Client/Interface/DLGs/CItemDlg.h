@@ -49,6 +49,7 @@ public:
 
 	void		AddActionEventListener2Slots( );
 	void		RemoveActionEventListener2Slots( );
+	void	SortItems();
 
 private:
 	void		SwitchIcon( int iReal, int iVirtual );								/// 실제 인벤토리 인덱스와 가상 인벤토리인덱스로 아이콘 위치 이동
