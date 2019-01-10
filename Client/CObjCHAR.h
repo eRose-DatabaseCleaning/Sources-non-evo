@@ -1135,15 +1135,15 @@ class CObjAVT : public CObjCHAR
 protected:
 	CCharMODEL		m_CharMODEL;
 
-	/// 캐릭터 표정
+	/// Character expression
 	int				m_iExpression;
 
-	/// 캐릭터 파츠
+	/// Character Parts
 	union {
 		tagPartITEM	m_sPartItemIDX[ MAX_BODY_PART ];
 		// short	m_nPartItemIDX[ MAX_BODY_PART ];
 		struct {
-			// 순서는 t_CharPART에 따라서...
+			// Depending on the order of t_CharPART ...
 			tagPartITEM m_sFaceIDX;			//short m_nFaceIDX;
 			tagPartITEM m_sHairIDX;			//short m_nHairIDX;
 			tagPartITEM m_sHelmetIDX;		//short m_nHelmetIDX;

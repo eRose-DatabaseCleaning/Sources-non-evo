@@ -852,14 +852,14 @@ struct cli_CHAR_LIST : public t_PACKETHEADER {
 } ;
 
 
-// 성별, 레벨,직업, 파트 인덱스...
+// Gender, Level, Occupation, Part Index...
 struct tagCHARINFO {
 	BYTE	m_btCharRACE;
 	short	m_nLEVEL;
 	short	m_nJOB;
-	DWORD	m_dwRemainSEC;		// 0이 아닐경우 삭제될때까지 남은 시간(초단위)
+	DWORD	m_dwRemainSEC;		// If not 0, the remaining time (seconds)
 #ifdef	__INC_PLATINUM
-	BYTE	m_btIsPlatinumCHAR;	// 0이 아닌경우는 플레티넘일 경우만 선택 가능한 케릭이다.
+	BYTE	m_btIsPlatinumCHAR;	// If it is not 0, it is selectable only for platinum.
 #endif
 } ;
 struct wsv_CHAR_LIST : public t_PACKETHEADER {
@@ -1524,7 +1524,7 @@ struct cli_EQUIP_ITEM : public t_PACKETHEADER {
 struct gsv_EQUIP_ITEM : public t_PACKETHEADER {
 	WORD		m_wObjectIDX;
 	short		m_nEquipIndex;
-//	short		m_nItemNO;
+	//short		m_nItemNO;
 	tagPartITEM m_PartITEM;
 	short		m_nRunSPEED[ 0 ];	// Move Speed calculated entirely by the server. Here we set it and forget it
 } ;

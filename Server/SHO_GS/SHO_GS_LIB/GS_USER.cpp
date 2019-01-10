@@ -2908,7 +2908,7 @@ bool classUSER::Recv_cli_MOUSECMD( t_PACKET *pPacket )
 	}
 
 	int iDistance = distance ((int)m_PosCUR.x, (int)m_PosCUR.y, (int)pPacket->m_cli_MOUSECMD.m_PosTO.x, (int)pPacket->m_cli_MOUSECMD.m_PosTO.y);
-	if ( iDistance > 1000 * 15 )	// 150 m //Numenor: if we want we can mouve further with one click ^^
+	if ( iDistance > 1000 * 15 )	// 150 m //Numenor: if we want we can move further with one click ^^
 		return true;
 
 	this->m_nPosZ = pPacket->m_cli_MOUSECMD.m_nPosZ;
@@ -3052,9 +3052,11 @@ bool classUSER::Send_gsv_CHANGE_SKIN( WORD wAbilityTYPE, int iValue )
 }
 
 //-------------------------------------------------------------------------------------------------
-/// ÀåÂø ¾ÆÀÌÅÛÀÌ º¯°æ µÇ¾úÀ»¶§...
+/// When the item is changed...
 bool classUSER::Send_gsv_EQUIP_ITEM (short nEquipInvIDX, tagITEM *pEquipITEM)
 {
+	
+
 	classPACKET *pCPacket = Packet_AllocNLock ();
 	if ( !pCPacket )
 		return false;
@@ -3062,34 +3064,34 @@ bool classUSER::Send_gsv_EQUIP_ITEM (short nEquipInvIDX, tagITEM *pEquipITEM)
 	pCPacket->m_HEADER.m_wType = GSV_EQUIP_ITEM;
 	pCPacket->m_HEADER.m_nSize = sizeof( gsv_EQUIP_ITEM );
 	pCPacket->m_gsv_EQUIP_ITEM.m_wObjectIDX  = this->Get_INDEX();
-
 	pCPacket->m_gsv_EQUIP_ITEM.m_nEquipIndex = nEquipInvIDX;
+	
 	pCPacket->m_gsv_EQUIP_ITEM.m_PartITEM.m_nItemNo	  = pEquipITEM->GetItemNO();
 	pCPacket->m_gsv_EQUIP_ITEM.m_PartITEM.m_nGEM_OP	  = pEquipITEM->GetGemNO();
 	pCPacket->m_gsv_EQUIP_ITEM.m_PartITEM.m_cGrade	  = pEquipITEM->GetGrade();
 	pCPacket->m_gsv_EQUIP_ITEM.m_PartITEM.m_bHasSocket= pEquipITEM->m_bHasSocket;
-
+	
 	if ( 0 == this->GetCur_RIDE_MODE() ) {
 		pCPacket->m_HEADER.m_nSize += sizeof( short );
-		pCPacket->m_gsv_EQUIP_ITEM.m_nRunSPEED[0] = this->GetOri_RunSPEED();	// ÆÐ½Ãºê¿¡ÀÇÇØ¼­¸¸ º¸Á¤/ Áö¼Óº¸Á¤ Á¦¿ÜµÈ°ª.
+		pCPacket->m_gsv_EQUIP_ITEM.m_nRunSPEED[0] = this->GetOri_RunSPEED();	// Only by passive Calibration / sustained correction Excluded value.
 	}
-
+	
 	this->GetZONE()->SendPacketToSectors( this, pCPacket );
     Packet_ReleaseNUnlock( pCPacket );
 	return true;
 }
 //-------------------------------------------------------------------------------------------------
-/// ÀåÂø ¾ÆÀÌÅÛ º¯°æ
+/// Change mounting item
 bool classUSER::Change_EQUIP_ITEM (short nEquipInvIDX, short nWeaponInvIDX)
 {
 	if ( nEquipInvIDX < 1 || nEquipInvIDX >= MAX_EQUIP_IDX )
 		return false;
 
-	// ¾ç¼Õ¹«±â ÀåÂø½Ã¿¡ ¿Þ¼Õ ¹æÆÐ ÀåÂøÇÒ½Ã¿¡´Â ¾ç¼Õ ¹«±â¸¦ ³»¸®Áö ¾Ê´Â´Ù.
-	// Àåºñ Å»°Å´Â ¹¬ÀÎ...
+	// Do not lower your two-handed weapon when you wear a left-hand shield when you are wearing a two-handed weapon.
+	// The equipment removal ...
 	if ( EQUIP_IDX_WEAPON_L == nEquipInvIDX && nWeaponInvIDX ) {
 		if ( m_Inventory.m_ItemLIST[ EQUIP_IDX_WEAPON_R ].IsTwoHands() ) {
-			// Å¬¶óÀÌ¾ðÆ®¿¡¼­ °É·¯Á® ¿ÀÁö ¸øÇÏ´Â °æ¿ìµµ ÀÖ³×...
+			// Sometimes clients do not get filtered ...
 			return true;
 		}
 	}
@@ -3099,13 +3101,13 @@ bool classUSER::Change_EQUIP_ITEM (short nEquipInvIDX, short nWeaponInvIDX)
 	BYTE btRecvMP = this->m_btRecoverMP;
 
 	bool bResult = true;
-	// ¹Ù²ï ÀÎº¥Åä¸® ±¸Á¶ Àü¼Û..
+	// Transfer changed inventory structure ..
 	classPACKET *pCPacket = Packet_AllocNLock ();
 
 	pCPacket->m_gsv_SET_INV_ONLY.m_btItemCNT = 0;
 	tagITEM *pEquipITEM = &m_Inventory.m_ItemLIST[ nEquipInvIDX ];
 	if ( nWeaponInvIDX == 0 ) {
-		// Àåºñ Å»°Å...
+		// Removing equipment ...
 		if ( pEquipITEM->GetTYPE() && pEquipITEM->GetTYPE() < ITEM_TYPE_USE ) {
 			short nInvIDX = this->Add_ITEM( *pEquipITEM  );
 			if ( nInvIDX > 0 ) {
@@ -3117,65 +3119,65 @@ bool classUSER::Change_EQUIP_ITEM (short nEquipInvIDX, short nWeaponInvIDX)
 				pCPacket->m_gsv_SET_INV_ONLY.m_sInvITEM[ 1 ].m_btInvIDX =  (BYTE)nInvIDX;
 				pCPacket->m_gsv_SET_INV_ONLY.m_sInvITEM[ 1 ].m_ITEM     = *pEquipITEM;
 
-				// ¼ø¼­ ÁÖÀÇ ¹Ø¿¡²¨ È£ÃâµÇ¸é *pEquipITEMÀÌ »èÁ¦µÈ´Ù.
+				// * PEquipITEM is cleared when invoked under the Order Notes.
 				this->ClearITEM( nEquipInvIDX );
 
 				if ( EQUIP_IDX_WEAPON_R == nEquipInvIDX ) {
-					// ¿À¸¥¼Õ ¹«±âÁß ¼Ò¸ðÅº ÇØÁ¦...
+					// Disarm wastes from right hand weapon ...
 					this->m_pShotITEM = NULL;
 				}
 			} else {
-				// ºó ÀÎº¥Åä¸®°¡ ¾ø¾î¼­ Àåºñ¸¦ ¹þÀ»¼ö ¾ø´Ù...
+				// I can not take my equipment off because I do not have empty inventory ...
 				goto _RETURN;
 			}
 		} else {
-			#pragma COMPILE_TIME_MSG( "2004. 7. 16 4Â÷ Å¬º£°úÁ¤¿¡¼­ ¸î¸î À¯Àú¿¡°Ô ³ªÅ¸³ª´Â Çö»ó ÀÓ½Ã·Î ..." )
+			#pragma COMPILE_TIME_MSG( "2004. 7. 16 A phenomenon that appears to some users in the fourth stage of Cube ..." )
 			// IS_HACKING( this, "Change_EQUIP_ITEM-1" );	// ¹¹³Ä ???
 			// bResult = false;
 			goto _RETURN;
 		}
 	} else {
-		// Àåºñ ÀåÂø...
+		// Equipped with equipment ...
 		tagITEM WeaponITEM = m_Inventory.m_ItemLIST[ nWeaponInvIDX ];
 		if ( this->Check_EquipCondition( WeaponITEM, nEquipInvIDX ) && WeaponITEM.IsEquipITEM() ) {
 			if ( WeaponITEM.IsTwoHands() && m_Inventory.m_ItemEQUIP[ EQUIP_IDX_WEAPON_L ].GetTYPE() ) {
-				// ¾ç¼Õ ¹«±âÀÌ°í ¿Þ¼Õ¿¡ ¹æÆÐ ÀÖ´Ù¸é 
-				// ¿Þ¼Õ ¹«±â¸¦ Å»°ÅÇÒ Àåºñ ÀÎº¥Åä¸®¿¡ ºó °ø°£ÀÌ 1°³ ÀÖ¾î¾ß ÇÑ´Ù.
+				// If you have both hands and you have a shield on your left hand
+				// You must have one empty space in your equipment inventory to remove your left hand weapon.
 				short nEmptyInvIDX = m_Inventory.GetEmptyInventory( INV_WEAPON );
 				if ( nEmptyInvIDX < 0 )
 					goto _RETURN;
 
-				// ¿Þ¼Õ¹«±â ÀÎº¥Åä¸®·Î...
+				// Left hand weapon inventory ...
 				tagITEM *pSubWPN = &m_Inventory.m_ItemLIST[ EQUIP_IDX_WEAPON_L ];
 				m_Inventory.m_ItemLIST[ nEmptyInvIDX ] = *pSubWPN;
 
-				// ¿Þ¼Õ ÀåÂø ¾ÆÀÌÅÛ »èÁ¦.. 
+				// Delete left-handed item ..
 				pSubWPN->Clear();
-				this->SetPartITEM( BODY_PART_WEAPON_L, *pSubWPN );		// ¿Þ¼Õ ¸ðµ¨ ¾ÆÀÌÅÛ °­Á¦·Î »èÁ¦ !!!
+				this->SetPartITEM( BODY_PART_WEAPON_L, *pSubWPN );		// Left hand model item force delete !!!
 
 				pCPacket->m_gsv_SET_INV_ONLY.m_btItemCNT = 4;
 
-				// ¿Þ¼Õ ¹«±â »èÁ¦...
+				// Delete left hand weapon ...
 				pCPacket->m_gsv_SET_INV_ONLY.m_sInvITEM[ 2 ].m_btInvIDX = EQUIP_IDX_WEAPON_L;
 				pCPacket->m_gsv_SET_INV_ONLY.m_sInvITEM[ 2 ].m_ITEM.Clear();
 
-				// ÀåÂø Àåºñ µé¾î°£ ÀÎº¥Åä¸® Á¤º¸ Àü¼Û.
+				// Transfer of inventory information into the equipment.
 				pCPacket->m_gsv_SET_INV_ONLY.m_sInvITEM[ 3 ].m_btInvIDX = (BYTE)nEmptyInvIDX;
 				pCPacket->m_gsv_SET_INV_ONLY.m_sInvITEM[ 3 ].m_ITEM     = m_Inventory.m_ItemLIST[ nEmptyInvIDX ];
 
-				// ¾ç¼Õ¹«±â ÀåÂøÀÌ¹Ç·Î :: ¹æ¾î·ÂÁõ°¡, Ç×¸¶·ÂÁõ°¡, ¹æÆÐµ¥ÀÌÁö »èÁ¦...
+				// Because it is equipped with two-handed weapons :: Increase armor, increase armor, remove shield daisy ...
 				this->m_IngSTATUS.ClearSTATUS( ING_INC_DPOWER );
 				this->m_IngSTATUS.ClearSTATUS( ING_INC_RES );
 				this->m_IngSTATUS.ClearSTATUS( ING_SHIELD_DAMAGE );
 			} else {
-				// ÀÏ¹Ý Àåºñ & ÇÑ¼Õ ¹«±â
+				// General Equipment & One Hand Weapon
 				pCPacket->m_gsv_SET_INV_ONLY.m_btItemCNT = 2;
 			}
 
 			m_Inventory.m_ItemLIST[ nWeaponInvIDX ] = *pEquipITEM;
 			*pEquipITEM = WeaponITEM;
 
-			// Àåºñ ±³È¯.
+			// Equipment exchange.
 			pCPacket->m_gsv_SET_INV_ONLY.m_sInvITEM[ 0 ].m_btInvIDX = (BYTE)nEquipInvIDX;
 			pCPacket->m_gsv_SET_INV_ONLY.m_sInvITEM[ 0 ].m_ITEM     = m_Inventory.m_ItemLIST[ nEquipInvIDX ];
 
@@ -3183,18 +3185,18 @@ bool classUSER::Change_EQUIP_ITEM (short nEquipInvIDX, short nWeaponInvIDX)
 			pCPacket->m_gsv_SET_INV_ONLY.m_sInvITEM[ 1 ].m_ITEM     = m_Inventory.m_ItemLIST[ nWeaponInvIDX ];
 
 			if ( EQUIP_IDX_WEAPON_R == nEquipInvIDX ) {
-				// ¿À¸¥¼Õ ¹«±âÁß ¼Ò¸ðÅº »ç¿ëÇÏ³ª ???
+				// One of the right-handed weapons is consumed?
 				this->Set_ShotITEM ();			// classUSER::Change_EQUIP_ITEM 
 			}
-		} // else Àåºñ ¾ÆÀÌÅÛÀÌ ¾Æ´Ï´Ù...
+		} // else It is not an equipment item ...
 	}
 
 
 	if ( pCPacket->m_gsv_SET_INV_ONLY.m_btItemCNT ) {
-		// ¹«±â º¯°æ½Ã
+		// When changing weapons
 		switch( nEquipInvIDX ) {
 			case EQUIP_IDX_WEAPON_R :
-				// °ø°Ý·ÂÁõ°¡, ¸íÁß·ÂÁõ°¡, °ø°Ý¼ÓµµÁõ°¡, Å©¸®Æ¼ÄÃÁõ°¡ »èÁ¦...
+				// Increases attack power, increases hit rate, increases attack speed, increases critical damage ...
 				this->m_IngSTATUS.ClearStatusIfENABLED( ING_INC_APOWER );
 				this->m_IngSTATUS.ClearStatusIfENABLED( ING_INC_HIT );
 				this->m_IngSTATUS.ClearStatusIfENABLED( ING_INC_ATK_SPD );
@@ -3202,25 +3204,25 @@ bool classUSER::Change_EQUIP_ITEM (short nEquipInvIDX, short nWeaponInvIDX)
 				break;
 
 			case EQUIP_IDX_WEAPON_L :
-				// ¹æ¾î·ÂÁõ°¡, Ç×¸¶·ÂÁõ°¡, ¹æÆÐµ¥ÀÌÁö »èÁ¦...
+				// Increase armor, increase armor, remove shield daisy ...
 				this->m_IngSTATUS.ClearStatusIfENABLED( ING_INC_DPOWER );
 				this->m_IngSTATUS.ClearStatusIfENABLED( ING_INC_RES );
 				this->m_IngSTATUS.ClearStatusIfENABLED( ING_SHIELD_DAMAGE );
 				break;
 		}
 
-		// ÄÉ¸¯ÅÍ »óÅÂ ¾÷µ¥ÀÌÆ®.. ÆÄÆ®´Â ¹Ù²îÁö ¾Ê´Â´Ù..
+		// Update the character status .. parts do not change ..
 		this->SetPartITEM( nEquipInvIDX );
 
 		pCPacket->m_HEADER.m_wType = GSV_SET_INV_ONLY;
 		pCPacket->m_HEADER.m_nSize = sizeof( gsv_SET_INV_ONLY ) + pCPacket->m_gsv_SET_INV_ONLY.m_btItemCNT * sizeof( tag_SET_INVITEM );
 		this->SendPacket( pCPacket );
 
-		// ÁÖº¯¿¡ ¹«±â ¹Ù²ñÀ» Åëº¸...
+		// Notice the weapon changes around ...
 		this->Send_gsv_EQUIP_ITEM( nEquipInvIDX, pEquipITEM );
 
 		if ( this->GetPARTY() ) {
-			// º¯°æ¿¡ ÀÇÇØ ¿É¼ÇÀÌ ºÙ¾î È¸º¹ÀÌ ¹Ù²î¸é ÆÄÆ¼¿ø¿¡°Ô Àü¼Û.
+			// If the option is attached by a change and the recovery is changed, it is sent to the party member.
 			if ( btCurCON != this->GetCur_CON()  ||
 				 btRecvHP != this->m_btRecoverHP ||
 				 btRecvMP != this->m_btRecoverMP ) {
@@ -6941,7 +6943,7 @@ void classUSER::Send_gsv_CRAFT_ITEM_REPLY( classPACKET *pCPacket, BYTE btRESULT,
 	Packet_ReleaseNUnlock( pCPacket );
 }
 
-/// Àç¹Ö ¿äÃ»
+/// Gemming request
 bool classUSER::Proc_CRAFT_GEMMING_REQ( t_PACKET *pPacket )
 {
 	if ( pPacket->m_cli_CRAFT_GEMMING_REQ.m_btEquipInvIDX >= MAX_EQUIP_IDX )
@@ -6953,8 +6955,9 @@ bool classUSER::Proc_CRAFT_GEMMING_REQ( t_PACKET *pPacket )
 	tagITEM *pEquipITEM = &this->m_Inventory.m_ItemLIST[ pPacket->m_cli_CRAFT_GEMMING_REQ.m_btEquipInvIDX ];
 	if ( !pEquipITEM->IsEquipITEM() )
 		return true;
-
+	
 	tagITEM *pJewelITEM = &this->m_Inventory.m_ItemLIST[ pPacket->m_cli_CRAFT_GEMMING_REQ.m_btJemInvIDX ];
+	
 	if ( ITEM_TYPE_GEM != pJewelITEM->GetTYPE() || pJewelITEM->GetQuantity() < 1 )
 		return true;
 	if ( pJewelITEM->GetItemNO() >= g_TblGEMITEM.m_nDataCnt ) {
@@ -6970,32 +6973,31 @@ bool classUSER::Proc_CRAFT_GEMMING_REQ( t_PACKET *pPacket )
 	if ( pEquipITEM->GetGemNO() > 300 ) {
 		return this->Send_gsv_CRAFT_ITEM_RESULT( CRAFT_GEMMING_USED_SOCKET );
 	}
-
-	// Àç¹Ö ·Î±×..
+	// Gemming Log ..
 	g_pThreadLOG->When_GemmingITEM( this, pEquipITEM, pJewelITEM, NEWLOG_GEMMING, NEWLOG_SUCCESS );
-
-	// º¸¼® ¹ÚÈù°ÍÀº ÀÚµ¿ °ËÁõ...
+	
+	// Gem stuck automatic verification ...
 	pEquipITEM->m_nGEM_OP = pJewelITEM->GetItemNO();
 	this->SetPartITEM( pPacket->m_cli_CRAFT_GEMMING_REQ.m_btEquipInvIDX );
-
+	
 	pJewelITEM->SubQuantity( 1 );
-
+	
 	classPACKET *pCPacket = this->Init_gsv_CRAFT_ITEM_REPLY ();
 	if ( !pCPacket )
 		return false;
-
+	
 	pCPacket->m_gsv_CRAFT_ITEM_REPLY.m_sInvITEM[ 0 ].m_btInvIDX = pPacket->m_cli_CRAFT_GEMMING_REQ.m_btEquipInvIDX;
 	pCPacket->m_gsv_CRAFT_ITEM_REPLY.m_sInvITEM[ 0 ].m_ITEM		= *pEquipITEM;
 	pCPacket->m_gsv_CRAFT_ITEM_REPLY.m_sInvITEM[ 1 ].m_btInvIDX = pPacket->m_cli_CRAFT_GEMMING_REQ.m_btJemInvIDX;
 	pCPacket->m_gsv_CRAFT_ITEM_REPLY.m_sInvITEM[ 1 ].m_ITEM		= *pJewelITEM;
 
 	this->Send_gsv_CRAFT_ITEM_REPLY( pCPacket, CRAFT_GEMMING_SUCCESS, 2 );
-
-	// ÀåÂøµÈ ÀåºñÀÌ¹Ç·Î ÁÖº¯¿¡ Åëº¸ ÇÊ¿ä...
+	
+	// Because it is equipped equipment, you need to be notified around ...
 	this->UpdateAbility ();		// gemming
 	this->InitPassiveSkill ();
 	this->Send_gsv_EQUIP_ITEM( pPacket->m_cli_CRAFT_GEMMING_REQ.m_btEquipInvIDX, pEquipITEM );
-
+	
 	return true;
 }
 /// ¾ÆÀÌÅÛ ºÐÇØ ¿äÃ»
@@ -7342,7 +7344,7 @@ bool classUSER::Proc_CRAFT_UPGRADE_REQ( t_PACKET *pPacket, bool bUseMP )
 
 	this->Send_gsv_CRAFT_ITEM_REPLY( pCPacket, btResult, btOutCNT );
 
-	//if ( ÀåÂøÁßÀÎ Àåºñ´Â ¾÷±Û ¾ÈµÊ...
+	//if ( Equipment being installed is not upgraded ...
 	//	this->UpdateAbility ();		// upgrade...
 	//	this->Send_gsv_EQUIP_ITEM( pPacket->m_cli_APPRAISAL_REQ.m_wInventoryIndex, pITEM );
 	//}

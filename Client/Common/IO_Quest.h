@@ -18,31 +18,32 @@
 #define	QST_VARTYPE_PLANET		0x0500
 #define	QST_VARTYPE_UNION		0x0600
 
-/// STR_COND_001, STR_REWD_002에 필요한 Structure. Quest변수에 대한 체크에 사용됨
+/// STR_COND_001, Structure needed for STR_REWD_002. Used to check Quest variables
 struct STR_QUEST_DATA
 {
 	union {
-		int		iType;	/// 0x00000000~0x00000010 ==> QuestVar0 ~ QuestVar9, 
-						/// 0x01000000~0x0100001F ==> switch0 ~ switch32
-						/// 0x02000000 ==> 퀘스트 타이머를 의미함
-						/// 0x03000000 ~ 0x03000004 ==> 에피소드 진행변수 5개
-						/// 0x04000000 ~ 0x04000002 ==> 직업진행변수 3개
-						/// 0x05000000 ~ 0x05000006 ==> 행성별 진행변수 7개
-						/// 0x06000000 ~ 0x06000009 ==> 조합별 진행변수 10개
+		int		iType;	/// 0x00000000 ~ 0x00000010 ==> QuestVar0 ~ QuestVar9,
+						/// 0x01000000 ~ 0x0100001F ==> switch0 ~ switch32
+						/// 0x02000000 ==> means a quest timer
+						/// 0x03000000 ~ 0x03000004 ==> 5 episode progress parameters
+						/// 0x04000000 ~ 0x04000002 ==> 3 job progress variables
+						/// 0x05000000 ~ 0x05000006 ==> 7 planetary progress parameters
+						/// 0x06000000 ~ 0x06000009 ==> 10 combination variables
+						/// 0x07000000 ~ 0x07000004 ==> 5 clan star progress variables
 		struct {
 			WORD	m_wVarNO;
 			WORD	m_wVarTYPE;
 		} ;
 	} ;
 
-	// 비교는 :: 얻은값 op nValue
-	short	nValue;	/// 비교할 데이터값. 0~255, 스위치일 경우 0, 1 (iType에 해당하는 값 Op btValue)
-	BYTE	btOp;	/// iData값에 대한 비교방법. 0 = 같다, 1 = 크다, 2 = 크거나 같다. 3=작다, 4=작거나 같다, 
-					/// (이후 액션쪽) 5 = 값바꿈, 6 = 증가(주어진 만큼), 7 = 감소, 8 = 스위치 Off, 9 = 스위치 On
+	// Compare: :: Obtained value op nValue
+	short	nValue;	/// The data value to compare. 0 to 255 for the switch, 0 for the switch, 1 (Op btValue for iType)
+	BYTE	btOp;	/// How to compare against iData values. 0 = equal, 1 = greater, 2 = greater than or equal. 3 = Small, 4 = Less Than or Equal to
+					/// (After action) 5 = value change, 6 = increase (given), 7 = decrease, 8 = switch off, 9 = switch on
 };
 
 
-/// STR_COND_003, STR_REWD_004 에 필요한 Structure. 능력치 체크에 사용되는 데이터
+/// STR_COND_003, STR_REWD_004 Required Structure. Data used for the ability check
 struct STR_ABIL_DATA
 {
 	int		iType;	/// enum t_AbilityINDEX와 동일

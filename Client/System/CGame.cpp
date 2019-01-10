@@ -1106,7 +1106,7 @@ void CGame::CreateSelectedAvata()
 	g_pAVATAR->m_nReviveZoneNO = m_SelectedAvataInfo.m_nReviveZoneNO;
 	::CopyMemory ( &g_pAVATAR->m_BasicINFO,		&m_SelectedAvataInfo.m_BasicINFO,		sizeof(tagBasicINFO)	);
 	::CopyMemory ( &g_pAVATAR->m_BasicAbility,	&m_SelectedAvataInfo.m_BasicAbility,	sizeof(tagBasicAbility)	);
-	::CopyMemory ( &g_pAVATAR->m_BasicAbility,	&m_SelectedAvataInfo.m_BasicAbility,	sizeof(tagBasicAbility)	);
+	//::CopyMemory ( &g_pAVATAR->m_BasicAbility,	&m_SelectedAvataInfo.m_BasicAbility,	sizeof(tagBasicAbility)	); //Numenor: is this needed?
 	::CopyMemory ( &g_pAVATAR->m_GrowAbility,	&m_SelectedAvataInfo.m_GrowAbility,		sizeof(tagGrowAbility)	);
 	::CopyMemory ( &g_pAVATAR->m_Skills,		&m_SelectedAvataInfo.m_Skill,			sizeof(tagSkillAbility)	);
 	::CopyMemory ( &g_pAVATAR->m_Quests,		&m_QuestData.m_Quests,					sizeof(tagQuestData)	);

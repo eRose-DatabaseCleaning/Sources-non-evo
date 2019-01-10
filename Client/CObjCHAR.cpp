@@ -4974,7 +4974,7 @@ void CObjAVT::Update (bool bUpdateBONE )
 	}
 
 
-	// 4. ¸ðµ¨ ¼³Á¤.
+	// 4. Model settings.
 	this->CreatePARTS ( (char*)m_Name.c_str() );
 
 	this->InsertToScene ();

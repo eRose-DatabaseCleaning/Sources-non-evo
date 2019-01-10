@@ -87,8 +87,8 @@ LRESULT CApplication::MessageProc ( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM
 			break;
 		case WM_ACTIVATE :
 			{
-				m_wActive = ( ( LOWORD( wParam ) != WA_INACTIVE ) && ( HIWORD( wParam ) == 0 ) ); // INVACIVE 가 아니고, 미니마이즈도 아닌 경우에만 활성화
-				m_wActive = true; //Numenor: This enables constant rendering!!
+				//m_wActive = ( ( LOWORD( wParam ) != WA_INACTIVE ) && ( HIWORD( wParam ) == 0 ) ); // Enabled only if it is not INVACIVE or not MINIMIZE
+				m_wActive = ( HIWORD( wParam ) == 0 ); //Numenor: This enables constant rendering except if window is minimized
 				
 				LogString( LOG_DEBUG, "WM_ACTIVATE: [%s]\n",
 					( HIWORD(wParam) != 0) ? "[MINIMIZED]" :

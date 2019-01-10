@@ -421,55 +421,56 @@ bool GS_CThreadSQL::UpdateUserRECORD (classUSER *pUSER)
 	pUSER->m_BasicINFO.m_cFaceIDX = (char)pUSER->m_PartITEM[ BODY_PART_FACE ].m_nItemNo;
 	pUSER->m_BasicINFO.m_cHairIDX = (char)pUSER->m_PartITEM[ BODY_PART_HAIR ].m_nItemNo;
 
-	this->m_pSQL->BindPARAM( 1, (BYTE*)&this->m_sBE,			sizeof( tagBasicETC )		);
-	this->m_pSQL->BindPARAM( 2, (BYTE*)&pUSER->m_BasicINFO,		sizeof( tagBasicINFO )		);
-	this->m_pSQL->BindPARAM( 3, (BYTE*)&pUSER->m_BasicAbility,	sizeof( tagBasicAbility )	);
-	this->m_pSQL->BindPARAM( 4, (BYTE*)&pUSER->m_GrowAbility,	sizeof( tagGrowAbility )	);
-	this->m_pSQL->BindPARAM( 5, (BYTE*)&pUSER->m_Skills,		sizeof( tagSkillAbility )	);
-	this->m_pSQL->BindPARAM( 6, (BYTE*)&pUSER->m_Inventory,		sizeof( CInventory )		);
-	this->m_pSQL->BindPARAM( 7, (BYTE*)&pUSER->m_Quests,		sizeof( tagQuestData )		);
-	this->m_pSQL->BindPARAM( 8, (BYTE*)&pUSER->m_HotICONS,		sizeof( CHotICONS )			);
-	this->m_pSQL->BindPARAM( 9, (BYTE*)&pUSER->m_WishLIST,		sizeof( tagWishLIST )		);
+	this->m_pSQL->BindPARAM( 1, (BYTE*)&this->m_sBE,			sizeof( tagBasicETC )		); // <=96
+	this->m_pSQL->BindPARAM( 2, (BYTE*)&pUSER->m_BasicINFO,		sizeof( tagBasicINFO )		); // <=32
+	this->m_pSQL->BindPARAM( 3, (BYTE*)&pUSER->m_BasicAbility,	sizeof( tagBasicAbility )	); // <=48
+	this->m_pSQL->BindPARAM( 4, (BYTE*)&pUSER->m_GrowAbility,	sizeof( tagGrowAbility )	); // <=384
+	this->m_pSQL->BindPARAM( 5, (BYTE*)&pUSER->m_Skills,		sizeof( tagSkillAbility )	); // <=240
+	this->m_pSQL->BindPARAM( 6, (BYTE*)&pUSER->m_Inventory,		sizeof( CInventory )		); // <=2048 && 139*14+8 = 1954
+	this->m_pSQL->BindPARAM( 7, (BYTE*)&pUSER->m_Quests,		sizeof( tagQuestData )		); // <=1000
+	this->m_pSQL->BindPARAM( 8, (BYTE*)&pUSER->m_HotICONS,		sizeof( CHotICONS )			); // <= unsigned short (i.e. 2 bytes) * 64 = 128
+	this->m_pSQL->BindPARAM( 9, (BYTE*)&pUSER->m_WishLIST,		sizeof( tagWishLIST )		); // <=
 
 #ifdef __KCHS_BATTLECART__  // MQ_PARAM_INT16,		DATA_VER_2,
 	this->m_pSQL->MakeQuery( "UPDATE tblGS_AVATAR SET binBasicE=",
-												MQ_PARAM_BINDIDX,	1,
-			MQ_PARAM_ADDSTR, ",binBasicI=",		MQ_PARAM_BINDIDX,	2,
-			MQ_PARAM_ADDSTR, ",binBasicA=",		MQ_PARAM_BINDIDX,	3,
-			MQ_PARAM_ADDSTR, ",binGrowA=",		MQ_PARAM_BINDIDX,	4,
-			MQ_PARAM_ADDSTR, ",binSkillA=",		MQ_PARAM_BINDIDX,	5,
-			MQ_PARAM_ADDSTR, ",blobINV=",		MQ_PARAM_BINDIDX,	6,
-			MQ_PARAM_ADDSTR, ",blobQUEST=",		MQ_PARAM_BINDIDX,	7,
-			MQ_PARAM_ADDSTR, ",binHotICON=",	MQ_PARAM_BINDIDX,	8,
-			MQ_PARAM_ADDSTR, ",binWishLIST=",	MQ_PARAM_BINDIDX,	9,
-			MQ_PARAM_ADDSTR, ",btLEVEL=",		MQ_PARAM_INT,		pUSER->m_GrowAbility.m_nLevel,
-			MQ_PARAM_ADDSTR, ",intMoney=",		MQ_PARAM_INT64,		pUSER->GetCur_MONEY(),
-			MQ_PARAM_ADDSTR, ",intJOB=",		MQ_PARAM_INT,		pUSER->m_BasicINFO.m_nClass,
-			MQ_PARAM_ADDSTR, ",dwRegTIME=",		MQ_PARAM_INT,		this->m_dwCurTIME,
-			MQ_PARAM_ADDSTR, ",dwPartyIDX=",	MQ_PARAM_INT,		pUSER->GetPARTY() ? pUSER->m_pPartyBUFF->m_wPartyWSID : 0,
-			MQ_PARAM_ADDSTR, ",dwItemSN=",		MQ_PARAM_INT,		pUSER->m_dwItemSN,
-			MQ_PARAM_ADDSTR, ",intDataVER=",	MQ_PARAM_INT16,		DATA_VER_2,
-			MQ_PARAM_ADDSTR, "WHERE txtNAME=",	MQ_PARAM_STR,		pUSER->Get_NAME(),
+												MQ_PARAM_BINDIDX,	1, // 96
+			MQ_PARAM_ADDSTR, ",binBasicI=",		MQ_PARAM_BINDIDX,	2, // 32 in SQL server
+			MQ_PARAM_ADDSTR, ",binBasicA=",		MQ_PARAM_BINDIDX,	3, // 48
+			MQ_PARAM_ADDSTR, ",binGrowA=",		MQ_PARAM_BINDIDX,	4, // 388 (and 384 in config file! What have we done?)
+			MQ_PARAM_ADDSTR, ",binSkillA=",		MQ_PARAM_BINDIDX,	5, // 384
+			MQ_PARAM_ADDSTR, ",blobINV=",		MQ_PARAM_BINDIDX,	6, // 2048
+			MQ_PARAM_ADDSTR, ",blobQUEST=",		MQ_PARAM_BINDIDX,	7, // 1024
+			MQ_PARAM_ADDSTR, ",binHotICON=",	MQ_PARAM_BINDIDX,	8, // 128
+			MQ_PARAM_ADDSTR, ",binWishLIST=",	MQ_PARAM_BINDIDX,	9, // 256
+			MQ_PARAM_ADDSTR, ",btLEVEL=",		MQ_PARAM_INT,		pUSER->m_GrowAbility.m_nLevel, // smallint
+			MQ_PARAM_ADDSTR, ",intMoney=",		MQ_PARAM_INT64,		pUSER->GetCur_MONEY(), // bigint
+			MQ_PARAM_ADDSTR, ",intJOB=",		MQ_PARAM_INT,		pUSER->m_BasicINFO.m_nClass, // smallint
+			MQ_PARAM_ADDSTR, ",dwRegTIME=",		MQ_PARAM_INT,		this->m_dwCurTIME, // int
+			MQ_PARAM_ADDSTR, ",dwPartyIDX=",	MQ_PARAM_INT,		pUSER->GetPARTY() ? pUSER->m_pPartyBUFF->m_wPartyWSID : 0, // int
+			MQ_PARAM_ADDSTR, ",dwItemSN=",		MQ_PARAM_INT,		pUSER->m_dwItemSN, // int
+			MQ_PARAM_ADDSTR, ",intDataVER=",	MQ_PARAM_INT16,		DATA_VER_2, // smallint
+			MQ_PARAM_ADDSTR, "WHERE txtNAME=",	MQ_PARAM_STR,		pUSER->Get_NAME(), // 
 												MQ_PARAM_END );
 #else
 	this->m_pSQL->MakeQuery( "UPDATE tblGS_AVATAR SET binBasicE=",
-												MQ_PARAM_BINDIDX,	1,
-			MQ_PARAM_ADDSTR, ",binBasicI=",		MQ_PARAM_BINDIDX,	2,
-			MQ_PARAM_ADDSTR, ",binBasicA=",		MQ_PARAM_BINDIDX,	3,
-			MQ_PARAM_ADDSTR, ",binGrowA=",		MQ_PARAM_BINDIDX,	4,
-			MQ_PARAM_ADDSTR, ",binSkillA=",		MQ_PARAM_BINDIDX,	5,
-			MQ_PARAM_ADDSTR, ",blobINV=",		MQ_PARAM_BINDIDX,	6,
-			MQ_PARAM_ADDSTR, ",blobQUEST=",		MQ_PARAM_BINDIDX,	7,
-			MQ_PARAM_ADDSTR, ",binHotICON=",	MQ_PARAM_BINDIDX,	8,
-			MQ_PARAM_ADDSTR, ",binWishLIST=",	MQ_PARAM_BINDIDX,	9,
-			MQ_PARAM_ADDSTR, ",btLEVEL=",		MQ_PARAM_INT,		pUSER->m_GrowAbility.m_nLevel,
-			MQ_PARAM_ADDSTR, ",intMoney=",		MQ_PARAM_INT64,		pUSER->GetCur_MONEY(),
-			MQ_PARAM_ADDSTR, ",intJOB=",		MQ_PARAM_INT,		pUSER->m_BasicINFO.m_nClass,
-			MQ_PARAM_ADDSTR, ",dwRegTIME=",		MQ_PARAM_INT,		this->m_dwCurTIME,
-			MQ_PARAM_ADDSTR, ",dwPartyIDX=",	MQ_PARAM_INT,		pUSER->GetPARTY() ? pUSER->m_pPartyBUFF->m_wPartyWSID : 0,
-			MQ_PARAM_ADDSTR, ",dwItemSN=",		MQ_PARAM_INT,		pUSER->m_dwItemSN,
-			MQ_PARAM_ADDSTR, "WHERE txtNAME=",	MQ_PARAM_STR,		pUSER->Get_RNAME(),
-												MQ_PARAM_END );
+												MQ_PARAM_BINDIDX,	1, // 96 in SQL server
+			MQ_PARAM_ADDSTR, ",binBasicI=",		MQ_PARAM_BINDIDX,	2, // 32 in SQL server
+			MQ_PARAM_ADDSTR, ",binBasicA=",		MQ_PARAM_BINDIDX,	3, // 48 ...etc
+			MQ_PARAM_ADDSTR, ",binGrowA=",		MQ_PARAM_BINDIDX,	4, // 388 (and 384 in config file! What have we done?)
+			MQ_PARAM_ADDSTR, ",binSkillA=",		MQ_PARAM_BINDIDX,	5, // 384
+			MQ_PARAM_ADDSTR, ",blobINV=",		MQ_PARAM_BINDIDX,	6, // 2048
+			MQ_PARAM_ADDSTR, ",blobQUEST=",		MQ_PARAM_BINDIDX,	7, // 1024
+			MQ_PARAM_ADDSTR, ",binHotICON=",	MQ_PARAM_BINDIDX,	8, // 128 (and 64 in config file! What have we done?)
+			MQ_PARAM_ADDSTR, ",binWishLIST=",	MQ_PARAM_BINDIDX,	9, // 256
+			MQ_PARAM_ADDSTR, ",btLEVEL=",		MQ_PARAM_INT,		pUSER->m_GrowAbility.m_nLevel, // smallint
+			MQ_PARAM_ADDSTR, ",intMoney=",		MQ_PARAM_INT64,		pUSER->GetCur_MONEY(), // bigint
+			MQ_PARAM_ADDSTR, ",intJOB=",		MQ_PARAM_INT,		pUSER->m_BasicINFO.m_nClass, // smallint
+			MQ_PARAM_ADDSTR, ",dwRegTIME=",		MQ_PARAM_INT,		this->m_dwCurTIME, // int
+			MQ_PARAM_ADDSTR, ",dwPartyIDX=",	MQ_PARAM_INT,		pUSER->GetPARTY() ? pUSER->m_pPartyBUFF->m_wPartyWSID : 0, // int
+			MQ_PARAM_ADDSTR, ",dwItemSN=",		MQ_PARAM_INT,		pUSER->m_dwItemSN, // int
+			//MQ_PARAM_ADDSTR, ",intDataVER=",	MQ_PARAM_INT16,		DATA_VER_2, // smallint in SQL server (NB: this IS in our DB! but not here...)
+			MQ_PARAM_ADDSTR, "WHERE txtNAME=",	MQ_PARAM_STR,		pUSER->Get_RNAME(), // nvarchar 30
+												MQ_PARAM_END );     //There is also a binSkillB on 240...
 #endif
 
 	if ( this->m_pSQL->ExecSQLBuffer() < 0 ) {
@@ -1239,7 +1240,7 @@ bool GS_CThreadSQL::Proc_cli_SELECT_CHAR( tagQueryDATA *pSqlPACKET )
 					g_pPartyBUFF->OnConnect( iPartyIDX, pUSER );
 				}
 
-				// 아이템 시리얼번호 초기값 갱신...
+				// Item serial number initial value update ...
 				DWORD dwDBItemSN = this->m_pSQL->GetInteger( AVTTBL_ITEM_SN );
 				if ( this->m_dwCurTIME >= dwDBItemSN )
 					pUSER->m_dwItemSN = this->m_dwCurTIME;

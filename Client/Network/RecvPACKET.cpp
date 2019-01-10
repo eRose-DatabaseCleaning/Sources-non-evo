@@ -546,11 +546,10 @@ void CRecvPACKET::Recv_gsv_INIT_DATA ()
 {
 	m_pRecvPacket->m_gsv_INIT_DATA.m_iRandomSEED;
 	m_pRecvPacket->m_gsv_INIT_DATA.m_wRandomINDEX;
-#ifdef FRAROSE
-	g_itMGR.AppendChatMsg("Bienvenu sur FraRose Online.",IT_MGR::CHAT_TYPE_SYSTEM);
-	g_itMGR.AppendChatMsg("Ne divulgez jamais votre nom de compte ou mot de passe à qui que ce soit, nos admin ne vous le demanderons jamais.",IT_MGR::CHAT_TYPE_SYSTEM);
+
+	g_itMGR.AppendChatMsg("Bienvenue sur RoseAs.",IT_MGR::CHAT_TYPE_SYSTEM);
+	g_itMGR.AppendChatMsg("Un projet développé par Laurenzzo et Numenor.",IT_MGR::CHAT_TYPE_SYSTEM);
 	g_itMGR.AppendChatMsg("Bon jeu!.",IT_MGR::CHAT_TYPE_SYSTEM, D3DCOLOR_ARGB( 255, 255, 255, 255));
-#endif
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -767,7 +766,7 @@ void CRecvPACKET::Recv_gsv_SELECT_CHAR ()
 
 	::CopyMemory ( &refGame.m_SelectedAvataInfo.m_BasicINFO,		&m_pRecvPacket->m_gsv_SELECT_CHAR.m_BasicINFO,		sizeof(tagBasicINFO)	);
 	::CopyMemory ( &refGame.m_SelectedAvataInfo.m_BasicAbility,	&m_pRecvPacket->m_gsv_SELECT_CHAR.m_BasicAbility,	sizeof(tagBasicAbility)	);
-	::CopyMemory ( &refGame.m_SelectedAvataInfo.m_BasicAbility,	&m_pRecvPacket->m_gsv_SELECT_CHAR.m_BasicAbility,	sizeof(tagBasicAbility)	);
+	//::CopyMemory ( &refGame.m_SelectedAvataInfo.m_BasicAbility,	&m_pRecvPacket->m_gsv_SELECT_CHAR.m_BasicAbility,	sizeof(tagBasicAbility)	);
 	::CopyMemory ( &refGame.m_SelectedAvataInfo.m_GrowAbility,	&m_pRecvPacket->m_gsv_SELECT_CHAR.m_GrowAbility,	sizeof(tagGrowAbility)	);
 	::CopyMemory ( &refGame.m_SelectedAvataInfo.m_Skill,			&m_pRecvPacket->m_gsv_SELECT_CHAR.m_Skill,			sizeof(tagSkillAbility)	);
 	::CopyMemory ( &refGame.m_SelectedAvataInfo.m_HotICONS,		&m_pRecvPacket->m_gsv_SELECT_CHAR.m_HotICONS,		sizeof(CHotICONS)		);
@@ -816,9 +815,6 @@ void CRecvPACKET::Recv_gsv_QUEST_DATA()
 	refGame.SetLoadingData(  data );
 	refGame.ChangeState( CGame::GS_MOVEMAIN );
 	
-	CChatDLG* pChatDLG = g_itMGR.GetChatDLG();
-	pChatDLG->AppendMsg2System((const char*)CStr::Printf("Welcome %s to RoseAs", g_pAVATAR->Get_NAME()), 0xFF00FFFF);
-	pChatDLG->AppendMsg2System( "Have fun playing", 0xFFFFFF00);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -2200,8 +2196,8 @@ void CRecvPACKET::Recv_gsv_CHANGE_SKIN ()
 }
 
 //-------------------------------------------------------------------------------------------------
-/// m_pRecvPacket->m_gsv_EQUIP_ITEM.m_nEquipIndex °¡ ÀÎº¥Åä¸® ½½·Ô ³Ñ¹ö°¡ ³Ñ¾î¿Â´Ù..
-/// @bug ÀÌµ¿¼Óµµ Ã¼Å©ÇÏ¶ó..
+/// m_pRecvPacket->m_gsv_EQUIP_ITEM.m_nEquipIndex The inventory slot number is exceeded.
+/// @bug Check the speed of movement ..
 void CRecvPACKET::Recv_gsv_EQUIP_ITEM ()
 {
 	CObjAVT *pCHAR = g_pObjMGR->Get_ClientCharAVT( m_pRecvPacket->m_gsv_EQUIP_ITEM.m_wObjectIDX, false );
@@ -2226,19 +2222,19 @@ void CRecvPACKET::Recv_gsv_EQUIP_ITEM ()
 				short nWeaponTYPE = WEAPON_TYPE( nEquipItemNO );
 
 				if ( nWeaponTYPE >= 221 && nWeaponTYPE <= 255 ) {
-					// ¾ç¼Õ°Ë : 221 ~
-					// ¿ø°Å¸® : 231 ~
-					// ¸¶¹ý¹«±â : 241 ~
-					// Ä«Æ®¸£°è¿­ : 251 ~
+				    // Greatsword : 221 ~
+					// Distance : 231 ~
+					// Magic weapons : 241 ~
+                    // Le cart system : 251 ~
 					if ( nWeaponTYPE != 242 ) 
 					{
-						// ¾ç¼Õ ¹«±â¸é ¿Þ¼ÕÀÇ ¹«±â¸¦ »èÁ¦...
+						// Remove the left-hand side of the weapon, two-handed weapon ...
 						if( pCHAR->Get_L_WEAPON() != 0 )
 						{
 							pCHAR->SetPartITEM( BODY_PART_WEAPON_L, 0 );
 							pCHAR->ClearLWeaponSkillEffect();
 						}
-					} // else ( 242 ÇÑ¼Õ ¸¶¹ý µµ±¸ )					
+					} // else ( 242 Magic tool with one hand )						
 				}
 
 				pCHAR->SetChangeWeaponR( nEquipItemNO );
@@ -2253,16 +2249,17 @@ void CRecvPACKET::Recv_gsv_EQUIP_ITEM ()
 				pCHAR->SetUpdateMotionFlag( true );
 		}
 
-		if( nBodyPart < MAX_BODY_PART )///2004 / 2 / 2 :nAvyÃß°¡ - ¹ÝÁö,¸ñ°ÉÀÌ, ±Í°ÉÀÌÀÇ °æ¿ì´Â ¾ø´Ù.
+		if( nBodyPart < MAX_BODY_PART )///2004 / 2 / 2 :Add nAvy - rings, necklaces, earrings, if it is not.
 		{
-			pCHAR->SetPartITEM( nBodyPart, nEquipItemNO );			
+			pCHAR->SetPartITEM( nBodyPart, nEquipItemNO );	
+			pCHAR->SetPartITEM( nBodyPart, m_pRecvPacket->m_gsv_EQUIP_ITEM.m_PartITEM ); //Numenor: This comes from outside the if... but nBodyPart can be 10 if it's a jewel an make things bug... And there is no point to show this on the char... It's a jewel or a gem!
+
 		}
 
-		// µî±Þ, º¸¼®¹øÈ£ Æ÷ÇÔ...
-		pCHAR->SetPartITEM( nBodyPart, m_pRecvPacket->m_gsv_EQUIP_ITEM.m_PartITEM );
-
-		if( !pCHAR->IsPersonalStoreMode() )
-			pCHAR->Update ();		
+		// Grade, including jewelry number ...
+		//pCHAR->SetPartITEM( nBodyPart, m_pRecvPacket->m_gsv_EQUIP_ITEM.m_PartITEM ); //Numenor: if commented out, this fixes the issue with jewels changing names.
+		//Ok, so only when applying the setPartITEM something overflows to the next item on pCHAR, i.e. the name.
+		if( !pCHAR->IsPersonalStoreMode() ) 	pCHAR->Update ();		
 
 
 		/// ¼Óµµ°¡ º¯Çß´Ù¸é ¼Óµµ ¼¼ÆÃ
@@ -4760,21 +4757,22 @@ void CRecvPACKET::Recv_gsv_CRAFT_ITEM_REPLY()
 	{
 	case	CRAFT_GEMMING_SUCCESS:		//	0x01
 		{
-
-
 			g_pAVATAR->SetWaitUpdateInventory( true );
 			for( int i = 0; i < m_pRecvPacket->m_gsv_CRAFT_ITEM_REPLY.m_btOutCNT; i++ )
 			{
 				int iPartIdx = CInventory::GetBodyPartByEquipSlot( m_pRecvPacket->m_gsv_CRAFT_ITEM_REPLY.m_sInvITEM[ i ].m_btInvIDX );
 
+
+
 				if( g_pAVATAR )
 				{
-					g_pAVATAR->SetPartITEM( iPartIdx,
-						m_pRecvPacket->m_gsv_CRAFT_ITEM_REPLY.m_sInvITEM[ i ].m_ITEM );
+					if(iPartIdx < MAX_BODY_PART) g_pAVATAR->SetPartITEM( iPartIdx, m_pRecvPacket->m_gsv_CRAFT_ITEM_REPLY.m_sInvITEM[ i ].m_ITEM ); //Numenor: Removing this otherwise gem socketing makes the name bug!
+					//L'erreur vient vraiment quand on équipe l'objet en fait... (cad pour i = 1)... OU ALORS C'EST PARCE QU'ON RAJOUTE UN TRUC DE TROP ET DONC QUE CA FOIRE. On rajoute une equipement sur l'objet 10 qui n'existe pas... Donc ca deborde dans le nom du perso via cette fonction.
+					//Du coup quand on deborde j'ai dit de ne rien faire... Ca sert a rien le setPartItem pour les gems et les bijoux. L'effet est rempli avec le set item.
 					g_pAVATAR->Set_ITEM( m_pRecvPacket->m_gsv_CRAFT_ITEM_REPLY.m_sInvITEM[ i ].m_btInvIDX,
 						m_pRecvPacket->m_gsv_CRAFT_ITEM_REPLY.m_sInvITEM[ i ].m_ITEM );
-					/// Equip ÆÐÅ¶ÀÌ ³¯¶ó¿À±â¶§¹®¿¡ ¼Ó¼º ¾÷µ¥ÀÌÆ®´Â ºÒÇÊ¿äÇØ º¸ÀÎ´Ù.
-					/// ¾ÆÀÌÅÛ ½½·Ô¸¸ °»½Å½ÃÅ°¸é µÉµí..
+					/// Equip The attribute update seems unnecessary because the packet is being sent.
+					/// You can only update item slots.
 					g_pAVATAR->Update();
 				}
 			}
@@ -6736,7 +6734,6 @@ void CRecvPACKET::Recv_gsv_UPDATE_NAME()
 {
 	short nOffset = sizeof( gsv_UPDATE_NAME );
 	char *szMsg;
-
 	CObjAVT* pAVT = g_pObjMGR->Get_CharAVT( g_pObjMGR->Get_ClientObjectIndex( m_pRecvPacket->m_gsv_UPDATE_NAME.m_nCharID ), false );
 	
 	if( pAVT == NULL)
