@@ -451,7 +451,7 @@ short classUSER::Parse_CheatCODE (char *szCode)
 		if ( !strcmpi( pToken, "/mm" ) ) {
 			// pArg1 // zone no
 			short nZoneNO = atoi( pArg1 );
-			if( pArg1[0] == 'h') {
+			if( pArg1[0] == 'h' || pArg1[0] == '?') {
 				//Numenor: print help and the list of zone where you can tp
 				this->Send_gsv_WHISPER( "<SERVER>::", "The command /mm will tp you on an other map.");
 				this->Send_gsv_WHISPER( "<SERVER>::", "Usage 1: /mm mapNo" );
@@ -503,10 +503,59 @@ short classUSER::Parse_CheatCODE (char *szCode)
 		if ( !strcmpi( pToken, "/ITEM" ) ) {
 			pArg2 = pStrVAR->GetTokenNext (pDelimiters);
 			pArg3 = pStrVAR->GetTokenNext (pDelimiters);
-			if ( !pArg2 || !pArg3 )
-				return CHEAT_INVALID;
-			char *pArg4 = pStrVAR->GetTokenNext (pDelimiters);
-			return Cheat_item( pArg1, pArg2, pArg3, pArg4 );
+			if( pArg1[0] == 'h' || pArg1[0] == '?') {
+				//Numenor: print help and the list of zone where you can tp
+				this->Send_gsv_WHISPER( "<SERVER>::", "The command /item adds an item to your inventory.");
+				this->Send_gsv_WHISPER( "<SERVER>::", "Equipment: /item Type ID Stat (-1 is socketted)" );
+				this->Send_gsv_WHISPER( "<SERVER>::", "Other: /item Type ID Amount" );
+				this->Send_gsv_WHISPER( "<SERVER>::", "Write /item Type h or /item Type ? to get a list of all items of this type" );
+
+				std::vector<char*> list_item;
+				list_item.push_back("Mask"); //1
+				list_item.push_back("Hat"); //2
+				list_item.push_back("Chest"); //3
+				list_item.push_back("Gloves"); //4
+				list_item.push_back("Shoes"); //5
+				list_item.push_back("Back Item"); //6
+				list_item.push_back("Jewelry"); //7
+				list_item.push_back("Weapon"); //8
+				list_item.push_back("Shield"); //9
+				list_item.push_back("Consumable"); //10
+				list_item.push_back("Gem"); //11
+				list_item.push_back("Etc"); //12
+				list_item.push_back("Quest?"); //13
+				list_item.push_back("PAT"); //14
+
+				for( short item = 0; item < list_item.size(); item++){
+					this->Send_gsv_WHISPER( "<SERVER>::", CStr::Printf("%d : %s", item+1, list_item[item] ));
+				}
+				return CHEAT_NOLOG;
+			}
+			else if( pArg2 && (pArg2[0] == 'h' || pArg2[0] == '?')) {
+				int iItemTYPE = atoi( pArg1 );
+				bool printInfo = true;
+				if ( iItemTYPE < 1 || iItemTYPE >= ITEM_TYPE_QUEST ) {
+					if ( iItemTYPE > ITEM_TYPE_QUEST && iItemTYPE <= ITEM_TYPE_RIDE_PART ) {
+					;
+					} else{
+						this->Send_gsv_WHISPER( "<SERVER>::", CStr::Printf("Invalid type for /item command."));
+						printInfo=false;
+					}
+				}
+				if(printInfo){
+					for (int item = 1; item < g_pTblSTBs[ iItemTYPE ]->m_nDataCnt; item++){
+						if( g_pTblSTBs[ iItemTYPE ]->m_ppNAME[item] != NULL ) this->Send_gsv_WHISPER( "<SERVER>::", CStr::Printf("%d : %s", item, g_pTblSTBs[ iItemTYPE ]->m_ppNAME[item] ));
+					}
+				}
+				return CHEAT_NOLOG;
+
+			}
+			else{
+				if ( !pArg2 || !pArg3 )
+					return CHEAT_INVALID;
+				char *pArg4 = pStrVAR->GetTokenNext (pDelimiters);
+				return Cheat_item( pArg1, pArg2, pArg3, pArg4 );
+			}
 		}
 
 		if ( !strcmpi( pToken, "/GET" ) ) {
@@ -537,6 +586,18 @@ short classUSER::Parse_CheatCODE (char *szCode)
 			// ¸÷ ¼ÒÈ¯
 			if ( !strcmpi( pToken, "/mon" ) ) {
 				// pArg1 Mob IDX
+				if( pArg1[0] == 'h' || pArg1[0] == '?') {
+					//Numenor: print help and the list of monsters you can summon
+					this->Send_gsv_WHISPER( "<SERVER>::", "The command /mon summons monster.");
+					this->Send_gsv_WHISPER( "<SERVER>::", "Usage: /mon ID Amount" );
+					this->Send_gsv_WHISPER( "<SERVER>::", "Write /mon h or /mon ? to get a list of all available monsters" );
+
+					int iItemTYPE = atoi( pArg1 );
+					for (int npc = 1; npc < g_TblNPC.m_nDataCnt; npc++){
+						if( NPC_NAME(npc) != NULL ) this->Send_gsv_WHISPER( "<SERVER>::", CStr::Printf("%d : %s", npc, NPC_NAME(npc) ));
+					}
+					return CHEAT_NOLOG;
+				}
 				pArg2 = pStrVAR->GetTokenNext (pDelimiters);	// mob cnt
 				if ( pArg2 ) {
 					return Cheat_mon ( pArg1, pArg2 );

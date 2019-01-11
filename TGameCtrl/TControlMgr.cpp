@@ -1261,7 +1261,7 @@ CZListBox*	CTControlMgr::MakeZListBoxByXML( MSXML::IXMLDOMNodePtr pNode )
 	int iScrX = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "X" );
 	int iScrY = GetNodeValueFromNamedNodeMapByName(pNamedNodeMap, "Y" );
 
-	const int iMaxLn = 200; // ZListBox���� ǥ���� �ִ� ������ ����.
+	const int iMaxLn = 2000; // The maximum number of lines to represent in the ZListBox.
 
 	pNamedNodeMap->Release();
 	pNamedNodeMap = NULL;

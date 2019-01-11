@@ -14,6 +14,8 @@
 #include "GS_Party.h"
 #include "Calculation.h"
 
+#include <vector>
+
 #ifdef	__INC_WORLD
 	#include "CDLList.h"
 	#include "CThreadMSGR.h"
