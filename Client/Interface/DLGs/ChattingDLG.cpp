@@ -1246,7 +1246,7 @@ bool CChatDLG::Create( const char* IDD )
 		if( pCtrl )
 		{
 			CTEditBox* pEditBox = (CTEditBox*) pCtrl;
-			pEditBox->SetLimitText(150);
+			//pEditBox->SetLimitText(150); //Numenor: should be 126. One day we might debug this to allow more char to be written.
 			pCtrl->AddActionListener( this );
 		}
 

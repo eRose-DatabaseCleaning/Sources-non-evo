@@ -36,7 +36,7 @@ CTEditBox::~CTEditBox(void)
 
 bool CTEditBox::Create(int iScrX, int iScrY, int iWidth, int iHeight ,int iCharWidth )
 {
-	m_iMaxCharCnt	= 126;
+	m_iMaxCharCnt	= 126; //Numenor: as it is now, it has to be 126 (or less).
 	m_iCharWidth	= iCharWidth;
 	m_pFontMgr		= CTControlMgr::GetInstance()->GetFontMgr();
 	Init(CTRL_EDITBOX, iScrX, iScrY, iWidth, iHeight );

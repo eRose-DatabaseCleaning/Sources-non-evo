@@ -238,3 +238,4 @@ Client/Util/Util_r.lib
 00_Latest_build/Latest_server/SHO_GS.exe
 00_Latest_build/Latest_server/SHO_LS.exe
 00_Latest_build/Latest_server/SHO_WS.exe
+*.inc

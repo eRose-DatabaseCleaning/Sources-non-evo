@@ -78,13 +78,13 @@ protected:
 
 
 protected:
-	int		m_iMaxCharCnt;			// 입력가능한 최대문자
+	int		m_iMaxCharCnt;			// Maximum characters that can be entered
 	
 	int		m_iCharWidth;			// 출력될 문자의 Width
 	int		m_iCharHeight;			// 출력될 문자의 Height
 
 	bool	m_bShowCursor;			// 프롬프트를 보여줄것인가?
-	bool	m_bMultiline;			// 멀티라인 입력?( 실제적으로 Draw시에 줄넘김 기능만이 있어. 프롬프트의 위치가 이상하다 )
+	bool	m_bMultiline;			// Multi-line input? (Actually there is only a line-feed function in Draw.
 
 	int		m_iTextAlign;			// 출력시 정렬 : TES_ALIGN_LEFT, TES_ALIGN_CENTER, TES_ALIGN_RIGHT
 
@@ -95,7 +95,7 @@ protected:
 	int		m_iPromptPos;			// 프롬프트 위치
 
 	int		m_iViewPos;				// 입력된 문자열중 현재 화면에 보여질 최초의 문자위치
-	char	m_pszBuffer[4096];		// 입력된 문자가 저장될 버퍼
+	char	m_pszBuffer[4096];		// Buffer where input character will be stored
 
 	int		m_iFont;				// 폰트 인덱스 : 클라이언트에서 만들 폰트에 따른다.
 	std::string m_strTemp;			
