@@ -1983,10 +1983,12 @@ struct gsv_P_STORE_RESULT : public t_PACKETHEADER {
 struct cli_PARTY_REQ : public t_PACKETHEADER {
 	BYTE	m_btREQUEST;
 	DWORD	m_dwDestIDXorTAG;
+	bool	m_bShareParty;
 } ;
 struct gsv_PARTY_REQ : public t_PACKETHEADER {
 	BYTE	m_btREQUEST;
 	DWORD	m_dwFromIDXorTAG;
+	bool	m_bShareParty;
 //	short	m_nZoneNO;
 } ;
 #define	PARTY_REQ_MAKE				0x00	// 파티 결성 요청 
@@ -1999,6 +2001,7 @@ struct gsv_PARTY_REQ : public t_PACKETHEADER {
 struct cli_PARTY_REPLY : public t_PACKETHEADER {
 	BYTE	m_btREPLY;
 	DWORD	m_dwDestIDXorTAG;
+	bool	m_bShareParty;
 } ;
 struct gsv_PARTY_REPLY : public t_PACKETHEADER {
 	BYTE	m_btREPLY;
@@ -2078,6 +2081,7 @@ struct gsv_PARTY_ITEM : public t_PACKETHEADER {
 #define	BIT_PARTY_RULE_ITEM_TO_ORDER		0x080	// 순서대로 우선권 부여...
 struct cli_PARTY_RULE : public t_PACKETHEADER {
 	BYTE	m_btPartyRUEL;
+	bool	m_bShareParty;
 } ;
 struct gsv_PARTY_RULE : public t_PACKETHEADER {
 	BYTE	m_btPartyRULE;

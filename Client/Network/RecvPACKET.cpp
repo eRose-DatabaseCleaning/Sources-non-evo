@@ -3771,6 +3771,7 @@ void CRecvPACKET::Recv_gsv_PARTY_REQ()
 	_RPT2( _CRT_WARN,"Recv_gsv_PARTY_REQ_1 %d(%d)\n",m_pRecvPacket->m_gsv_PARTY_REQ.m_btREQUEST, g_GameDATA.GetGameTime() );
 
 	WORD wObjSvrIdx = (WORD)m_pRecvPacket->m_gsv_PARTY_REQ.m_dwFromIDXorTAG;
+	bool bShareParty = m_pRecvPacket->m_gsv_PARTY_REQ.m_bShareParty;
 	CObjAVT* pObjChar		= g_pObjMGR->Get_CharAVT( g_pObjMGR->Get_ClientObjectIndex( wObjSvrIdx ), true );
 	CParty& Party = CParty::GetInstance();
 
@@ -3796,7 +3797,7 @@ void CRecvPACKET::Recv_gsv_PARTY_REQ()
 				{
 
 					sprintf( g_MsgBuf,FORMAT_STR_PARTY_INVITE,pObjChar->Get_NAME() );
-					CTCmdAcceptPartyJoin* pCmdOk		= new CTCmdAcceptPartyJoin( wObjSvrIdx );
+					CTCmdAcceptPartyJoin* pCmdOk		= new CTCmdAcceptPartyJoin( wObjSvrIdx, bShareParty );
 					CTCmdRejectPartyJoin* pCmdCancel	= new CTCmdRejectPartyJoin( wObjSvrIdx );
 
 					g_itMGR.OpenMsgBox( g_MsgBuf, CMsgBox::BT_OK | CMsgBox::BT_CANCEL, false, 0, pCmdOk, pCmdCancel , CMsgBox::MSGTYPE_RECV_PARTY_REQ );
@@ -3824,7 +3825,7 @@ void CRecvPACKET::Recv_gsv_PARTY_REQ()
 
 					sprintf( g_MsgBuf,FORMAT_STR_PARTY_MAKE_REQ,pObjChar->Get_NAME() );
 
-					CTCmdAcceptPartyJoin* pCmdOk		= new CTCmdAcceptPartyJoin( wObjSvrIdx );
+					CTCmdAcceptPartyJoin* pCmdOk		= new CTCmdAcceptPartyJoin( wObjSvrIdx, bShareParty );
 					CTCmdRejectPartyJoin* pCmdCancel	= new CTCmdRejectPartyJoin( wObjSvrIdx );
 
 					g_itMGR.OpenMsgBox( g_MsgBuf, CMsgBox::BT_OK | CMsgBox::BT_CANCEL, false, 0, pCmdOk, pCmdCancel , CMsgBox::MSGTYPE_RECV_PARTY_REQ );

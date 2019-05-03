@@ -48,8 +48,10 @@ bool CBasicCommand::Execute()
 	switch( iBasicCommandType )
 	{		
 	case COMMON_COMMAND_SELFTARGET:
-		g_UserInputSystem.SetTargetSelf();
-		actionDone = true;
+		{
+			g_UserInputSystem.SetTargetSelf();
+			actionDone = true;
+		}
 		break;
 	case COMMON_COMMAND_SIT:
 		{
@@ -425,8 +427,9 @@ bool CBasicCommand::Execute()
 					g_itMGR.OpenMsgBox( STR_CANTPARTY_WITHOTHERTEAM_INPVPZONE );
 				}
 			}
-			break;
 		}
+		break;
+
 	case COMMON_COMMAND_EXCHANGE:
 		{
 			int iTargetObjClientIndex = g_UserInputSystem.GetCurrentTarget();
@@ -446,8 +449,9 @@ bool CBasicCommand::Execute()
 					}
 				}
 			}
-			break;
 		}
+		break;
+
 	case COMMON_COMMAND_PRIVATESTORE:
 		{
 
@@ -469,6 +473,7 @@ bool CBasicCommand::Execute()
 			actionDone = true;
 		}
 		break;
+
 	case COMMON_COMMAND_PICK_ITEM_FROM_DISTANCE: //Numenor: this is when you use the "gather" skill. Not when you click on the object, just on the skill
 		{
 			/// 펫탑승모드에선.. 금지
@@ -542,7 +547,50 @@ bool CBasicCommand::Execute()
 			}
 		}
 		break;
-	}	
+	
+	case COMMON_COMMAND_PARTY_SCALE: //Numenor: new skill, party with scaling and exp sharing
+		{
+			int iTargetObjClientIndex = g_UserInputSystem.GetCurrentTarget();
+			CObjAVT* pAVT = g_pObjMGR->Get_CharAVT( iTargetObjClientIndex, true );
+
+			if( iTargetObjClientIndex != g_pAVATAR->Get_INDEX() && pAVT )
+			{
+				if( !g_pTerrain->IsPVPZone())
+				{
+					if( CParty::GetInstance().HasParty() )
+					{
+						///파티 초대
+						if( CParty::GetInstance().IsPartyLeader() )
+						{
+							///파티 풀
+							if( CParty::GetInstance().IsPartyFull() )
+								g_itMGR.AppendChatMsg(STR_PARTY_IS_FULL, IT_MGR::CHAT_TYPE_SYSTEM );
+							else{
+								g_pNet->Send_cli_PARTY_REQ(PARTY_REQ_JOIN,  g_pObjMGR->Get_ServerObjectIndex(iTargetObjClientIndex ), true);
+								actionDone = true;
+							}
+						}
+						else///Error
+						{
+							g_itMGR.AppendChatMsg(STR_CANT_INVITE_TO_PARTY, IT_MGR::CHAT_TYPE_SYSTEM );
+						}
+					}
+					else
+					{
+						g_pNet->Send_cli_PARTY_REQ(PARTY_REQ_MAKE,  g_pObjMGR->Get_ServerObjectIndex(iTargetObjClientIndex), true);
+						actionDone = true;
+					}
+				}
+				else
+				{
+					g_itMGR.OpenMsgBox( STR_CANT_SCALE_PARTY_IN_PVP );
+				}
+			}
+		}
+		break;
+
+	} //End of switch
+
 	if(actionDone) g_pAVATAR->Skill_UseAbilityValue(pSkill->GetSkillIndex()); //Numenor: use MP/HP/stamina etc... on the client side
 
 	return true;

@@ -23,11 +23,11 @@ CPartyBUFF::~CPartyBUFF ()
 }
 
 //-------------------------------------------------------------------------------------------------
-bool CPartyBUFF::CreatePARTY ( classUSER *pOwner )
+bool CPartyBUFF::CreatePARTY ( classUSER *pOwner, bool bShareParty )
 {
 	CParty *pCParty = this->Pool_Alloc ();
 	if ( pCParty ) {
-		pCParty->InitPARTY();
+		pCParty->InitPARTY(bShareParty);
 		// pCParty->m_nMinUserLEV = pCParty->m_nMaxUserLEV = pOwner->Get_LEVEL();
 
 		pOwner->m_pPartyBUFF = pCParty;
@@ -362,7 +362,7 @@ bool CParty::SendPartyLEVnEXP (classUSER *pUSER, BYTE bitLevelUP)
 bool CParty::AddEXP( CObjMOB *pMobCHAR, int iTotalEXP, int iPartyExpA, int iPartyExpB )
 {
 	classUSER *pNearUSER[ MAX_PARTY_MEMBERS ];
-	int iD, iNearUSER=0;
+	int iD, minID = 0, iNearUSER=0;
 	bool bFindOwner=false;
 
 	this->Lock ();
@@ -387,24 +387,40 @@ bool CParty::AddEXP( CObjMOB *pMobCHAR, int iTotalEXP, int iPartyExpA, int iPart
 #endif
 		if ( iNearUSER > 1 ) {	// 파티로 솔로링하는건 안돼~~
 			int iEXP;
-			if ( this->m_btPartyRULE & BIT_PARTY_RULE_EXP_PER_PLAYER ) {
-				// 개인 레벨에 따라 분배...
-				for (iD=0; iD<iNearUSER; iD++) {
-					iEXP = (int)( ( iTotalEXP * ( m_btPartyLEV+101 ) ) * ( pNearUSER[ iD ]->Get_LEVEL()+35-m_iAverageLEV ) / (iNearUSER*4+1) / 700 );
-					if ( iEXP > 0 ) {
-						pNearUSER[ iD ]->Add_EXP( iEXP, true, pMobCHAR->Get_INDEX() );
+			if(this->m_bShareParty){ //Numenor: if shared party, exp is given to lowest level member
+				//Numenor: Find userID of the min level in all users near the dead monster
+				for (iD=1; iD<iNearUSER; iD++) {
+					if ( pNearUSER[ iD ]->Get_LEVEL() < pNearUSER[ minID ]->Get_LEVEL() ){
+						minID = iD;
 					}
-					if ( pNearUSER[ iD ] == this->GetPartyOWNER() )
-						bFindOwner = true;
 				}
-			} else {
-				// 파티원에게 균등 분배...
-				iEXP = (int)( ( iTotalEXP * ( this->m_btPartyLEV+101 ) ) / (iNearUSER*4+1) / 20 );
+								
+				iEXP = (int)( (( iTotalEXP * ( this->m_btPartyLEV+101 ) ) / (iNearUSER*4+1) / 20)*iNearUSER ); //EXP per nearUSER * nearUSER = we give all EXP to one user.
 				if ( iEXP > 0 ) {
+					pNearUSER[ minID ]->Add_EXP( iEXP, true, pMobCHAR->Get_INDEX() );
+					if ( pNearUSER[ minID ] == this->GetPartyOWNER() )	bFindOwner = true;
+				}
+			}
+			else{ //Numenor: if normal party, party rules decide
+				if ( this->m_btPartyRULE & BIT_PARTY_RULE_EXP_PER_PLAYER ) {
+					// 개인 레벨에 따라 분배...
 					for (iD=0; iD<iNearUSER; iD++) {
-						pNearUSER[ iD ]->Add_EXP( iEXP, true, pMobCHAR->Get_INDEX() );
+						iEXP = (int)( ( iTotalEXP * ( m_btPartyLEV+101 ) ) * ( pNearUSER[ iD ]->Get_LEVEL()+35-m_iAverageLEV ) / (iNearUSER*4+1) / 700 );
+						if ( iEXP > 0 ) {
+							pNearUSER[ iD ]->Add_EXP( iEXP, true, pMobCHAR->Get_INDEX() );
+						}
 						if ( pNearUSER[ iD ] == this->GetPartyOWNER() )
 							bFindOwner = true;
+					}
+				} else {
+					// 파티원에게 균등 분배...
+					iEXP = (int)( ( iTotalEXP * ( this->m_btPartyLEV+101 ) ) / (iNearUSER*4+1) / 20 );
+					if ( iEXP > 0 ) {
+						for (iD=0; iD<iNearUSER; iD++) {
+							pNearUSER[ iD ]->Add_EXP( iEXP, true, pMobCHAR->Get_INDEX() ); //Numenor: since we set 2nd arg to true, exp depends on level of pNearUSER
+							if ( pNearUSER[ iD ] == this->GetPartyOWNER() )
+								bFindOwner = true;
+						}
 					}
 				}
 			}
@@ -426,7 +442,10 @@ bool CParty::AddEXP( CObjMOB *pMobCHAR, int iTotalEXP, int iPartyExpA, int iPart
 		iNewEXP = ( iCalEXP > m_iPartyEXP ) ? 0 : m_iPartyEXP-iCalEXP;
 
 		// 얻는 경험치
-		int iDiffLEV = pMobCHAR->Get_LEVEL() - m_iAverageLEV;
+		int iDiffLEV;
+		if(this->m_bShareParty) iDiffLEV = pMobCHAR->Get_LEVEL() - pNearUSER[ minID ]->Get_LEVEL();
+		else iDiffLEV = pMobCHAR->Get_LEVEL() - m_iAverageLEV;
+		
 		if ( iDiffLEV >= 0 ) {
 			// 얻는 파티 경험치 = (몹레벨-파티평균 레벨 + A) * (몹레벨-파티평균 레벨 + A + 1) * B/10 + 2
 			// iCalEXP = ( iDiffLEV + 2 ) * ( iDiffLEV + 1 ) + 2;

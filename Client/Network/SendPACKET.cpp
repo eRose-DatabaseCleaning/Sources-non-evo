@@ -1495,7 +1495,7 @@ void CSendPACKET::Send_cli_TRADE_P2P_ITEM( char	cTradeSLOT,short nInventoryIndex
 }
 
 //-------------------------------------------------------------------------------------------------
-void CSendPACKET::Send_cli_PARTY_REQ(BYTE btRequest, DWORD dwDestIDXorTAG )
+void CSendPACKET::Send_cli_PARTY_REQ(BYTE btRequest, DWORD dwDestIDXorTAG, bool isSharedParty)
 {
 
 	if(CCountry::GetSingleton().IsJapan())
@@ -1512,16 +1512,18 @@ void CSendPACKET::Send_cli_PARTY_REQ(BYTE btRequest, DWORD dwDestIDXorTAG )
 
 	m_pSendPacket->m_cli_PARTY_REQ.m_btREQUEST = btRequest;
 	m_pSendPacket->m_cli_PARTY_REQ.m_dwDestIDXorTAG = dwDestIDXorTAG;
+	m_pSendPacket->m_cli_PARTY_REQ.m_bShareParty = isSharedParty;
 	this->Send_PACKET( m_pSendPacket );
 
 }
-void CSendPACKET::Send_cli_PARTY_REPLY(BYTE btRequest, DWORD dwDestIDXorTAG )
+void CSendPACKET::Send_cli_PARTY_REPLY(BYTE btRequest, DWORD dwDestIDXorTAG, bool isSharedParty )
 {
 	m_pSendPacket->m_HEADER.m_wType = CLI_PARTY_REPLY;
 	m_pSendPacket->m_HEADER.m_nSize = sizeof( cli_PARTY_REPLY );
 
 	m_pSendPacket->m_cli_PARTY_REPLY.m_btREPLY = btRequest;
 	m_pSendPacket->m_cli_PARTY_REPLY.m_dwDestIDXorTAG = dwDestIDXorTAG;
+	m_pSendPacket->m_cli_PARTY_REPLY.m_bShareParty = isSharedParty;
 	this->Send_PACKET( m_pSendPacket );
 }
 
@@ -1918,11 +1920,12 @@ void CSendPACKET::Send_cli_REPAIR_FROM_NPC( WORD wNpcSvrIdx, short nTargetItemIn
 	this->Send_PACKET( m_pSendPacket );
 }
 
-void CSendPACKET::Send_cli_PARTY_RULE( BYTE btRule )
+void CSendPACKET::Send_cli_PARTY_RULE( BYTE btRule, bool isSharedParty )
 {
 	m_pSendPacket->m_HEADER.m_wType = CLI_PARTY_RULE;
 	m_pSendPacket->m_HEADER.m_nSize = sizeof( cli_PARTY_RULE );
 	m_pSendPacket->m_cli_PARTY_RULE.m_btPartyRUEL = btRule;
+	m_pSendPacket->m_cli_PARTY_RULE.m_bShareParty = isSharedParty;
 	Send_PACKET( m_pSendPacket );
 }
 

@@ -2295,7 +2295,7 @@ bool classUSER::Send_gsv_BANK_LIST_REPLY (BYTE btReply)
 
 //-------------------------------------------------------------------------------------------------
 /// ÆÄÆ¼ ¿äÃ» ÆÐÅ¶ Àü¼Û
-bool classUSER::Send_gsv_PARTY_REQ(int iObjectIDXorTAG, BYTE btReq)
+bool classUSER::Send_gsv_PARTY_REQ(int iObjectIDXorTAG, BYTE btReq, bool bShareParty)
 {
     classPACKET *pCPacket = Packet_AllocNLock ();
 	if ( !pCPacket )
@@ -2305,7 +2305,7 @@ bool classUSER::Send_gsv_PARTY_REQ(int iObjectIDXorTAG, BYTE btReq)
 	pCPacket->m_HEADER.m_nSize = sizeof( gsv_PARTY_REQ );
 	pCPacket->m_gsv_PARTY_REQ.m_btREQUEST = btReq;
 	pCPacket->m_gsv_PARTY_REQ.m_dwFromIDXorTAG = iObjectIDXorTAG;
-
+	pCPacket->m_gsv_PARTY_REQ.m_bShareParty = bShareParty;
 	this->SendPacket( pCPacket );
     Packet_ReleaseNUnlock( pCPacket );
 
@@ -6571,12 +6571,12 @@ bool classUSER::Recv_cli_PARTY_REQ( t_PACKET *pPacket )
 				return this->Send_gsv_PARTY_REPLY( pPacket->m_cli_PARTY_REQ.m_dwDestIDXorTAG, PARTY_REPLY_BUSY );
 			}
 
-			// °á¼º½Ã ÆÄÆ¼·¾Àº 0ÀÌ´Ù !!
-			if ( !this->Check_PartyJoinLEVEL( pUSER->Get_LEVEL(), this->Get_LEVEL(), 0 ) ) {
+			// Numenor : no level restriction if it is a shared party
+			if ( !pPacket->m_cli_PARTY_REQ.m_bShareParty && !this->Check_PartyJoinLEVEL( pUSER->Get_LEVEL(), this->Get_LEVEL(), 0 ) ) {
 				return Send_gsv_PARTY_REPLY( pPacket->m_cli_PARTY_REQ.m_dwDestIDXorTAG, PARTY_REPLY_INVALID_LEVEL );
 			}
 
-			return pUSER->Send_gsv_PARTY_REQ( this->Get_INDEX(), PARTY_REQ_MAKE );
+			return pUSER->Send_gsv_PARTY_REQ( this->Get_INDEX(), PARTY_REQ_MAKE, pPacket->m_cli_PARTY_REQ.m_bShareParty );
 
 		case PARTY_REQ_JOIN :
 			// °ú±Ý ¾ÈµÇ¾î ÀÖ´Ù¸é ÆÄÆ¼ ¸øÇÑ´Ù.
@@ -6594,12 +6594,12 @@ bool classUSER::Recv_cli_PARTY_REQ( t_PACKET *pPacket )
 				return this->Send_gsv_PARTY_REPLY( pPacket->m_cli_PARTY_REQ.m_dwDestIDXorTAG, PARTY_REPLY_BUSY );
 			}
 
-			// pUSERÀÇ °¡ÀÔ ·¹º§ Ã¼Å©...
-			if ( !this->Check_PartyJoinLEVEL( pUSER->Get_LEVEL(), this->m_pPartyBUFF->GetAverageLEV(), this->m_pPartyBUFF->GetPartyLEV() ) ) {
+			// Numenor : no level restriction if it is shared party
+			if ( !pPacket->m_cli_PARTY_REQ.m_bShareParty && !this->Check_PartyJoinLEVEL( pUSER->Get_LEVEL(), this->m_pPartyBUFF->GetAverageLEV(), this->m_pPartyBUFF->GetPartyLEV() ) ) {
 				return Send_gsv_PARTY_REPLY( pPacket->m_cli_PARTY_REQ.m_dwDestIDXorTAG, PARTY_REPLY_INVALID_LEVEL );
 			}
 
-			return pUSER->Send_gsv_PARTY_REQ( this->Get_INDEX(), PARTY_REQ_JOIN );
+			return pUSER->Send_gsv_PARTY_REQ( this->Get_INDEX(), PARTY_REQ_JOIN, pPacket->m_cli_PARTY_REQ.m_bShareParty );
 
 		case PARTY_REQ_CHANGE_OWNER :
 			if ( this->GetPARTY() && this->GetPARTY() == pUSER->GetPARTY() ) {
@@ -6638,7 +6638,7 @@ bool classUSER::Recv_cli_PARTY_REPLY( t_PACKET *pPacket )
 
 			if ( NULL == pUSER->GetPARTY() ) {
 				// ÆÄÆ¼ °á¼º ¿äÃ»ÀÚ°¡ ÆÄÆ¼¸¦ ¸¸µç´Ù.
-				if ( !g_pPartyBUFF->CreatePARTY( pUSER ) ) {
+				if ( !g_pPartyBUFF->CreatePARTY( pUSER, pPacket->m_cli_PARTY_REPLY.m_bShareParty ) ) {
 					return this->Send_gsv_PARTY_REPLY( pPacket->m_cli_PARTY_REPLY.m_dwDestIDXorTAG, PARTY_REPLY_DESTROY );
 				}
 			} else

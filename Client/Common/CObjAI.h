@@ -66,6 +66,7 @@ enum
 	COMMON_COMMAND_SELFTARGET   = 12,
 	COMMON_COMMAND_BOARD_CART	= 13,	// 카트 탑승 스킬.
 	COMMON_COMMAND_PICK_ITEM_FROM_DISTANCE	= 14,
+	COMMON_COMMAND_PARTY_SCALE	= 15, //Numenor: new skill, party with scaling and exp sharing
 };
 
 

@@ -100,9 +100,9 @@ public   :
 	bool Send_cli_TRADE_P2P( WORD wServerIdx, BYTE btResult ,char cSlotIdx = 0 );
 	void Send_cli_TRADE_P2P_ITEM( char	cTradeSLOT,short nInventoryIndex, DWORD	iQuantity );	
 	///파티 관련
-	void Send_cli_PARTY_REQ(BYTE btRequest, DWORD dwDestIDXorTAG );
-	void Send_cli_PARTY_REPLY(BYTE btRequest, DWORD dwDestIDXorTAG );
-	void Send_cli_PARTY_RULE( BYTE btRule );
+	void Send_cli_PARTY_REQ(BYTE btRequest, DWORD dwDestIDXorTAG, bool isSharedParty = false); //Numenor: add shared party option
+	void Send_cli_PARTY_REPLY(BYTE btRequest, DWORD dwDestIDXorTAG, bool isSharedParty = false);
+	void Send_cli_PARTY_RULE( BYTE btRule, bool isSharedParty = false);
 	///제조 관련
 	void Send_cli_CREATE_ITEM_REQ( BYTE btSkillSLOT, char cTargetItemTYPE, short nTargetItemNO, short* pnUseItemINV );
 //	void Send_cli_CREATE_ITEM_EXP_REQ();

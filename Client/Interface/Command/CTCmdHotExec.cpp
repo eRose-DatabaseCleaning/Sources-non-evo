@@ -158,7 +158,7 @@ bool CTCmdLeaveParty::Exec( CTObject* pObj )
 
 bool CTCmdAcceptPartyJoin::Exec( CTObject* pObj )
 {
-	g_pNet->Send_cli_PARTY_REPLY(PARTY_REPLY_ACCEPT_MAKE, m_wDestObjSvrIdx );
+	g_pNet->Send_cli_PARTY_REPLY(PARTY_REPLY_ACCEPT_MAKE, m_wDestObjSvrIdx, m_bShareParty);
 
 	g_itMGR.AppendChatMsg( STR_PARTY_MADE, IT_MGR::CHAT_TYPE_SYSTEM);
 

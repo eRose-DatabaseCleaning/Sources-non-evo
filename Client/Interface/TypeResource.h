@@ -532,7 +532,7 @@
 #define F_STR_REWARD_ITEMS							CStringManager::GetSingleton().GetString( 560 )//%s %d개를 보상 받았습니다
 #define F_STR_REWARD_ITEM							CStringManager::GetSingleton().GetString( 561 )//%s을 보상 받았습니다
 
-/// 562 ~ 570 : 아이템 타입
+/// 562 ~ 570 : 아이템 타입 //Numenor: seems like the ammunition type when looking at the STL file.
 
 #define STR_RIDE_PART_VER							CStringManager::GetSingleton().GetString( 571 )//부품번호
 #define STR_RESULT_CREATE_CHAR_DUP_NAME				CStringManager::GetSingleton().GetString( 572 )//부품번호
@@ -737,6 +737,11 @@
 #define STR_GETTING_MONEY_PARTY					CStringManager::GetSingleton().GetString( 730 ) //%s님이 돈 %원을 획득하였습니다
 
 #define STR_CANT_REFAIR_PAT_ENGINE				CStringManager::GetSingleton().GetString( 731 ) //팻 엔진은 수리 할 수 없습니다. 엔진 연료를 충전해야 합니다.
+
+//Numenor: From 732 to 922 (included) strings are already in the LIST_STRING.STL
+//They are not used by the code (yet).
+
+#define STR_CANT_SCALE_PARTY_IN_PVP				CStringManager::GetSingleton().GetString( 923 ) //Numenor: No scaled party in PvP.
 
 ///////////////////////////////////////////////////////////////////////////////////////
 /// sound

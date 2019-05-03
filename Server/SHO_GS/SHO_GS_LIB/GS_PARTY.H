@@ -54,6 +54,7 @@ private:
 public :
 	WORD	m_wPartyWSID;
 	BYTE	m_btPartyRULE;		// 파티 아이템/경험치 분배 방식
+	bool	m_bShareParty;
 	DWORD	m_dwLastKillTIME;
 	int		m_iAverageLEV;		// 평균 파티원 레벨
 	int		m_iTotalLEV;		// 모든 파티원 레벨 합
@@ -72,9 +73,10 @@ public :
 	{	
 		;
 	}
-	void InitPARTY ()
+	void InitPARTY (bool bShareParty)
 	{
 		m_btPartyRULE = 0;
+		m_bShareParty = bShareParty;
 		m_nMemberCNT = 1;
 		m_iPartyEXP = 0;
 		m_btPartyLEV = 1;
@@ -193,7 +195,7 @@ public  :
 	CPartyBUFF( WORD wMaxPartyCNT=MAX_PARTY_BUFF );
 	~CPartyBUFF ();
 
-	bool	CreatePARTY ( classUSER *pOwner );
+	bool	CreatePARTY ( classUSER *pOwner, bool bShareParty );
 	void	DeletePARTY ( CParty *pCParty );
 
 	void	OnConnect (unsigned int uiPartyIDX, classUSER *pUSER)

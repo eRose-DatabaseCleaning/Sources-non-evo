@@ -105,11 +105,13 @@ class CTCmdAcceptPartyJoin : public CTCommand
 public:
 	CTCmdAcceptPartyJoin( void ){}
 	CTCmdAcceptPartyJoin( WORD wDestObjSvrIdx ){ m_wDestObjSvrIdx = wDestObjSvrIdx; }
+	CTCmdAcceptPartyJoin( WORD wDestObjSvrIdx, bool bShareParty){ m_wDestObjSvrIdx = wDestObjSvrIdx; m_bShareParty = bShareParty; }
 	~CTCmdAcceptPartyJoin( void ){}
 	virtual bool Exec( CTObject* );
 
 protected:
 	WORD m_wDestObjSvrIdx;
+	bool m_bShareParty;
 };
 
 /// 파티 초대 거부

@@ -348,7 +348,7 @@ public :
 
 	bool Send_gsv_BANK_ITEM_LIST (bool bNewBank=false);
 	bool Send_gsv_BANK_LIST_REPLY (BYTE btReply);
-	bool Send_gsv_PARTY_REQ(int iObjectIDX, BYTE btResult);
+	bool Send_gsv_PARTY_REQ(int iObjectIDX, BYTE btResult, bool bShareParty);
 	bool Send_gsv_PARTY_REPLY(int iObjectIDX, BYTE btResult);
 	bool Send_gsv_RELAY_REQ( WORD wRelayTYPE, short nZoneGOTO, tPOINTF &PosGOTO );
 
