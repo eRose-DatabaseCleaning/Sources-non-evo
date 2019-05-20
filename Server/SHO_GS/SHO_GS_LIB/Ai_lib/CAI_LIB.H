@@ -34,6 +34,7 @@ public  :
 	virtual int		 Get_CharNO() = 0{ *(int*)0 = 10; }					///< 객체의 케릭터 번호를 얻는다.
 
 	virtual int		 Get_LEVEL ()	=0;
+	virtual int		 Get_TRUE_LEVEL ()	=0;
 	virtual int		 Get_ATK ()		=0;
 	virtual int		 Get_DEF ()		=0;
 	virtual int		 Get_RES ()		=0;

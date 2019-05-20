@@ -110,6 +110,7 @@ public :
 	int			m_iTeamNO;
 	short		m_nPosZ;
 	CIngSTATUS	m_IngSTATUS;
+	int			m_iMinLEVInParty; //set to 0 if scaled party.
 
 	// >>>> virtual function ----------------------------------------------------------------------
 	virtual void	CloseNETWORK ()												{	/* nop */			}
@@ -153,6 +154,7 @@ public :
 	virtual short	Get_WEIGHT ()=0;
 //	virtual short	Get_ItemQUALITY (short nEquipIDX)=0;
 	virtual int		Get_LEVEL ()=0;
+	virtual int		Get_TRUE_LEVEL ()=0;
 	virtual int		Get_GiveEXP ()=0;
 	virtual void	Add_EXP (int iExp, bool bApplyStamina=true)		{	;	/* nop */	}
 	virtual int		Get_AbilityValue (WORD wType)=0;
@@ -241,16 +243,78 @@ public :
 		short nR = ( GetOri_RunSPEED()+m_IngSTATUS.Adj_RUN_SPEED() );
 		return ( nR > 200 ) ? nR : 200.f;
 	}
+	//Numenor: party scaling functions
+	bool UpdateMinLEVInParty();
+	int Get_MinLEVInParty()		{ return m_iMinLEVInParty;	}
 
-	int		Get_ATK ()				{	int iR = GetOri_ATK()+m_IngSTATUS.Adj_APOWER();			return (iR>10) ? iR : 10;	}	// 공격력
-    int		Get_DEF ()				{	int iR = GetOri_DEF()+m_IngSTATUS.Adj_DPOWER();			return (iR>10) ? iR : 10;	}	// 방어력
-    int		Get_RES ()				{	int iR = GetOri_RES()+m_IngSTATUS.Adj_RES();			return (iR>10) ? iR : 10;	}	// 항마력
-    int		Get_HIT ()				{	int iR = GetOri_HIT()+m_IngSTATUS.Adj_HIT();			return (iR>10) ? iR : 10;	}
-    int		Get_AVOID ()			{	int iR = GetOri_AVOID()+m_IngSTATUS.Adj_AVOID();		return (iR>10) ? iR : 10;	}	// 회피력
-	int		Get_CRITICAL()			{	int iR = GetOri_CRITICAL()+m_IngSTATUS.Adj_CRITICAL();	return (iR>10) ? iR : 10;	}
+	double Get_Scaling(double a, double b, double c){
+		//y=a*x^2+b*x+c
+		int trueLevel = Get_TRUE_LEVEL(); 
+		double valueWithTrueLevel = a*std::pow((double) trueLevel,2) + b*trueLevel + c;
+		double valueWithScaledLevel = a*std::pow((double) m_iMinLEVInParty,2) + b*m_iMinLEVInParty +c;
+		return valueWithScaledLevel/valueWithTrueLevel;
+	}
 
-	int		Get_MaxHP()				{	return ( GetOri_MaxHP() + m_IngSTATUS.Inc_MAX_HP() );	}
-	int		Get_MaxMP()				{	return ( GetOri_MaxMP() + m_IngSTATUS.Inc_MAX_MP() );	}
+	enum { ATK, DEF, RES, HIT, AVOID, CRITICAL, MAXHP, MAXMP }; //atk speed not affected, same for move speed... for now.
+
+	double PartyScaling(int statType){
+		//y=a*x^2+b*x+c
+		double a, b, c;
+		switch(statType){ //stats from candle ghosts
+		case ATK:
+			a = 0.00628054;
+			b = 2.996256257;
+			c = 0.28934009;
+			break;
+		case DEF:
+			a = 0.010319936;
+			b = 1.433366066;
+			c = 16.30707998;
+			break;
+		case RES:
+			a = 0.007973269;
+			b = 2.200147734;
+			c = 28.42448815;
+			break;
+		case HIT:
+			a = 0.003586574;
+			b = 1.513518493;
+			c = 56.69516948;
+			break;
+		case AVOID:
+			a = 0.002689;
+			b = 1.067206618;
+			c = 17.05879698;
+			break;
+		case CRITICAL: //from HIT
+			a = 0.003586574;
+			b = 1.513518493;
+			c = 56.69516948;
+			break;
+		case MAXHP:
+			a = -0.0000564864;
+			b = 0.101023707;
+			c = 16.49045728;
+			break;
+		case MAXMP: //from MAXHP
+			a = -0.0000564864;
+			b = 0.101023707;
+			c = 16.49045728;
+			break;
+		}
+		return m_iMinLEVInParty == 0 ? 1. : Get_Scaling(a, b, c);
+
+	}
+
+	int		Get_ATK ()				{	int iR = GetOri_ATK()*PartyScaling(ATK)+m_IngSTATUS.Adj_APOWER();			return (iR>10) ? iR : 10;	}	// 공격력
+    int		Get_DEF ()				{	int iR = GetOri_DEF()*PartyScaling(DEF)+m_IngSTATUS.Adj_DPOWER();			return (iR>10) ? iR : 10;	}	// 방어력
+    int		Get_RES ()				{	int iR = GetOri_RES()*PartyScaling(RES)+m_IngSTATUS.Adj_RES();			return (iR>10) ? iR : 10;	}	// 항마력
+    int		Get_HIT ()				{	int iR = GetOri_HIT()*PartyScaling(HIT)+m_IngSTATUS.Adj_HIT();			return (iR>10) ? iR : 10;	}
+    int		Get_AVOID ()			{	int iR = GetOri_AVOID()*PartyScaling(AVOID)+m_IngSTATUS.Adj_AVOID();		return (iR>10) ? iR : 10;	}	// 회피력
+	int		Get_CRITICAL()			{	int iR = GetOri_CRITICAL()*PartyScaling(CRITICAL)+m_IngSTATUS.Adj_CRITICAL();	return (iR>10) ? iR : 10;	}
+
+	int		Get_MaxHP()				{	return ( GetOri_MaxHP()*PartyScaling(MAXHP) + m_IngSTATUS.Inc_MAX_HP() );	} //Numenor: maybe a good idea to round this...
+	int		Get_MaxMP()				{	return ( GetOri_MaxMP()*PartyScaling(MAXMP) + m_IngSTATUS.Inc_MAX_MP() );	} //Numenor: maybe a good idea to round this...
 
 	int		GetCurrentFrame ()							{	return	m_iCurMotionFRAME;	}
 	DWORD	GetCurAbsSEC ();

@@ -58,6 +58,7 @@ public :
 	DWORD	m_dwLastKillTIME;
 	int		m_iAverageLEV;		// 평균 파티원 레벨
 	int		m_iTotalLEV;		// 모든 파티원 레벨 합
+	int		m_iMinLEV;			//Lowest level in the party members
 
 	//short	m_nMinUserLEV;
 	//short	m_nMaxUserLEV;
@@ -121,6 +122,7 @@ x	//bool Sub_PartyUSER (CDLList< tagPartyUSER >::tagNODE *pPartyNODE );
 
 	bool Kick_MEMBER( DWORD dwDBID );
 	void Member_LevelUP (short nPartyPOS, short nLevelDIFF);
+	void ComputeMinLEV();
 
 #ifdef	__USE_ARRAY_PARTY_USER
 	bool Give_Item2ORDER(classUSER *pTryOBJ, CObjITEM *pItemOBJ);
@@ -133,6 +135,8 @@ x	//bool Sub_PartyUSER (CDLList< tagPartyUSER >::tagNODE *pPartyNODE );
 	void SetPartyLEV(int newLevel)		{	this->m_btPartyLEV = newLevel ;	}
 	int	 GetAverageLEV()	{	return	this->m_iAverageLEV;	}
 	int  GetPartyEXP()		{	return	this->m_iPartyEXP;		}
+	int  isShareParty()		{	return	this->m_bShareParty;		}
+	int	 GetMinLEV()		{	return	this->m_iMinLEV;	}
 
 	bool SendWhisperToPartyMembers( char *szMessage );
 	bool Send_gsv_PARTY_REPLY2Members (	BYTE btReply, DWORD dwFromIDXorTAG );

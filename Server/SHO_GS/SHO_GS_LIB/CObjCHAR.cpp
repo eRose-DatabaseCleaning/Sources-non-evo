@@ -1455,6 +1455,7 @@ bool CObjCHAR::Attack_START (CObjCHAR *pTarget)
 		return true;
 
 	uniDAMAGE sDamage;
+
 	sDamage.m_wDamage = CCal::Get_DAMAGE( this, pTarget, m_pCurMOTION->m_wTatalAttackFrame );
 	this->Give_DAMAGE (pTarget, sDamage);
 
@@ -1652,6 +1653,18 @@ int CObjCHAR::Proc (void)
 	}
 
 	return 1;
+}
+
+bool CObjCHAR::UpdateMinLEVInParty(){
+	CParty* myParty = this->GetPARTY();
+	if(myParty != NULL && myParty->isShareParty()){
+		m_iMinLEVInParty = myParty->GetMinLEV();
+		return true;
+	}
+	else{
+		m_iMinLEVInParty = 0;
+		return false;
+	}
 }
 
 //-------------------------------------------------------------------------------------------------

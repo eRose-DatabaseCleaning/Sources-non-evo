@@ -171,6 +171,13 @@ bool CParty::HasParty()
 	return m_bHasParty;
 }
 //*----------------------------------------------------------------------
+/// @brief Return if it is a party with shared exp and scaled levels
+//*----------------------------------------------------------------------
+bool CParty::IsShareParty()
+{
+	return m_bShareParty;
+}
+//*----------------------------------------------------------------------
 /// @brief 파티멤버가 풀인가?
 //*----------------------------------------------------------------------
 bool CParty::IsPartyFull()
@@ -254,9 +261,10 @@ void CParty::Join()
 	JoinMember( memberinfo, g_pAVATAR->Get_NAME() );
 }
 
-void CParty::Make()///내가 파티를 만들었을경우
+void CParty::Make(bool isShareParty)///내가 파티를 만들었을경우
 {
 	m_bHasParty = true;
+	m_bShareParty = isShareParty;
 	m_Event.SetID( CTEventParty::EID_INIT );
 	SetChanged();
 	NotifyObservers( &m_Event );

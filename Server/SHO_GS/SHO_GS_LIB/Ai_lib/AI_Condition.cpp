@@ -702,9 +702,9 @@ bool F_AICOND_27 (stCondHead *pConDATA, t_AIPARAM *pAIParam)
 {
 /*
  * Struct Name : AICOND_27
- * 주변캐릭터 상황 체크 
- * Explain : 체크범위 iDistance이내에 캐릭터타입 cChrType이고 레벨차가 cLevelDiff이상이고 캐릭터수가 wChrNum이상/이하인 경우
- truct		AICOND27			// 2번 조건하고 비슷...
+ * Check the surrounding character situation
+ * Explain : If the character type is cChrType within the check range iDistance, the level difference is greater than cLevelDiff, and the number of characters is wChrNum or more /
+  Struct AICOND27 // same condition twice and ...
 {
 	DWORD		dwSize ;		
 	AITYPE		Type ;			

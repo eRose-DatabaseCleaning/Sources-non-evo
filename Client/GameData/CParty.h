@@ -34,7 +34,8 @@ public:
 
 	bool	ChangeMemberInfoByUserTag( tag_PARTY_MEMBER& MemberInfo );
 
-	bool	HasParty();						
+	bool	HasParty();
+	bool	IsShareParty();
 	bool	IsPartyFull();					
 	bool	IsPartyLeader();				
 	bool	IsPartyMember(WORD wObjSvrIdx);	
@@ -56,7 +57,7 @@ public:
 	void	SetExp( int iExp );
 	void	LevelUp();
 
-	void	Make();///내가 파티를 만들었을경우
+	void	Make(bool isShareParty);///내가 파티를 만들었을경우
 	void	Join();///파티에 참가했을경우
 	void	Leave();///파티를 떠날때
 	void	Destory();
@@ -72,6 +73,7 @@ private:
 private:
 	BYTE	m_btPartyRule;
 	bool	m_bHasParty;
+	bool	m_bShareParty;
 	int		m_iLevel;
 	int		m_iCurrExp;
 	WORD	m_wLeaderObjSvrIdx;

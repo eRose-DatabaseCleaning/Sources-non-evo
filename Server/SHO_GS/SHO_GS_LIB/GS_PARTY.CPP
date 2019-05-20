@@ -45,10 +45,12 @@ bool CPartyBUFF::CreatePARTY ( classUSER *pOwner, bool bShareParty )
 
 		pPU->m_dwDBID = pOwner->m_dwDBID;
 		pPU->m_pUSER  = pOwner;
-		pPU->m_nLevel = pOwner->Get_LEVEL();
+		pPU->m_nLevel = pOwner->Get_TRUE_LEVEL();
 		pPU->m_NameCHAR.Set( pOwner->Get_NAME() );
 
-		pCParty->m_iAverageLEV = pCParty->m_iTotalLEV = pOwner->Get_LEVEL();
+		pCParty->m_iAverageLEV = pCParty->m_iTotalLEV = pOwner->Get_TRUE_LEVEL();
+		pCParty->m_iMinLEV = pOwner->Get_TRUE_LEVEL();
+		pOwner->UpdateMinLEVInParty();
 		pCParty->m_dwLastKillTIME = pOwner->GetZONE()->GetCurrentTIME();
 
 		return true;
@@ -73,6 +75,7 @@ void CPartyBUFF::DeletePARTY (CParty *pCParty)
 				if ( pCParty->m_pPartyUSERs[ nI ]->m_pUSER ) {
 					pCParty->m_pPartyUSERs[ nI ]->m_pUSER->m_pPartyBUFF = NULL;
 					pCParty->m_pPartyUSERs[ nI ]->m_pUSER->Send_gsv_PARTY_REPLY( 0, PARTY_REPLY_DESTROY );
+					pCParty->m_pPartyUSERs[ nI ]->m_pUSER->UpdateMinLEVInParty();
 				}
 
 				SAFE_DELETE( pCParty->m_pPartyUSERs[ nI ] );
@@ -174,6 +177,7 @@ void CParty::Member_LevelUP (short nPartyPOS, short nLevelDIFF)
 		this->m_pPartyUSERs[ nPartyPOS ]->m_nLevel += nLevelDIFF;
 		this->m_iTotalLEV += nLevelDIFF;
 		this->m_iAverageLEV = this->m_iTotalLEV / m_nMemberCNT;
+		this->ComputeMinLEV();
 	}
 	this->Unlock ();
 }
@@ -390,8 +394,8 @@ bool CParty::AddEXP( CObjMOB *pMobCHAR, int iTotalEXP, int iPartyExpA, int iPart
 			if(this->m_bShareParty){ //Numenor: if shared party, exp is given to lowest level member
 				//Numenor: Find userID of the min level in all users near the dead monster
 				for (iD=1; iD<iNearUSER; iD++) {
-					if ( pNearUSER[ iD ]->Get_LEVEL() < pNearUSER[ minID ]->Get_LEVEL() ){
-						minID = iD;
+					if ( pNearUSER[ iD ]->Get_TRUE_LEVEL() < pNearUSER[ minID ]->Get_TRUE_LEVEL() ){
+						minID = iD; //Numenor: warning! The power scaling is done independently of the distance between players. However the exp will go to the nearest char with lowest level.
 					}
 				}
 								
@@ -405,7 +409,7 @@ bool CParty::AddEXP( CObjMOB *pMobCHAR, int iTotalEXP, int iPartyExpA, int iPart
 				if ( this->m_btPartyRULE & BIT_PARTY_RULE_EXP_PER_PLAYER ) {
 					// 개인 레벨에 따라 분배...
 					for (iD=0; iD<iNearUSER; iD++) {
-						iEXP = (int)( ( iTotalEXP * ( m_btPartyLEV+101 ) ) * ( pNearUSER[ iD ]->Get_LEVEL()+35-m_iAverageLEV ) / (iNearUSER*4+1) / 700 );
+						iEXP = (int)( ( iTotalEXP * ( m_btPartyLEV+101 ) ) * ( pNearUSER[ iD ]->Get_TRUE_LEVEL()+35-m_iAverageLEV ) / (iNearUSER*4+1) / 700 );
 						if ( iEXP > 0 ) {
 							pNearUSER[ iD ]->Add_EXP( iEXP, true, pMobCHAR->Get_INDEX() );
 						}
@@ -443,8 +447,8 @@ bool CParty::AddEXP( CObjMOB *pMobCHAR, int iTotalEXP, int iPartyExpA, int iPart
 
 		// 얻는 경험치
 		int iDiffLEV;
-		if(this->m_bShareParty) iDiffLEV = pMobCHAR->Get_LEVEL() - pNearUSER[ minID ]->Get_LEVEL();
-		else iDiffLEV = pMobCHAR->Get_LEVEL() - m_iAverageLEV;
+		if(this->m_bShareParty) iDiffLEV = pMobCHAR->Get_TRUE_LEVEL() - pNearUSER[ minID ]->Get_TRUE_LEVEL();
+		else iDiffLEV = pMobCHAR->Get_TRUE_LEVEL() - m_iAverageLEV;
 		
 		if ( iDiffLEV >= 0 ) {
 			// 얻는 파티 경험치 = (몹레벨-파티평균 레벨 + A) * (몹레벨-파티평균 레벨 + A + 1) * B/10 + 2
@@ -559,6 +563,22 @@ bool CParty::Change_PartyOWNER (classUSER *pNewOWNER, BYTE btReply)
 //}
 
 //-------------------------------------------------------------------------------------------------
+void CParty::ComputeMinLEV ()
+{
+	m_iMinLEV = 300;
+	if ( this->m_nMemberCNT < 1) m_iMinLEV = 0;
+	for (short nI=0; nI<this->m_nMemberCNT; nI++) {
+		if ( NULL == this->m_pPartyUSERs[ nI ] ) continue;
+		if ( m_pPartyUSERs[ nI ]->m_nLevel < m_iMinLEV ){
+			m_iMinLEV = m_pPartyUSERs[ nI ]->m_nLevel;
+		}
+	}
+	for (short nI=0; nI<this->m_nMemberCNT; nI++) {
+		if ( NULL == this->m_pPartyUSERs[ nI ] ) continue;
+		m_pPartyUSERs[ nI ]->m_pUSER->UpdateMinLEVInParty();
+	}
+}
+//-------------------------------------------------------------------------------------------------
 bool CParty::Send_PartyUserLIST( classUSER *pUSER, DWORD dwUserTAG )
 {
 	this->SendPartyLEVnEXP( pUSER );
@@ -572,6 +592,7 @@ bool CParty::Send_PartyUserLIST( classUSER *pUSER, DWORD dwUserTAG )
 	pCPacket->m_HEADER.m_nSize = sizeof( gsv_PARTY_MEMBER );
 	pCPacket->m_gsv_PARTY_MEMBER.m_btPartyRULE = this->m_btPartyRULE;
 	pCPacket->m_gsv_PARTY_MEMBER.m_cUserCNT = 0;
+	pCPacket->m_gsv_PARTY_MEMBER.m_bShareParty = isShareParty();
 
 	tag_PARTY_MEMBER sMember, sDisMEM = { 0, };
 
@@ -647,6 +668,7 @@ BYTE CParty::Add_PartyUSER (classUSER *pUSER)
 		pCPacket->m_HEADER.m_nSize = sizeof( gsv_PARTY_MEMBER );
 		pCPacket->m_gsv_PARTY_MEMBER.m_btPartyRULE = this->m_btPartyRULE;
 		pCPacket->m_gsv_PARTY_MEMBER.m_cUserCNT = 1;
+		pCPacket->m_gsv_PARTY_MEMBER.m_bShareParty = isShareParty();
 
 		tag_PARTY_MEMBER sMember;
 
@@ -675,7 +697,7 @@ BYTE CParty::Add_PartyUSER (classUSER *pUSER)
 
 		pPU->m_dwDBID = pUSER->m_dwDBID;
 		pPU->m_pUSER  = pUSER;
-		pPU->m_nLevel = pUSER->Get_LEVEL();
+		pPU->m_nLevel = pUSER->Get_TRUE_LEVEL();
 		pPU->m_NameCHAR.Set( pUSER->Get_NAME() );
 
 		m_nMemberCNT ++;
@@ -683,8 +705,9 @@ BYTE CParty::Add_PartyUSER (classUSER *pUSER)
 		x
 #endif
 		pUSER->m_pPartyBUFF = this;
-		this->m_iTotalLEV += pUSER->Get_LEVEL();
+		this->m_iTotalLEV += pUSER->Get_TRUE_LEVEL();
 		this->m_iAverageLEV = this->m_iTotalLEV / m_nMemberCNT;
+		this->ComputeMinLEV();
 
 		this->Set_PartyRULE( this->m_btPartyRULE );
 	}
@@ -709,9 +732,10 @@ bool CParty::Sub_PartyUSER( short nPartyPOS )
 
 		dwLeftUserID = this->m_pPartyUSERs[ nPartyPOS ]->m_dwDBID;
 
-		if ( this->m_pPartyUSERs[ nPartyPOS ]->m_pUSER )
+		if ( this->m_pPartyUSERs[ nPartyPOS ]->m_pUSER ){
 			this->m_pPartyUSERs[ nPartyPOS ]->m_pUSER->m_pPartyBUFF = NULL;
-
+			this->m_pPartyUSERs[ nPartyPOS ]->m_pUSER->UpdateMinLEVInParty();
+		}
 		this->m_iTotalLEV -= this->m_pPartyUSERs[ nPartyPOS ]->m_nLevel;
 
 		SAFE_DELETE( this->m_pPartyUSERs[ nPartyPOS ] );
@@ -740,6 +764,7 @@ bool CParty::Sub_PartyUSER( short nPartyPOS )
 		else {
 			this->m_iAverageLEV = 1;
 		}
+		this->ComputeMinLEV();
 
 		dwOwnerID = m_pPartyUSERs[ 0 ]->m_dwDBID;
 #else
@@ -762,6 +787,7 @@ bool CParty::Sub_PartyUSER( short nPartyPOS )
 		pCPacket->m_HEADER.m_nSize = sizeof( gsv_PARTY_MEMBER ) + sizeof(DWORD) * 2;
 		pCPacket->m_gsv_PARTY_MEMBER.m_btPartyRULE = this->m_btPartyRULE;
 		pCPacket->m_gsv_PARTY_MEMBER.m_cUserCNT = -1;
+		pCPacket->m_gsv_PARTY_MEMBER.m_bShareParty = isShareParty();
 		pCPacket->m_gsv_PARTY_MEMBER.m_dwObjectTAG[ 0 ] = dwLeftUserID;
 		pCPacket->m_gsv_PARTY_MEMBER.m_dwObjectTAG[ 1 ] = dwOwnerID;//pOwnerNODE->m_VALUE.m_pUSER->m_dwDBID;
 

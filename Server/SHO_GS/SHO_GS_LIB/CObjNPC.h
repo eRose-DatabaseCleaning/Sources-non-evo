@@ -80,7 +80,8 @@ public :
 //    short	Get_ItemQUALITY (short nEquipIDX)	{	return 60;			    }	// ¹«Á¶°Ç 60 !
     short	Get_WEIGHT ()			{	return 0;			            	}
     int		Get_LEVEL ()			{	return NPC_LEVEL( m_nCharIdx );		}
-    int		Get_GiveEXP ()			{	return NPC_GIVE_EXP( m_nCharIdx );	}
+    int		Get_TRUE_LEVEL ()		{	return Get_LEVEL ();		}
+	int		Get_GiveEXP ()			{	return NPC_GIVE_EXP( m_nCharIdx );	}
 	int		Get_AbilityValue (WORD wType);
 
 	int		Get_INT ()				{	return Get_LEVEL();					}
@@ -238,6 +239,7 @@ public :
 	short		GetSummonedSkillIDX ()		{	return m_nSummonedSkillIDX;	}
 
 	int		Get_LEVEL ()					{	return m_iLevel;		}
+	int		Get_TRUE_LEVEL ()				{	return Get_LEVEL();		}
 
 	int		GetOri_ATK ()					{	return m_iOriATK;		}
 	int		GetOri_HIT ()					{	return m_iOriHIT;		}

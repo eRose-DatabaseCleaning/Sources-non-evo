@@ -162,7 +162,8 @@ public :
 
 	short	Get_WEIGHT ()			{	return	GetCur_WEIGHT ();		}
 //    short	Get_ItemQUALITY (short nEquipIDX);
-    int		Get_LEVEL ()			{	return	GetCur_LEVEL ();		}
+    int		Get_LEVEL ()			{	return	(Get_MinLEVInParty() == 0) ? GetCur_LEVEL () : Get_MinLEVInParty();		}
+    int		Get_TRUE_LEVEL ()		{	return	GetCur_LEVEL ();		}
 
 	int		Get_EXP ()				{	return  GetCur_EXP();			}
 	int		Get_JOB ()				{	return	GetCur_JOB();			}

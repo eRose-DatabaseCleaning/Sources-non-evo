@@ -2053,6 +2053,7 @@ struct tag_PARTY_MEMBER {	// 존 서버에서 전송됨
 struct gsv_PARTY_MEMBER : public t_PACKETHEADER {
 	BYTE	m_btPartyRULE;				// 파티 규칙(아이템분배, 경험치분배방식)
 	char	m_cUserCNT;					// -1이면 파티원에서 제외, 양수 m_cType은 추가될 사용자수, ObjTAG...
+	bool	m_bShareParty;
 	DWORD	m_dwObjectTAG[0];			// 파티원 제외일 경우 참조...
 	/*
 	tag_PARTY_MEMBER[ m_cUserCNT ];		// 파티원 추가일 경우 참조

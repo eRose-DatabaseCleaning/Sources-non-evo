@@ -404,8 +404,12 @@ bool CBasicCommand::Execute()
 						if( CParty::GetInstance().IsPartyLeader() )
 						{
 							///파티 풀
-							if( CParty::GetInstance().IsPartyFull() )
+							if( CParty::GetInstance().IsPartyFull() ){
 								g_itMGR.AppendChatMsg(STR_PARTY_IS_FULL, IT_MGR::CHAT_TYPE_SYSTEM );
+							}
+							else if( CParty::GetInstance().IsShareParty() ){
+								g_itMGR.AppendChatMsg("You are in a scaled party. You cannot invite someone as in a normal party.", IT_MGR::CHAT_TYPE_SYSTEM );
+							}
 							else{
 								g_pNet->Send_cli_PARTY_REQ(PARTY_REQ_JOIN,  g_pObjMGR->Get_ServerObjectIndex(iTargetObjClientIndex ));
 								actionDone = true;
@@ -563,8 +567,12 @@ bool CBasicCommand::Execute()
 						if( CParty::GetInstance().IsPartyLeader() )
 						{
 							///파티 풀
-							if( CParty::GetInstance().IsPartyFull() )
+							if( CParty::GetInstance().IsPartyFull() ){
 								g_itMGR.AppendChatMsg(STR_PARTY_IS_FULL, IT_MGR::CHAT_TYPE_SYSTEM );
+							}
+							else if( !CParty::GetInstance().IsShareParty() ){
+								g_itMGR.AppendChatMsg("You are in a normal party. You cannot invite someone as in a scaled party.", IT_MGR::CHAT_TYPE_SYSTEM );
+							}
 							else{
 								g_pNet->Send_cli_PARTY_REQ(PARTY_REQ_JOIN,  g_pObjMGR->Get_ServerObjectIndex(iTargetObjClientIndex ), true);
 								actionDone = true;
@@ -583,7 +591,7 @@ bool CBasicCommand::Execute()
 				}
 				else
 				{
-					g_itMGR.OpenMsgBox( STR_CANT_SCALE_PARTY_IN_PVP );
+					g_itMGR.OpenMsgBox( "You cannot use a scaled party in PvP!" );
 				}
 			}
 		}

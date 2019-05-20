@@ -738,10 +738,6 @@
 
 #define STR_CANT_REFAIR_PAT_ENGINE				CStringManager::GetSingleton().GetString( 731 ) //팻 엔진은 수리 할 수 없습니다. 엔진 연료를 충전해야 합니다.
 
-//Numenor: From 732 to 922 (included) strings are already in the LIST_STRING.STL
-//They are not used by the code (yet).
-
-#define STR_CANT_SCALE_PARTY_IN_PVP				CStringManager::GetSingleton().GetString( 923 ) //Numenor: No scaled party in PvP.
 
 ///////////////////////////////////////////////////////////////////////////////////////
 /// sound

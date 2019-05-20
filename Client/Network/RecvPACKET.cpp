@@ -3979,7 +3979,7 @@ void CRecvPACKET::Recv_gsv_PARTY_MEMBER()
 		///새롭게 파티를 만들고 이곳에 가입한 사람이다.
 		if( Party.IsPartyLeader() )///나는 내려오지 않는다.
 		{
-			CParty::GetInstance().Make();
+			CParty::GetInstance().Make(m_pRecvPacket->m_gsv_PARTY_MEMBER.m_bShareParty);
 			pMember = (tag_PARTY_MEMBER*)Packet_GetDataPtr( m_pRecvPacket, nOffset, sizeof( tag_PARTY_MEMBER ) );
 			pszName = Packet_GetStringPtr( m_pRecvPacket, nOffset );
 			assert( pMember && pszName );
