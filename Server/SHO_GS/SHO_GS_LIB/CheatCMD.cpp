@@ -357,9 +357,9 @@ short classUSER::Cheat_add ( char *pArg1, char *pArg2, char *pArg3, char *szCode
 				int iValue = atoi( pArg2 );
 				pUSER->AddCur_BonusPOINT( iValue );
 
-				if ( pUSER->GetCur_BonusPOINT() < 0	   ) pUSER->SetCur_BonusPOINT( 0 );
+				if ( pUSER->GetCur_BonusPOINT() < 0	   ) pUSER->SetCur_SkillPOINT( 0 );
 				else
-				if ( pUSER->GetCur_BonusPOINT() > 9999 ) pUSER->SetCur_BonusPOINT( 9999 );
+				if ( pUSER->GetCur_BonusPOINT() > 9999 ) pUSER->SetCur_SkillPOINT( 9999 );
 				return CHEAT_PROCED;
 			} else
 			if ( !strcmpi(pArg1, "SP") ) {
