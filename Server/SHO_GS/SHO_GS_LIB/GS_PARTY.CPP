@@ -28,7 +28,7 @@ bool CPartyBUFF::CreatePARTY ( classUSER *pOwner, bool bShareParty )
 	CParty *pCParty = this->Pool_Alloc ();
 	if ( pCParty ) {
 		pCParty->InitPARTY(bShareParty);
-		// pCParty->m_nMinUserLEV = pCParty->m_nMaxUserLEV = pOwner->Get_LEVEL();
+		// pCParty->m_nMinUserLEV = pCParty->m_nMaxUserLEV = pOwner->Get_TRUE_LEVEL();
 
 		pOwner->m_pPartyBUFF = pCParty;
 
@@ -346,6 +346,8 @@ bool CParty::SendPartyLEVnEXP (classUSER *pUSER, BYTE bitLevelUP)
 	pCPacket->m_HEADER.m_wType = GSV_PARTY_LEVnEXP;
 	pCPacket->m_HEADER.m_nSize = sizeof( gsv_PARTY_LEVnEXP );
 	pCPacket->m_gsv_PARTY_LEVnEXP.m_btLEVEL = this->m_btPartyLEV;
+	this->ComputeMinLEV();
+	pCPacket->m_gsv_PARTY_LEVnEXP.m_btMinLEV = this->m_iMinLEV;
 	pCPacket->m_gsv_PARTY_LEVnEXP.m_iEXP = this->m_iPartyEXP;
 	pCPacket->m_gsv_PARTY_LEVnEXP.m_bitLevelUP = bitLevelUP;
 
@@ -447,9 +449,14 @@ bool CParty::AddEXP( CObjMOB *pMobCHAR, int iTotalEXP, int iPartyExpA, int iPart
 
 		// 얻는 경험치
 		int iDiffLEV;
-		if(this->m_bShareParty) iDiffLEV = pMobCHAR->Get_TRUE_LEVEL() - pNearUSER[ minID ]->Get_TRUE_LEVEL();
+		if(this->m_bShareParty) iDiffLEV = pMobCHAR->Get_TRUE_LEVEL() - pNearUSER[ minID ]->Get_TRUE_LEVEL(); //for shared party we don't care about averageLEV
 		else iDiffLEV = pMobCHAR->Get_TRUE_LEVEL() - m_iAverageLEV;
 		
+		if(this->m_bShareParty){
+			g_LOG.CS_ODS( LOG_NORMAL, "MOB Lvl: %d \n", pMobCHAR->Get_TRUE_LEVEL() );
+			g_LOG.CS_ODS( LOG_NORMAL, "Low Lvl: %d \n", pNearUSER[ minID ]->Get_TRUE_LEVEL() );
+		}
+
 		if ( iDiffLEV >= 0 ) {
 			// 얻는 파티 경험치 = (몹레벨-파티평균 레벨 + A) * (몹레벨-파티평균 레벨 + A + 1) * B/10 + 2
 			// iCalEXP = ( iDiffLEV + 2 ) * ( iDiffLEV + 1 ) + 2;

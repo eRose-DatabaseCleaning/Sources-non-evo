@@ -501,7 +501,7 @@ short classUSER::Cheat_get ( CStrVAR *pStrVAR, char *pArg1, char *pArg2, char *s
 					pStrVAR->Printf ("HP:%d/%d, MP:%d/%d, LEV:%d, EXP:%d/%d, JOB:%d, SPD(M:%d,A:%d), ANI(M:%1.1f,A:%d), Hit:%d, Crt:%d, AP:%d, DP:%d, AVD:%d, ATTR:%d, bCST:%d, SKL:%d, FLG:%x, Summon:%d/%d, BP:%d, SP:%d, UP:%d, STMNA:%d \\:%I64d, Team:%d, Clan(%d,L:%d,P:%d,S:%d), Recover(%d,%d)",
 							pUSER->Get_HP(), pUSER->Get_MaxHP(), 
 							pUSER->Get_MP(), pUSER->Get_MaxMP(),
-							pUSER->Get_LEVEL(), pUSER->Get_EXP(), ( (classUSER*)pUSER )->Get_NeedEXP( pUSER->Get_LEVEL() ), pUSER->Get_JOB(), 
+							pUSER->Get_TRUE_LEVEL(), pUSER->Get_EXP(), ( (classUSER*)pUSER )->Get_NeedEXP( pUSER->Get_LEVEL() ), pUSER->Get_JOB(), 
 							nMovSpeed, nAtkSpeed, 
 							m_fRunAniSPEED,m_nAtkAniSPEED,
 							pUSER->Get_HIT(), pUSER->Get_CRITICAL(), pUSER->Get_ATK(), pUSER->Get_DEF(), pUSER->Get_AVOID(),
@@ -518,7 +518,7 @@ short classUSER::Cheat_get ( CStrVAR *pStrVAR, char *pArg1, char *pArg2, char *s
 				} else {
 					pStrVAR->Printf ("HP:%d/%d, MP:%d/%d, LEV:%d, EXP:%d, JOB:%d, SPD(M:%d,A:%d), Hit:%d, Crt:%d, AP:%d, DP:%d, AVD:%d, ATTR:%d, bCST:%d, SKL:%d, FLG:%x",
 							pUSER->Get_HP(), pUSER->Get_MaxHP(), pUSER->Get_MP(), pUSER->Get_MaxMP(),
-							pUSER->Get_LEVEL(), pUSER->Get_EXP(), pUSER->Get_JOB(), 
+							pUSER->Get_TRUE_LEVEL(), pUSER->Get_EXP(), pUSER->Get_JOB(), 
 							nMovSpeed, nAtkSpeed, pUSER->Get_HIT(), pUSER->Get_CRITICAL(), pUSER->Get_ATK(), pUSER->Get_DEF(), pUSER->Get_AVOID(),
 							btGndATT, pUSER->m_bCastingSTART, pUSER->Get_ActiveSKILL(), pUSER->m_IngSTATUS.GetFLAGs() );
 				}
@@ -801,7 +801,7 @@ short classUSER::Cheat_set ( classUSER *pUSER, char *pArg1, char *pArg2, char *p
 			return CHEAT_SEND;
 		/*	존 분할로 운영시 월드 서버에서 파티 운영될수 있도록 전송하던...
 		#ifndef	__INC_WORLD
-			g_pSockLSV->Send_gsv_LEVEL_UP( LEVELUP_OP_USER, pUSER->m_dwWSID, pUSER->Get_LEVEL(), pUSER->m_GrowAbility.m_lEXP );
+			g_pSockLSV->Send_gsv_LEVEL_UP( LEVELUP_OP_USER, pUSER->m_dwWSID, pUSER->Get_TRUE_LEVEL(), pUSER->m_GrowAbility.m_lEXP );
 		#endif
 		*/
 		} else 

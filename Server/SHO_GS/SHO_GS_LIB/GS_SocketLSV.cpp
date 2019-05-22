@@ -333,7 +333,7 @@ void GS_lsvSOCKET::Recv_wsv_CHEAT_REQ ()
 				short nAtkSpeed = pUSER->Get_nAttackSPEED();
 				m_TmpSTR.Printf ("/w %s>HP:%d/%d, MP:%d/%d, LEV:%d, EXP:%d, JOB:%d, SPD(M:%d,A:%d), Hit:%d, Crt:%d, AP:%d, DP:%d, AVD:%d, ATTR:%d, bCST:%d, SKL:%d, FLG:%x, Summon:%d/%d, BP:%d, SP:%d, \\:%I64d",
 						pUSER->Get_NAME(), pUSER->Get_HP(), pUSER->Get_MaxHP(), pUSER->Get_MP(), pUSER->Get_MaxMP(),
-						pUSER->Get_LEVEL(), pUSER->Get_EXP(), pUSER->Get_JOB(), nMovSpeed, nAtkSpeed,
+						pUSER->Get_TRUE_LEVEL(), pUSER->Get_EXP(), pUSER->Get_JOB(), nMovSpeed, nAtkSpeed,
 						pUSER->Get_HIT(), pUSER->Get_CRITICAL(), pUSER->Get_ATK(), pUSER->Get_DEF(), pUSER->Get_AVOID(), 
 						( pUSER->GetZONE() ) ? pUSER->GetZONE()->IsMovablePOS(pUSER->m_PosCUR.x, pUSER->m_PosCUR.y) : 0,
 						pUSER->m_bCastingSTART, pUSER->Get_ActiveSKILL(), pUSER->m_IngSTATUS.GetFLAGs(),

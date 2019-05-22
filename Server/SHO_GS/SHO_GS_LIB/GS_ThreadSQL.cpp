@@ -668,7 +668,7 @@ void GS_CThreadSQL::Execute ()
 					// 로그인 서버에 로그아웃 or 서버 이동 정보 전송.
 					g_pSockASV->Send_zas_SUB_ACCOUNT( pUsrNODE->DATA.m_pUSER->Get_ACCOUNT(), 
 									pUsrNODE->DATA.m_btLogOutMODE, 
-									pUsrNODE->DATA.m_pUSER->Get_LEVEL(), 
+									pUsrNODE->DATA.m_pUSER->Get_TRUE_LEVEL(), 
 									pUsrNODE->DATA.m_pUSER->m_nZoneNO);
 					switch( pUsrNODE->DATA.m_btLogOutMODE ) {
 					/*

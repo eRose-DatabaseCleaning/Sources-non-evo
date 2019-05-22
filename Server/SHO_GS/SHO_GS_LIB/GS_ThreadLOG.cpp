@@ -84,7 +84,7 @@ bool GS_CThreadLOG::When_LogInOrOut (classUSER *pUSER, BYTE btType )
 						btType,											//	@Login tinyint,
 						pUSER->Get_NAME(),								//	@CharName nvarchar(30),
 						CLIB_GameSRV::GetInstance()->GetChannelNO(),	//	@Channel tinyint,
-						pUSER->Get_LEVEL(),								//	@CharLevel smallint,
+						pUSER->Get_TRUE_LEVEL(),								//	@CharLevel smallint,
 						pUSER->Get_MONEY(),								//	@Money bigint,
 						szZoneName?szZoneName:"null",					//	@Location varchar(24),
 						(int)pUSER->m_PosCUR.x,							//	@LocX int,
@@ -105,7 +105,7 @@ bool GS_CThreadLOG::When_LogIN ( classUSER *pUSER )
 {
 	m_csSQL.Lock ();
 	{
-		this->m_ItemSTR.Printf("Channel:%d, Money: %I64d, LEV: %d, EXP: %d, BP: %d, SP: %d", CLIB_GameSRV::GetInstance()->GetChannelNO(), pUSER->Get_MONEY(), pUSER->Get_LEVEL(), pUSER->Get_EXP(), pUSER->GetCur_BonusPOINT(), pUSER->GetCur_SkillPOINT() );
+		this->m_ItemSTR.Printf("Channel:%d, Money: %I64d, LEV: %d, EXP: %d, BP: %d, SP: %d", CLIB_GameSRV::GetInstance()->GetChannelNO(), pUSER->Get_MONEY(), pUSER->Get_TRUE_LEVEL(), pUSER->Get_EXP(), pUSER->GetCur_BonusPOINT(), pUSER->GetCur_SkillPOINT() );
 		// 시간, 케릭, 동작, 위치, IP
 		this->m_QuerySTR.Printf(SP_M_LOGInOut,
 				(__int64)0,		// 타입케스트 없이 0을 직접 입력하니 SP에서 오류나네 ...,
@@ -131,7 +131,7 @@ bool GS_CThreadLOG::When_LogOUT ( classUSER *pUSER )
 
 		classTIME::AbsSecondToSystem( pUSER->m_dwLoginTIME, stIn );
 
-		this->m_ItemSTR.Printf("Channel:%d, LogIn Time[%d-%d-%d,%d:%d:%d], Money: %I64d, LEV:%d, EXP: %d, BP: %d, SP: %d", CLIB_GameSRV::GetInstance()->GetChannelNO(), stIn.wYear, stIn.wMonth, stIn.wDay, stIn.wHour, stIn.wMinute, stIn.wSecond, pUSER->Get_MONEY(), pUSER->Get_LEVEL(), pUSER->Get_EXP(), pUSER->GetCur_BonusPOINT(), pUSER->GetCur_SkillPOINT() );
+		this->m_ItemSTR.Printf("Channel:%d, LogIn Time[%d-%d-%d,%d:%d:%d], Money: %I64d, LEV:%d, EXP: %d, BP: %d, SP: %d", CLIB_GameSRV::GetInstance()->GetChannelNO(), stIn.wYear, stIn.wMonth, stIn.wDay, stIn.wHour, stIn.wMinute, stIn.wSecond, pUSER->Get_MONEY(), pUSER->Get_TRUE_LEVEL(), pUSER->Get_EXP(), pUSER->GetCur_BonusPOINT(), pUSER->GetCur_SkillPOINT() );
 
 		if ( 0 == pUSER->m_nZoneNO ) {
 			m_PosSTR.Printf( "lobby :: Account: %s", pUSER->Get_ACCOUNT() );
@@ -270,7 +270,7 @@ bool GS_CThreadLOG::When_NpcTRADE ( classUSER *pSourAVT, tagITEM *pITEM, CObjCHA
 	m_csSQL.Lock ();
 	{
 	if ( this->GetItemINFO( pITEM, 10000, 100, 10000, iPriceTOT, iDupCnt ) ) {
-		this->m_DescSTR.Printf("Money: %I64d, LEV: %d, EXP: %d, PriceTOT:%d", pSourAVT->Get_MONEY(), pSourAVT->Get_LEVEL(), pSourAVT->Get_EXP(), iPriceTOT );
+		this->m_DescSTR.Printf("Money: %I64d, LEV: %d, EXP: %d, PriceTOT:%d", pSourAVT->Get_MONEY(), pSourAVT->Get_TRUE_LEVEL(), pSourAVT->Get_EXP(), iPriceTOT );
 									 
 		this->m_QuerySTR.Printf( SP_M_OBJDESCLOG,
 				pSourAVT->GetCur_MONEY() - pSourAVT->m_i64StartMoney,
@@ -542,7 +542,7 @@ bool GS_CThreadLOG::When_DieBY ( CObjCHAR *pKillOBJ, classUSER *pDeadAVT )
 				pDeadAVT->Get_NAME(),			// @CharName varchar(32),
 				pDeadAVT->Get_MONEY(),			// @Money bigint,
 				szZoneName?szZoneName:"null",	// @KillPos varchar(24),
-				pDeadAVT->Get_LEVEL(),			// @CharLevel smallint,
+				pDeadAVT->Get_TRUE_LEVEL(),			// @CharLevel smallint,
 				pDeadAVT->Get_EXP(),			// @Exp int,
 				(int)pDeadAVT->m_PosCUR.x,		// @PosX int,
 				(int)pDeadAVT->m_PosCUR.y,		// @PosY int,
@@ -559,13 +559,13 @@ bool GS_CThreadLOG::When_DieBY ( CObjCHAR *pKillOBJ, classUSER *pDeadAVT )
 // 레벨업
 bool GS_CThreadLOG::When_LevelUP ( classUSER *pSourAVT, int iGetEXP  )
 {
-	// LogString(LOG_NORMAL, ">>> %s LEVEL UP to %d,  CurEXP: %d, GetEXP: %d\n", pSourAVT->Get_NAME(), pSourAVT->Get_LEVEL(), pSourAVT->m_GrowAbility.m_lEXP, iGetEXP);
+	// LogString(LOG_NORMAL, ">>> %s LEVEL UP to %d,  CurEXP: %d, GetEXP: %d\n", pSourAVT->Get_NAME(), pSourAVT->Get_TRUE_LEVEL(), pSourAVT->m_GrowAbility.m_lEXP, iGetEXP);
 
 	m_csSQL.Lock ();
 	{
 		{
 	#ifndef	__NEW_LOG
-			this->m_ItemSTR.Printf ("LEVEL UP to %d, CurEXP: %d, GetEXP: %d, Money: %I64d, BP: %d, SP: %d", pSourAVT->Get_LEVEL(), pSourAVT->m_GrowAbility.m_lEXP, iGetEXP, pSourAVT->Get_MONEY(), pSourAVT->GetCur_BonusPOINT(), pSourAVT->GetCur_SkillPOINT() );
+			this->m_ItemSTR.Printf ("LEVEL UP to %d, CurEXP: %d, GetEXP: %d, Money: %I64d, BP: %d, SP: %d", pSourAVT->Get_TRUE_LEVEL(), pSourAVT->m_GrowAbility.m_lEXP, iGetEXP, pSourAVT->Get_MONEY(), pSourAVT->GetCur_BonusPOINT(), pSourAVT->GetCur_SkillPOINT() );
 			this->m_QuerySTR.Printf( SP_M_DEFLOG,
 					pSourAVT->GetCur_MONEY() - pSourAVT->m_i64StartMoney,
 					pSourAVT->Get_NAME(),
@@ -579,7 +579,7 @@ bool GS_CThreadLOG::When_LevelUP ( classUSER *pSourAVT, int iGetEXP  )
 			this->m_QuerySTR.Printf( SP_LevelUpLog,	//[AddLevelUpLog]
 					pSourAVT->m_dwDBID,				//	@CharID int,
 					pSourAVT->Get_NAME(),			//	@CharName nvarchar(30),
-					pSourAVT->Get_LEVEL(),			//	@toLevel smallint,
+					pSourAVT->Get_TRUE_LEVEL(),			//	@toLevel smallint,
 					pSourAVT->GetCur_BonusPOINT(),	//	@BPoint smallint,
 					pSourAVT->GetCur_SkillPOINT(),  //	@SPoint smallint,
 					szZoneName?szZoneName:"null",   //	@Location varchar(24),
@@ -603,7 +603,7 @@ bool GS_CThreadLOG::When_LearnSKILL ( classUSER *pSourAVT, short nSkillIDX )
 	{
 		{
 	#ifndef	__NEW_LOG
-			this->m_ItemSTR.Printf ("Skill Learn:%d[%s], SkillLEV: %d, Money: %I64d, LEV: %d, EXP: %d, BP: %d, SP: %d ", nSkillIDX, SKILL_NAME( nSkillIDX ), SKILL_LEVEL( nSkillIDX ), pSourAVT->Get_MONEY(), pSourAVT->Get_LEVEL(), pSourAVT->Get_EXP(), pSourAVT->GetCur_BonusPOINT(), pSourAVT->GetCur_SkillPOINT() );
+			this->m_ItemSTR.Printf ("Skill Learn:%d[%s], SkillLEV: %d, Money: %I64d, LEV: %d, EXP: %d, BP: %d, SP: %d ", nSkillIDX, SKILL_NAME( nSkillIDX ), SKILL_LEVEL( nSkillIDX ), pSourAVT->Get_MONEY(), pSourAVT->Get_TRUE_LEVEL(), pSourAVT->Get_EXP(), pSourAVT->GetCur_BonusPOINT(), pSourAVT->GetCur_SkillPOINT() );
 			this->m_QuerySTR.Printf( SP_M_DEFLOG,
 					pSourAVT->GetCur_MONEY() - pSourAVT->m_i64StartMoney,
 					pSourAVT->Get_NAME(),
@@ -638,7 +638,7 @@ bool GS_CThreadLOG::When_LevelUpSKILL ( classUSER *pSourAVT, short nSkillIDX )
 	m_csSQL.Lock ();
 	{
 		{
-			this->m_ItemSTR.Printf ("Skill LevelUP:%d[%s], SkillLEV: %d, Money: %I64d, LEV: %d, EXP: %d, BP: %d, SP: %d ", nSkillIDX, SKILL_NAME( nSkillIDX ), SKILL_LEVEL( nSkillIDX ), pSourAVT->Get_MONEY(), pSourAVT->Get_LEVEL(), pSourAVT->Get_EXP(), pSourAVT->GetCur_BonusPOINT(), pSourAVT->GetCur_SkillPOINT() );
+			this->m_ItemSTR.Printf ("Skill LevelUP:%d[%s], SkillLEV: %d, Money: %I64d, LEV: %d, EXP: %d, BP: %d, SP: %d ", nSkillIDX, SKILL_NAME( nSkillIDX ), SKILL_LEVEL( nSkillIDX ), pSourAVT->Get_MONEY(), pSourAVT->Get_TRUE_LEVEL(), pSourAVT->Get_EXP(), pSourAVT->GetCur_BonusPOINT(), pSourAVT->GetCur_SkillPOINT() );
 
 			this->m_QuerySTR.Printf( SP_M_DEFLOG,
 					pSourAVT->GetCur_MONEY() - pSourAVT->m_i64StartMoney,
@@ -1027,7 +1027,7 @@ bool GS_CThreadLOG::When_BackUP ( classUSER *pSourAVT,  char *szBackUpType )
 	{
 		{
 	#ifndef	__NEW_LOG
-			this->m_ItemSTR.Printf("Channel:%d, Money: %I64d, LEV: %d, EXP: %d, BP: %d, SP: %d", CLIB_GameSRV::GetInstance()->GetChannelNO(), pSourAVT->Get_MONEY(), pSourAVT->Get_LEVEL(), pSourAVT->Get_EXP(), pSourAVT->GetCur_BonusPOINT(), pSourAVT->GetCur_SkillPOINT() );
+			this->m_ItemSTR.Printf("Channel:%d, Money: %I64d, LEV: %d, EXP: %d, BP: %d, SP: %d", CLIB_GameSRV::GetInstance()->GetChannelNO(), pSourAVT->Get_MONEY(), pSourAVT->Get_TRUE_LEVEL(), pSourAVT->Get_EXP(), pSourAVT->GetCur_BonusPOINT(), pSourAVT->GetCur_SkillPOINT() );
 
 			this->m_QuerySTR.Printf( SP_M_DEFLOG,
 					pSourAVT->GetCur_MONEY() - pSourAVT->m_i64StartMoney,
@@ -1042,7 +1042,7 @@ bool GS_CThreadLOG::When_BackUP ( classUSER *pSourAVT,  char *szBackUpType )
 			this->m_QuerySTR.Printf( SP_AddPeriodicCHARLog,			// [AddPeriodicCHARLog]
 					pSourAVT->Get_NAME(),							// @CharName varchar(32),
 					CLIB_GameSRV::GetInstance()->GetChannelNO(),	// @Channel tinyint,
-					pSourAVT->Get_LEVEL(),							// @CharLevel smallint,
+					pSourAVT->Get_TRUE_LEVEL(),							// @CharLevel smallint,
 					pSourAVT->Get_MONEY(),							// @Money bigint,
 					pSourAVT->Get_EXP(),							// @Exp int,
 					pSourAVT->GetCur_BonusPOINT(),					// @BPoint smallint,

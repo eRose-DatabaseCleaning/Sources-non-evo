@@ -196,7 +196,7 @@ bool classUSER::CheckClanCreateCondition (char cStep)
 	#define	NEED_CLAN_CREATE_LEVEL	30
 	#define	NEED_CLAN_CREATE_MONEY	1000000
 
-	if ( this->Get_LEVEL() < NEED_CLAN_CREATE_LEVEL )
+	if ( this->Get_TRUE_LEVEL() < NEED_CLAN_CREATE_LEVEL )
 		return false;
 
 	bool bResult = true;
@@ -1048,7 +1048,7 @@ void classUSER::Add_EXP (__int64 iGetExp, bool bApplyStamina, WORD wFromObjIDX)
 	if ( bApplyStamina ) {
 		iExp = iGetExp;
 
-		iGetExp= (__int64)( ( (iExp + 100) / (this->Get_LEVEL()+6) ) * ( ::Get_WorldSTAMINA() ) / 80.f );
+		iGetExp= (__int64)( ( (iExp + 100) / (this->Get_TRUE_LEVEL()+6) ) * ( ::Get_WorldSTAMINA() ) / 80.f );
 		short nNewStamina = this->GetCur_STAMINA() + iGetExp;
 		this->SetCur_STAMINA( nNewStamina>=MAX_STAMINA? MAX_STAMINA : nNewStamina );
 
@@ -1102,41 +1102,41 @@ void classUSER::Add_EXP (__int64 iGetExp, bool bApplyStamina, WORD wFromObjIDX)
 	} else
 		m_GrowAbility.m_lEXP += iExp;
 
-	__int64  iNeedEXP = this->Get_NeedEXP( this->Get_LEVEL() );
+	__int64  iNeedEXP = this->Get_NeedEXP( this->Get_TRUE_LEVEL() );
 	bool bLevelUp=false;
 
-	short nBeforeLEV = this->Get_LEVEL();
+	short nBeforeLEV = this->Get_TRUE_LEVEL();
 	while ( m_GrowAbility.m_lEXP >= iNeedEXP ) {
 		// ·¹º§ Á¦ÇÑ 
-		if ( this->Get_LEVEL() < MAX_LEVEL ) {
-			this->Set_LEVEL( this->Get_LEVEL() + 1 );
+		if ( this->Get_TRUE_LEVEL() < MAX_LEVEL ) {
+			this->Set_LEVEL( this->Get_TRUE_LEVEL() + 1 );
 		}
 
-		this->AddCur_BonusPOINT( (short)( this->Get_LEVEL() * 0.8 ) + 10 );
+		this->AddCur_BonusPOINT( (short)( this->Get_TRUE_LEVEL() * 0.8 ) + 10 );
 
 		if ( IsTAIWAN() ) {
 			for (short nD=0; nD<g_TblSkillPoint.m_nDataCnt ; nD++) {
-				if ( SP_LEVEL(nD) == this->Get_LEVEL() ) {
+				if ( SP_LEVEL(nD) == this->Get_TRUE_LEVEL() ) {
 					this->AddCur_SkillPOINT( SP_POINT(nD) );
 					break;
 				}
 			}
 		} else {
 			// ½ºÅ³ Æ÷ÀÎÆ® =  (LV + 4) * 0.5 - 1 
-			this->AddCur_SkillPOINT( (short)( ( this->Get_LEVEL() + 4 ) * 0.5f ) - 1 );
+			this->AddCur_SkillPOINT( (short)( ( this->Get_TRUE_LEVEL() + 4 ) * 0.5f ) - 1 );
 		}
 		m_GrowAbility.m_lEXP -= iNeedEXP;
 
 		m_GrowAbility.m_lPenalEXP = 0;
-		iNeedEXP = this->Get_NeedEXP( this->Get_LEVEL() );
+		iNeedEXP = this->Get_NeedEXP( this->Get_TRUE_LEVEL() );
 		bLevelUp = true;
 	}
 
 	if ( bLevelUp ) {
 		g_pThreadLOG->When_LevelUP( this, iExp );
-		this->Send_gsv_LEVELUP( this->Get_LEVEL()-nBeforeLEV );
-		if ( g_pUserLIST->Get_LevelUpTRIGGER( this->Get_LEVEL() ) )
-			this->Do_QuestTRIGGER( g_pUserLIST->Get_LevelUpTRIGGER( this->Get_LEVEL() ) );
+		this->Send_gsv_LEVELUP( this->Get_TRUE_LEVEL()-nBeforeLEV );
+		if ( g_pUserLIST->Get_LevelUpTRIGGER( this->Get_TRUE_LEVEL() ) )
+			this->Do_QuestTRIGGER( g_pUserLIST->Get_LevelUpTRIGGER( this->Get_TRUE_LEVEL() ) );
 	} else
 		this->Send_gsv_SETEXP( wFromObjIDX );
 }
@@ -1879,7 +1879,7 @@ bool classUSER::Send_gsv_LEVELUP (short nLevelDIFF)
 {
 /*	Á¸ ºÐÇÒ·Î ¿î¿µ½Ã ¿ùµå ¼­¹ö¿¡¼­ ÆÄÆ¼ ¿î¿µµÉ¼ö ÀÖµµ·Ï Àü¼ÛÇÏ´ø...
 #ifndef	__INC_WORLD
-	g_pSockLSV->Send_gsv_LEVEL_UP( LEVELUP_OP_USER, this->m_dwWSID, this->Get_LEVEL(), m_GrowAbility.m_lEXP );
+	g_pSockLSV->Send_gsv_LEVEL_UP( LEVELUP_OP_USER, this->m_dwWSID, this->Get_TRUE_LEVEL(), m_GrowAbility.m_lEXP );
 #endif
 */
 	// ·¹º§¾÷½Ã È¹µæ Æ÷ÀÎÆ®...
@@ -1898,7 +1898,7 @@ bool classUSER::Send_gsv_LEVELUP (short nLevelDIFF)
 	pCPacket->m_HEADER.m_wType			= GSV_LEVELUP;
 	pCPacket->m_HEADER.m_nSize			= sizeof( gsv_LEVELUP );
 	pCPacket->m_gsv_LEVELUP.m_wObjectIDX= this->Get_INDEX ();
-	pCPacket->m_gsv_LEVELUP.m_nCurLevel	= this->Get_LEVEL ();
+	pCPacket->m_gsv_LEVELUP.m_nCurLevel	= this->Get_TRUE_LEVEL ();
 	pCPacket->m_gsv_LEVELUP.m_lCurEXP   = m_GrowAbility.m_lEXP;
 	pCPacket->m_gsv_LEVELUP.m_nBonusPoint = this->GetCur_BonusPOINT ();
 	pCPacket->m_gsv_LEVELUP.m_nSkillPoint = this->GetCur_SkillPOINT ();
@@ -4106,7 +4106,7 @@ bool classUSER::Recv_cli_CREATE_ITEM_REQ( t_PACKET *pPacket )
 				// Å¸ÀÌ¿Ï ¹öÁ¯¿¡¼­ °æÇèÄ¡´Â »©Áö ¾ÊÀ½..
 			}
 			else
-				this->m_nCreateItemEXP = 1 + (short) ( ( this->Get_LEVEL() + 50 ) * fPRO_POINT[0] * ( nNUM_MAT+4 ) / 1300.f );
+				this->m_nCreateItemEXP = 1 + (short) ( ( this->Get_TRUE_LEVEL() + 50 ) * fPRO_POINT[0] * ( nNUM_MAT+4 ) / 1300.f );
 			return this->Send_gsv_CREATE_ITEM_REPLY( RESULT_CREATE_ITEM_FAILED, nI, fPRO_POINT );
 		}
 	}
@@ -4142,7 +4142,7 @@ bool classUSER::Recv_cli_CREATE_ITEM_REQ( t_PACKET *pPacket )
 						( nPLUS*1.8f + ITEM_QUALITY(sOutITEM.GetTYPE(), sOutITEM.GetItemNO() )*0.4f + 8 ) * 0.2f / ( RANDOM(100)+51 ) - 100 );
 				}
 				else
-					iTEMP = (int)( ( this->GetCur_SENSE()+400-this->Get_LEVEL()*0.7f ) * 
+					iTEMP = (int)( ( this->GetCur_SENSE()+400-this->Get_TRUE_LEVEL()*0.7f ) * 
 						( nPLUS*1.8f + ITEM_QUALITY(sOutITEM.GetTYPE(), sOutITEM.GetItemNO() )*0.4f + 8 ) * 0.2f / ( RANDOM(100)+50 ) - 100 );
 				if ( iTEMP >= 1 ) {
 					sOutITEM.m_bHasSocket = 1;
@@ -4157,10 +4157,10 @@ bool classUSER::Recv_cli_CREATE_ITEM_REQ( t_PACKET *pPacket )
 					if( IsTAIWAN() )
 					{
 						// ITEM_OP = [{((SEN/A_LV)*50 + 220) * (PLUS+20) * 0.4 + ITEM_DIF*35 ? 1600 - TEMP} / (TEMP+17)] ? 85 (2005.07.08 ´ë¸¸)
-						iITEM_OP = (int)( ( ((GetCur_SENSE()/Get_LEVEL()/2.f)*50.f + 220) * ( nPLUS+20 )*0.4f + nITEM_DIF*35 - 1600 - iTEMP ) / ( iTEMP+17 ) - 85 );
+						iITEM_OP = (int)( ( ((GetCur_SENSE()/Get_TRUE_LEVEL()/2.f)*50.f + 220) * ( nPLUS+20 )*0.4f + nITEM_DIF*35 - 1600 - iTEMP ) / ( iTEMP+17 ) - 85 );
 					}
 					else
-						iITEM_OP = (int)( ( ( this->GetCur_SENSE()+220-this->Get_LEVEL()/2.f ) * ( nPLUS+20 )*0.4f + nITEM_DIF*35 - 1600 - iTEMP ) / ( iTEMP+17 ) - 85 );
+						iITEM_OP = (int)( ( ( this->GetCur_SENSE()+220-this->Get_TRUE_LEVEL()/2.f ) * ( nPLUS+20 )*0.4f + nITEM_DIF*35 - 1600 - iTEMP ) / ( iTEMP+17 ) - 85 );
 					if ( iITEM_OP > 0 ) {
 						sOutITEM.m_bIsAppraisal = 1;	// °¨Á¤ ¹ÞÀº°É·ç...
 						int iMod = (int)( (ITEM_QUALITY(sOutITEM.GetTYPE(), sOutITEM.GetItemNO() ) + 12)*3.2f );
@@ -4196,7 +4196,7 @@ bool classUSER::Recv_cli_CREATE_ITEM_REQ( t_PACKET *pPacket )
 		// ´ë¸¸ ¹öÁ¯ÀÏ °æ¿ì.. °æÇèÄ¡ ÁÖÁö ¾ÊÀ½.
 	}
 	else
-		this->m_nCreateItemEXP = 1 + (short)( ( this->Get_LEVEL() + 35 ) * ( fPRO_POINT[0] + this->Get_LEVEL() ) * ( nNUM_MAT+4 ) * (nITEM_DIF+20) / 23000.f );
+		this->m_nCreateItemEXP = 1 + (short)( ( this->Get_TRUE_LEVEL() + 35 ) * ( fPRO_POINT[0] + this->Get_TRUE_LEVEL() ) * ( nNUM_MAT+4 ) * (nITEM_DIF+20) / 23000.f );
 
 	return this->Send_gsv_CREATE_ITEM_REPLY( RESULT_CREATE_ITEM_SUCCESS, nI, fPRO_POINT, &sOutITEM);
 }
@@ -6572,7 +6572,7 @@ bool classUSER::Recv_cli_PARTY_REQ( t_PACKET *pPacket )
 			}
 
 			// Numenor : no level restriction if it is a shared party
-			if ( !pPacket->m_cli_PARTY_REQ.m_bShareParty && !this->Check_PartyJoinLEVEL( pUSER->Get_LEVEL(), this->Get_LEVEL(), 0 ) ) {
+			if ( !pPacket->m_cli_PARTY_REQ.m_bShareParty && !this->Check_PartyJoinLEVEL( pUSER->Get_TRUE_LEVEL(), this->Get_LEVEL(), 0 ) ) {
 				return Send_gsv_PARTY_REPLY( pPacket->m_cli_PARTY_REQ.m_dwDestIDXorTAG, PARTY_REPLY_INVALID_LEVEL );
 			}
 
@@ -6595,7 +6595,7 @@ bool classUSER::Recv_cli_PARTY_REQ( t_PACKET *pPacket )
 			}
 
 			// Numenor : no level restriction if it is shared party
-			if ( !pPacket->m_cli_PARTY_REQ.m_bShareParty && !this->Check_PartyJoinLEVEL( pUSER->Get_LEVEL(), this->m_pPartyBUFF->GetAverageLEV(), this->m_pPartyBUFF->GetPartyLEV() ) ) {
+			if ( !pPacket->m_cli_PARTY_REQ.m_bShareParty && !this->Check_PartyJoinLEVEL( pUSER->Get_TRUE_LEVEL(), this->m_pPartyBUFF->GetAverageLEV(), this->m_pPartyBUFF->GetPartyLEV() ) ) {
 				return Send_gsv_PARTY_REPLY( pPacket->m_cli_PARTY_REQ.m_dwDestIDXorTAG, PARTY_REPLY_INVALID_LEVEL );
 			}
 
@@ -6648,7 +6648,7 @@ bool classUSER::Recv_cli_PARTY_REPLY( t_PACKET *pPacket )
 			}
 
 			// ÆÄÂ¯ÀÌ µÈ À¯Àú¿¡°Ô Çã¶ô ÆÐÅ¶ Àü¼Û.
-			pUSER->Send_gsv_PARTY_REPLY( pPacket->m_cli_PARTY_REPLY.m_dwDestIDXorTAG, PARTY_REPLY_ACCEPT_MAKE );
+			pUSER->Send_gsv_PARTY_REPLY( pPacket->m_cli_PARTY_REPLY.m_dwDestIDXorTAG, PARTY_REPLY_ACCEPT_MAKE ); //HUGO
 
 			BYTE btFailed = pUSER->m_pPartyBUFF->Add_PartyUSER( this );
 			if ( btFailed )
@@ -6678,7 +6678,7 @@ bool classUSER::Recv_cli_PARTY_REPLY( t_PACKET *pPacket )
 			break;
 
 		default :
-			pUSER->Send_gsv_PARTY_REPLY( this->Get_INDEX(), pPacket->m_cli_PARTY_REPLY.m_btREPLY );
+			pUSER->Send_gsv_PARTY_REPLY( this->Get_INDEX(), pPacket->m_cli_PARTY_REPLY.m_btREPLY ); //HUGO
 			break;
 	} // switch( pPacket->m_cli_PARTY_REPLY.m_btREPLY )
 
