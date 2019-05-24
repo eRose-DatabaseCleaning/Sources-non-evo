@@ -154,15 +154,23 @@ struct tagSkillAbility {
 	void Init ()
 	{
 		::ZeroMemory( m_nSkillINDEX,	sizeof(short) * MAX_LEARNED_SKILL_CNT );
-		m_nSkillINDEX[ 0 ] = 11;	// 앉기
-		m_nSkillINDEX[ 1 ] = 12;	// 줍기
-		m_nSkillINDEX[ 2 ] = 16;	// 일반공격
-		m_nSkillINDEX[ 3 ] = 19;	// 파티신청
-		m_nSkillINDEX[ 4 ] = 20;	// 거래신청
-		m_nSkillINDEX[ 5 ] = 21;	// 상점개설
+		//Numenor: this is where skills are learned at character creation
+		m_nSkillINDEX[ 0 ] = 11;	// sit
+		m_nSkillINDEX[ 1 ] = 12;	// gather
+		m_nSkillINDEX[ 2 ] = 13;	// Jump
+		m_nSkillINDEX[ 3 ] = 14;	// Floating jump
+		m_nSkillINDEX[ 4 ] = 15;	// Auto target
+		m_nSkillINDEX[ 5 ] = 16;	// Normal attack
+		m_nSkillINDEX[ 6 ] = 18;	// Add friend
+		m_nSkillINDEX[ 7 ] = 19;	// Party
+		m_nSkillINDEX[ 8 ] = 20;	// Trading
+		m_nSkillINDEX[ 9 ] = 21;	// Open market
+		m_nSkillINDEX[ 10 ] = 24;	// Gather from distance
+		m_nSkillINDEX[ 11 ] = 26;	// Scaled party
+		m_nSkillINDEX[ 12 ] = 27;	// Kiss
 	}
 } ;
-
+		
 /// 퀘스트 데이터 ...
 
 // #define	__APPLY_EXTAND_QUEST_VAR		// 05.05.21 추가 확장 스위치및 변수 적용여부..
