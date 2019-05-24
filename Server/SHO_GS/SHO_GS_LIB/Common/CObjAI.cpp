@@ -15,7 +15,7 @@
 #endif
 
 //-------------------------------------------------------------------------------------------------
-/// Target Object 를 구한다.( HP 체크 )
+/// Get Target Object (check HP)
 CAI_OBJ *CObjTARGET::Get_TargetOBJ(bool bCheckHP)
 {	
 	if ( m_iServerTarget ) {

@@ -952,6 +952,7 @@ bool CObjCHAR::Skill_IsPassFilter( CObjCHAR *pTarget, short nSkillIDX )
 			else{
 				if (this->Is_ALLIED( pTarget ) ){
 					CObjCHAR *pSummon_OWNER = (CObjCHAR*)pTarget->Get_CALLER();
+					if(pSummon_OWNER == NULL){ bResult = false; break;}
 					if (pSummon_OWNER == this){ bResult = true; break;}
 					else{
 						if ( this->GetPARTY() ) {

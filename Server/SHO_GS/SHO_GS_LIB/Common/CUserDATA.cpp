@@ -1972,7 +1972,7 @@ bool	CUserDATA::Quest_SubITEM( tagITEM &sSubITEM )
 #endif
 bool CUserDATA::Reward_InitSKILL (void)
 {
-	// ÄÉ¸¯ÅÍÀÇ ½ºÅ³À» ÃÊ±âÈ­ ÇÑ´Ù.
+	// Initialize the skill of the character.
 	if ( IsTAIWAN() ) {
 		short nSkillIDX, n1LevSkillIDX;
 		int iRecoverySP = 0;
@@ -1996,10 +1996,10 @@ bool CUserDATA::Reward_InitSKILL (void)
 		this->SetCur_SkillPOINT( nNewSP );
 	}
 
-	// 0ÆäÀÌÁöÀÇ ±âº» ½ºÅ³À» °Á µÐ´Ù.
+	// Put the basic skill on page 0.
 	::ZeroMemory( &m_Skills.m_nSkillINDEX[ MAX_LEARNED_SKILL_PER_PAGE ], sizeof(short) * ( MAX_LEARNED_SKILL_CNT-MAX_LEARNED_SKILL_PER_PAGE ) );
 
-	// ÃÊ±âÈ­ µÆÀ¸´Ï »óÅÂ¸¦ º¸³»ÀÚ...
+	// It's initialized so let's send it ...
 	this->InitPassiveSkill ();
 	this->UpdateCur_Ability ();
 	this->Quest_CHANGE_SPEED ();

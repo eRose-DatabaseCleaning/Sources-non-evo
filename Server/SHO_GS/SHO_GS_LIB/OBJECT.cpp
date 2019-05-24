@@ -52,11 +52,8 @@ CObjCHAR*CObjMNG::Get_CharOBJ( WORD wIndex, bool bCheckHP )
 
     pObject = this->GetData( wIndex );
     if ( pObject && pObject->IsCHAR() ) {
-		if ( bCheckHP ) {
-			if ( ((CObjCHAR*)pObject)->Get_HP() > 0 )
-				return (CObjCHAR*)pObject;
-		} else
-			return (CObjCHAR*)pObject;
+		if ( bCheckHP && ((CObjCHAR*)pObject)->Get_HP() <= 0 ) return NULL;
+		return (CObjCHAR*)pObject;
     }
     return NULL;
 }

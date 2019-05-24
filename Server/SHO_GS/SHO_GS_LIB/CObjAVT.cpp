@@ -243,7 +243,7 @@ void CObjAVT::Set_TargetIDX (int iTargetIndex, bool bCheckHP)
 
 	CObjCHAR *pTarget;
 	if ( Get_TargetIDX() ) {
-		pTarget = (CObjCHAR*) this->Get_TargetOBJ (true);	// HP 체크된 CAI_OBJ를 상속받은 CObjCHAR가 넘어 온다.
+		pTarget = (CObjCHAR*) this->Get_TargetOBJ (true);	// The CObjCHAR that inherits the HP checked CAI_OBJ is passed.
 		if ( pTarget ) {
 			pTarget->Sub_FromTargetLIST( this );
 		}
@@ -252,7 +252,7 @@ void CObjAVT::Set_TargetIDX (int iTargetIndex, bool bCheckHP)
 	this->CObjTARGET::Set_TargetIDX( iTargetIndex );
 
 	if ( Get_TargetIDX() ) {
-		pTarget = (CObjCHAR*) this->Get_TargetOBJ (bCheckHP);		// HP 체크된 CAI_OBJ를 상속받은 CObjCHAR가 넘어 온다.
+		pTarget = (CObjCHAR*) this->Get_TargetOBJ (bCheckHP);		// The CObjCHAR that inherits the HP checked CAI_OBJ is passed.
 		if ( pTarget ) {
 			pTarget->Add_ToTargetLIST( this );
 			this->Send_gsv_HP_REPLY( Get_TargetIDX(), pTarget->Get_HP() );
@@ -1030,7 +1030,6 @@ bool CObjAVT::Is_ALLIED( CAI_OBJ *pDestOBJ )
 			return true;
 		}
 	}
-
 	return CAI_OBJ::Is_ALLIED( pDestOBJ );
 }
 
