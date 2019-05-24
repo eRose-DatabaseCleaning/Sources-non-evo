@@ -395,16 +395,16 @@ bool CParty::AddEXP( CObjMOB *pMobCHAR, int iTotalEXP, int iPartyExpA, int iPart
 			int iEXP;
 			if(this->m_bShareParty){ //Numenor: if shared party, exp is given to lowest level member
 				//Numenor: Find userID of the min level in all users near the dead monster
-				for (iD=1; iD<iNearUSER; iD++) {
+				for (iD=0; iD<iNearUSER; iD++) {
 					if ( pNearUSER[ iD ]->Get_TRUE_LEVEL() < pNearUSER[ minID ]->Get_TRUE_LEVEL() ){
 						minID = iD; //Numenor: warning! The power scaling is done independently of the distance between players. However the exp will go to the nearest char with lowest level.
 					}
+					if ( pNearUSER[ iD ] == this->GetPartyOWNER() )	bFindOwner = true; //Numenor: check if party leader is near. If yes, party will earn exp.
 				}
 								
 				iEXP = (int)( (( iTotalEXP * ( this->m_btPartyLEV+101 ) ) / (iNearUSER*4+1) / 20)*iNearUSER ); //EXP per nearUSER * nearUSER = we give all EXP to one user.
 				if ( iEXP > 0 ) {
 					pNearUSER[ minID ]->Add_EXP( iEXP, true, pMobCHAR->Get_INDEX() );
-					if ( pNearUSER[ minID ] == this->GetPartyOWNER() )	bFindOwner = true;
 				}
 			}
 			else{ //Numenor: if normal party, party rules decide
@@ -452,11 +452,6 @@ bool CParty::AddEXP( CObjMOB *pMobCHAR, int iTotalEXP, int iPartyExpA, int iPart
 		if(this->m_bShareParty) iDiffLEV = pMobCHAR->Get_TRUE_LEVEL() - pNearUSER[ minID ]->Get_TRUE_LEVEL(); //for shared party we don't care about averageLEV
 		else iDiffLEV = pMobCHAR->Get_TRUE_LEVEL() - m_iAverageLEV;
 		
-		if(this->m_bShareParty){
-			g_LOG.CS_ODS( LOG_NORMAL, "MOB Lvl: %d \n", pMobCHAR->Get_TRUE_LEVEL() );
-			g_LOG.CS_ODS( LOG_NORMAL, "Low Lvl: %d \n", pNearUSER[ minID ]->Get_TRUE_LEVEL() );
-		}
-
 		if ( iDiffLEV >= 0 ) {
 			// 얻는 파티 경험치 = (몹레벨-파티평균 레벨 + A) * (몹레벨-파티평균 레벨 + A + 1) * B/10 + 2
 			// iCalEXP = ( iDiffLEV + 2 ) * ( iDiffLEV + 1 ) + 2;
